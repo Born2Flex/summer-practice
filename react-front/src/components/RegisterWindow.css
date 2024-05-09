@@ -1,0 +1,11 @@
+.registerWindow {
+  background-image: url('.././assets/register.svg');
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 30px;
+  background-size: cover;
+  width: 466px;
+  height: 760px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
