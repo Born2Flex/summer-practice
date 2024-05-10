@@ -1,25 +1,20 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { ComponentProps } from 'react';
 
-interface RoundButtonProps {
-    iconUrl: IconDefinition;
-    backgroundColor?: string;
-    padding?: number;
-    disabled?: boolean;
+interface ButtonProps extends ComponentProps<"button"> {
+    icon: IconDefinition;
+    disabled?: boolean
 }
 
-const RoundButton: React.FC<RoundButtonProps> = ({ iconUrl, backgroundColor = 'transparent', padding = 2, disabled = false }) => {
-    const backgroundColorClass = backgroundColor;
-    const paddingClass = padding;
+function RoundButton({ icon, disabled = false, ...props }: ButtonProps) {
 
     return (
         <button
-            style={{ backgroundColor: backgroundColorClass }}
-            className={`flex items-center justify-center rounded-full p-${paddingClass} w-fit h-fit`}
             disabled={disabled}
+            {...props}
         >
-            {disabled ? <div className="absolute w-full h-full bg-black opacity-50 rounded-full" /> : <FontAwesomeIcon icon={iconUrl} className='text-white w-6 h-6' />}
+            {disabled ? <div className="absolute w-full h-full bg-black opacity-50 rounded-full" /> : <FontAwesomeIcon icon={icon} className='text-white w-6 h-6' />}
         </button>
     );
 };

@@ -7,7 +7,7 @@ interface InputProps extends ComponentProps<"input"> {
     color?: string;
 }
 
-const Input = ({ label, name, type = "text", color = "white", ...rest }: InputProps) => {
+function Input({ label, name, type = "text", color = "white", ...rest }: InputProps) {
     return (
         <div className="relative z-0 w-full mb-5">
             <input

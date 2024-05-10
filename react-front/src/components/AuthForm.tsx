@@ -25,7 +25,10 @@ function AuthForm() {
                 className={`flex flex-col px-5 py-3 z-10 w-full h-full rounded-2xl bg-cover bg-center ${isLogin ? 'bg-login' : 'bg-register'}`}
             >
                 <div>
-                    <RoundButton iconUrl={faChevronLeft} backgroundColor='transparent' padding={2} />
+                    <RoundButton
+                        icon={faChevronLeft}
+                        className='flex items-center justify-center rounded-full p-2 w-fit h-fit bg-transparent'
+                    />
                 </div>
                 <div className='flex-none mt-10 mb-14'>
                     <Header
@@ -79,10 +82,9 @@ function AuthForm() {
                         {isLogin ? 'Sign In' : 'Sign Up'}
                     </div>
                     <RoundButton
-                        iconUrl={faArrowRight}
-                        backgroundColor='#1BB8DA'
-                        padding={4}
+                        icon={faArrowRight}
                         disabled={isSubmitting}
+                        className='flex p-4 items-center justify-center rounded-full w-fit h-fit bg-[#1BB8DA]'
                     />
                 </div>
                 <div className="flex-none mt-6">
