@@ -6,11 +6,8 @@ input:focus-within~label,
 input:not(:placeholder-shown)~label {
     @apply transform scale-75 -translate-y-6;
     transition: transform 0.3s ease;
-    /* Only animate the transformation */
 }
 
 label {
     transition: transform 0.3s ease;
-    /* Ensures only transform is animated, not color */
-    /* Other styling properties */
 }
