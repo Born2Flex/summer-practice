@@ -1,40 +1,103 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './Header.tsx';
-import TextInput from './TextInput.tsx';
 import './RegisterWindow.css'
-import LinkText from './LinkText.tsx';
-import FullScreenBackground from './FullScreenBackround.tsx';
 import RoundButton from './RoundButton.tsx';
 import LeftArrow from '../assets/arrow-prev-small-svgrepo-com.svg';
 import RightArrow from '../assets/arrow-right-svgrepo-com.svg'
+import { Form, Link, useActionData, useNavigation, useSearchParams } from 'react-router-dom';
+import Input from '../components/TextDataInput.tsx';
 
 const AuthWindow: React.FC = () => {
-    return (
-        <div className="relative flex justify-center items-center h-full w-fit bg-transparent">
-            <FullScreenBackground />
-            <div className="flex flex-col px-6 py-7 w-[466px] h-[760px] md:max-w-md lg:max-w-lg absolute registerWindow">
-                <div className="flex-none">
-                    <RoundButton iconUrl={LeftArrow} backgroundColor='transparent' padding={2}/>
-                </div>
-                <div className='flex-none mt-10 mb-16'>   
-                    <Header title="Create Account" subtitle="Join sharing and creating events" />
-                </div>
-                <div className="flex-1 flex flex-col justify-between">
-                    <TextInput placeholder="Name" type="text" color='white' />
-                    <TextInput placeholder="E-mail" type="text" color='white' />
-                    <TextInput placeholder="Password" type="password" color='white' />
-                    <TextInput placeholder="Repeat password" type="password" color='white' />
-                </div>
+    const data = useActionData() as { errors?: string; message?: string };
+    const navigation = useNavigation();
 
-                <div className="flex-none flex items-center justify-between mt-8">
-                    <div className="text-4xl text-white m-0 p-0">Sign Up</div>
-                    <RoundButton iconUrl={RightArrow} backgroundColor='#1BB8DA' padding={4}/>
-                </div>
-                <div className="flex-none mt-6">
-                    <LinkText text="Sign In" onClick={() => console.log('Go to Sign In')} />
-                </div>
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
+
+    const [searchParams] = useSearchParams();
+    const isLogin = searchParams.get('mode') === 'login';
+    const isSubmitting = navigation.state === 'submitting';
+
+    return (
+        <Form
+            method='post'
+            className={`flex flex-col px-5 py-3 w-1/4 rounded-2xl bg-cover bg-center ${isLogin ? 'bg-login h-5/6' : 'bg-register'}`}
+        >
+            <div>
+                <RoundButton iconUrl={LeftArrow} backgroundColor='transparent' padding={2} />
             </div>
-        </div>
+            <div className='flex-none mt-7 mb-14'>
+                <Header
+                    title={isLogin ? "Welcome back!" : "Create Account"}
+                    subtitle={isLogin ? 'Discover new events around you!' : "Join sharing and creating events"}
+                />
+            </div>
+
+            {data && data.errors && (
+                <ul>
+                    {Object.values(data.errors).map((error: string) => (
+                        <li key={error} className="text-red-500">{error}</li>
+                    ))}
+                </ul>
+            )}
+            {data && data.message && <p>{data.message}</p>}
+
+
+            <div className={`flex-1 flex flex-col ${isLogin ? 'justify-end' : 'justify-between'}`}>
+                <Input
+                    label="Name"
+                    name="name"
+                    type="text"
+                    value={name}
+                    onChange={(v) => setName(v.target.value)}
+                    color={isLogin ? 'black' : 'white'}
+                />
+                {!isLogin && (
+                    <Input
+                        label="Email"
+                        name="email"
+                        type="email"
+                        value={email}
+                        onChange={(v) => setEmail(v.target.value)}
+                    />
+                )}
+
+                <Input
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={password}
+                    onChange={(v) => setPassword(v.target.value)}
+                    color={isLogin ? 'black' : 'white'}
+                />
+                {!isLogin && (
+                    <Input
+                        label="Repeat Password"
+                        name="repeatPassword"
+                        type="password"
+                        value={repeatPassword}
+                        onChange={(v) => setRepeatPassword(v.target.value)}
+                    />
+                )}
+            </div>
+
+            <div className="flex-none flex items-center justify-between mt-4">
+                <div className={`text-4xl m-0 p-0 ${isLogin ? 'text-black' : 'text-white'}`}>
+                    {isLogin ? 'Sign In' : 'Sign Up'}
+                </div>
+                <RoundButton iconUrl={RightArrow} backgroundColor='#1BB8DA' padding={4} />
+            </div>
+            <div className="flex-none mt-6">
+                <Link
+                    to={`?mode=${isLogin ? 'signup' : 'login'}`}
+                    className='hover:underline '
+                >
+                    {isLogin ? 'Create Account' : 'Log in'}
+                </Link>
+            </div>
+        </Form>
     );
 };
 

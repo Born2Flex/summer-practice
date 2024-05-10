@@ -15,7 +15,7 @@ const RoundButton: React.FC<RoundButtonProps> = ({ iconUrl, backgroundColor = 't
             style={{ backgroundColor: backgroundColorClass }}
             className={`flex items-center justify-center rounded-full p-${paddingClass} w-fit h-fit`}
         >
-            <img src={iconUrl} className="w-8 h-8" />
+            <img src={iconUrl} className="w-6 h-6" />
         </button>
     );
 };

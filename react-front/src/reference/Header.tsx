@@ -9,8 +9,8 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title, secondLine='', subtitle }) => {
     return (
         <div className="text-white text-left">
-            <div className="text-5xl mb-10">{title}<br/>{secondLine}</div>
-            <div className="text-2xl">{subtitle}</div>
+            <div className="text-3xl mb-5">{title}<br/>{secondLine}</div>
+            <div className="text-xl">{subtitle}</div>
         </div>
     );
 };
