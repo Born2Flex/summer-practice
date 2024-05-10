@@ -1,5 +1,4 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import './App.css'
 import { action as authAction } from './pages/AuthenticationPage'
 import AuthenticationPage from './pages/AuthenticationPage';
 import RootLayout from './pages/RootLayout';

@@ -1,11 +1,11 @@
 import { json, redirect } from "react-router-dom";
-import AuthWindow from "../reference/AuthWindow";
+import AuthForm from "../components/AuthForm";
 
 function AuthenticationPage() {
     return (
 
-        <div className='flex flex-1 justify-center items-center align-middle'>
-            <AuthWindow />
+        <div className='flex flex-1 justify-center'>
+            <AuthForm />
         </div>
     )
 }
