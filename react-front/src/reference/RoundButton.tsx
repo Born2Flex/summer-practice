@@ -4,9 +4,10 @@ interface RoundButtonProps {
     iconUrl: string;
     backgroundColor?: string;
     padding?: number;
+    disabled?: boolean;
 }
 
-const RoundButton: React.FC<RoundButtonProps> = ({ iconUrl, backgroundColor = 'transparent', padding=2 }) => {
+const RoundButton: React.FC<RoundButtonProps> = ({ iconUrl, backgroundColor = 'transparent', padding = 2, disabled = false }) => {
     const backgroundColorClass = backgroundColor;
     const paddingClass = padding;
 
@@ -14,8 +15,9 @@ const RoundButton: React.FC<RoundButtonProps> = ({ iconUrl, backgroundColor = 't
         <button
             style={{ backgroundColor: backgroundColorClass }}
             className={`flex items-center justify-center rounded-full p-${paddingClass} w-fit h-fit`}
+            disabled={disabled}
         >
-            <img src={iconUrl} className="w-6 h-6" />
+            {disabled ? <div className="absolute w-full h-full bg-black opacity-50 rounded-full" /> : <img src={iconUrl} className="w-6 h-6" />}
         </button>
     );
 };

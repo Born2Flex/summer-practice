@@ -13,12 +13,14 @@ const Input = ({ label, name, type = "text", color = "white", ...rest }: InputPr
             <input
                 {...rest}
                 id={name}
+                name={name}
                 type={type}
                 placeholder=" "
                 className={`pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 focus:outline-none focus:ring-0 text-${color}`}
                 style={{
                     borderColor: `var(--color-${color})`
                 }}
+                required
             />
             <label
                 htmlFor={name}

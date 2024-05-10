@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './Header.tsx';
 import './RegisterWindow.css'
 import RoundButton from './RoundButton.tsx';
@@ -11,11 +11,6 @@ const AuthWindow: React.FC = () => {
     const data = useActionData() as { errors?: string; message?: string };
     const navigation = useNavigation();
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [repeatPassword, setRepeatPassword] = useState("");
-
     const [searchParams] = useSearchParams();
     const isLogin = searchParams.get('mode') === 'login';
     const isSubmitting = navigation.state === 'submitting';
@@ -23,7 +18,7 @@ const AuthWindow: React.FC = () => {
     return (
         <Form
             method='post'
-            className={`flex flex-col px-5 py-3 w-1/4 rounded-2xl bg-cover bg-center ${isLogin ? 'bg-login h-5/6' : 'bg-register'}`}
+            className={`flex flex-col px-5 py-3 w-1/4 rounded-2xl bg-cover bg-center ${isLogin ? 'bg-login h-[590px]' : 'bg-register'}`}
         >
             <div>
                 <RoundButton iconUrl={LeftArrow} backgroundColor='transparent' padding={2} />
@@ -50,8 +45,6 @@ const AuthWindow: React.FC = () => {
                     label="Name"
                     name="name"
                     type="text"
-                    value={name}
-                    onChange={(v) => setName(v.target.value)}
                     color={isLogin ? 'black' : 'white'}
                 />
                 {!isLogin && (
@@ -59,8 +52,6 @@ const AuthWindow: React.FC = () => {
                         label="Email"
                         name="email"
                         type="email"
-                        value={email}
-                        onChange={(v) => setEmail(v.target.value)}
                     />
                 )}
 
@@ -68,8 +59,6 @@ const AuthWindow: React.FC = () => {
                     label="Password"
                     name="password"
                     type="password"
-                    value={password}
-                    onChange={(v) => setPassword(v.target.value)}
                     color={isLogin ? 'black' : 'white'}
                 />
                 {!isLogin && (
@@ -77,8 +66,6 @@ const AuthWindow: React.FC = () => {
                         label="Repeat Password"
                         name="repeatPassword"
                         type="password"
-                        value={repeatPassword}
-                        onChange={(v) => setRepeatPassword(v.target.value)}
                     />
                 )}
             </div>
@@ -87,7 +74,12 @@ const AuthWindow: React.FC = () => {
                 <div className={`text-4xl m-0 p-0 ${isLogin ? 'text-black' : 'text-white'}`}>
                     {isLogin ? 'Sign In' : 'Sign Up'}
                 </div>
-                <RoundButton iconUrl={RightArrow} backgroundColor='#1BB8DA' padding={4} />
+                <RoundButton
+                    iconUrl={RightArrow}
+                    backgroundColor='#1BB8DA'
+                    padding={4}
+                    disabled={isSubmitting}
+                />
             </div>
             <div className="flex-none mt-6">
                 <Link

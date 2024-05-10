@@ -3,7 +3,7 @@ import AuthWindow from "../reference/AuthWindow";
 
 function AuthenticationPage() {
     return (
-        
+
         <div className='flex flex-1 justify-center items-center align-middle'>
             <AuthWindow />
         </div>
@@ -21,10 +21,21 @@ export async function action({ request }: { request: Request }) {
     }
 
     const data = await request.formData();
-    const authData = {
-        email: data.get('email'),
-        password: data.get('password'),
-    };
+    let authData = {};
+
+    if (mode === 'login') {
+        authData = {
+            name: data.get('name'),
+            password: data.get('password'),
+        };
+    } else {
+        authData = {
+            name: data.get('name'),
+            email: data.get('email'),
+            password: data.get('password'),
+            repeatPassword: data.get('repeatPassword'),
+        };
+    }
 
     console.log(authData);
 
