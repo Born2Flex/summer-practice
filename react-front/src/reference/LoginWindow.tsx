@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header.tsx';
 import TextInput from './TextInput.tsx';
 import './LoginWindow.css'
-import Link from './Link.tsx';
+import Link from './LinkText.tsx';
 import SignUpButton from './SignUpButton.tsx';
 import Return from './Return.tsx';
 import FullScreenBackground from './FullScreenBackround.tsx';
