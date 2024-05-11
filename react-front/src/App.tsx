@@ -4,6 +4,7 @@ import AuthenticationPage from './pages/AuthenticationPage';
 import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const router = createBrowserRouter([
@@ -24,6 +25,10 @@ function App() {
         //   path: 'logout',
         //   action: logoutAction,
         // },
+        {
+          path: 'profile',
+          element: <ProfilePage />,
+        },
       ],
     },
   ]);
