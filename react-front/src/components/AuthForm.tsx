@@ -73,7 +73,7 @@ function AuthForm({ onFlip }: AuthFormProps) {
                 </div>
                 <div className="flex-none mt-6">
                     <Link
-                        to={`?mode=signup`}
+                        to='?mode=signup'
                         className='hover:underline ' onClick={onFlip}
                     >
                         Create Account
