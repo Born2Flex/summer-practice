@@ -18,7 +18,7 @@ function AuthenticationPage() {
             <ReactCardFlip
                 flipDirection="horizontal"
                 isFlipped={isFlipped}
-                containerStyle={{ display: 'flex' }}
+                containerStyle={{ display: 'flex', minWidth: '389px', height: '100%' }}
                 cardStyles={{ front: { display: 'flex' }, back: { display: 'flex' } }}
             >
                 <LoginForm onFlip={handleFlip} />

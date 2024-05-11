@@ -11,3 +11,26 @@ input:not(:placeholder-shown)~label {
 label {
     transition: transform 0.3s ease;
 }
+
+.link-underline {
+    border-bottom-width: 0;
+    background-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+    background-size: 0 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size .5s ease-in-out;
+}
+
+.link-underline-black {
+    background-image: linear-gradient(transparent, transparent), linear-gradient(rgb(6 182 212 / var(--tw-text-opacity)), rgb(6 182 212 / var(--tw-text-opacity)))
+}
+
+.link-underline:hover {
+    background-size: 100% 2px;
+    background-position: 0 100%
+}
+
+.link-underline-active {
+    background-size: 100% 2px;
+    background-position: 0 100%;
+}

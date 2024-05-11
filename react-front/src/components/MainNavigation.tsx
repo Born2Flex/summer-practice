@@ -4,20 +4,25 @@ import { NavLink, useRouteLoaderData } from 'react-router-dom';
 
 function MainNavigation() {
     const token = useRouteLoaderData('root');
+    const buttonClassName = 'text-xl py-2 link link-underline-black link-underline';
 
     return (
         <nav className="bg-white/50 backdrop-blur-sm dark:bg-gray-900 sticky w-full z-20 top-0 start-0 dark:border-gray-600 shadow-lg">
             <div className="flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                <NavLink
+                    to="/"
+                    className="flex items-center space-x-3 rtl:space-x-reverse"
+                    end
+                >
                     <FontAwesomeIcon icon={faRainbow} className='h-7' />
                     <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Eventify</span>
-                </a>
+                </NavLink>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     {!token && <NavLink
                         to="/auth?mode=login"
-                        className="text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:outline-none focus:ring-amber-100 
-                        font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-amber-300 dark:hover:bg-amber-400
-                        ark:focus:ring-amber-800">
+                        className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-400 
+                        font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-cyan-300 dark:hover:bg-cyan-400
+                        ark:focus:ring-cyan-800">
                         Get started
                     </NavLink>}
                     <button data-collapse-toggle="navbar-cta" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-cta" aria-expanded="false">
@@ -32,7 +37,9 @@ function MainNavigation() {
                         <li>
                             <NavLink
                                 to="/"
-                                className={({ isActive }) => isActive ? 'text-amber-500' : undefined}
+                                className={({ isActive }) => {
+                                    return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
+                                }}
                                 end
                             >
                                 Home
@@ -41,7 +48,9 @@ function MainNavigation() {
                         <li>
                             <NavLink
                                 to="/events"
-                                className={({ isActive }) => isActive ? 'text-amber-500' : undefined}
+                                className={({ isActive }) => {
+                                    return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
+                                }}
                             >
                                 Events
                             </NavLink>
@@ -50,7 +59,9 @@ function MainNavigation() {
                             <li>
                                 <NavLink
                                     to="/profile"
-                                    className={({ isActive }) => isActive ? 'text-amber-500' : undefined}
+                                    className={({ isActive }) => {
+                                        return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
+                                    }}
                                 >
                                     Profile
                                 </NavLink>
