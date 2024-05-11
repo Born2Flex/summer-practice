@@ -4,8 +4,13 @@ import { Form, Link, useActionData, useNavigation, useSearchParams } from 'react
 import { faArrowRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Input from '../components/TextDataInput.tsx';
 
-function AuthForm() {
-    const data = useActionData() as { errors?: string; message?: string };
+interface AuthFormProps {
+    id: number;
+    onFlip: () => void;
+}
+
+function AuthForm({id, onFlip}: AuthFormProps) {
+    const data = useActionData() as { errors?: string; message?: string};
     const navigation = useNavigation();
 
     const [searchParams] = useSearchParams();
@@ -13,7 +18,9 @@ function AuthForm() {
     const isSubmitting = navigation.state === 'submitting';
 
     return (
-        <div className="p-1.5 my-3 flex justify-center items-center relative !aspect-[0.61]">
+        <div className="my-3 flex justify-center items-center relative !aspect-[0.61] min-w-[466px]">
+        {/*<div className="p-1.5 my-3 flex justify-center items-center relative !aspect-[0.61]">*/}
+
             {isLogin && (
                 <div className="blur rounded-2xl absolute w-full h-full inset-0 bg-gradient-to-br from-yellow-500 via-cyan-700 from-20% via-30%"></div>
             )}
@@ -50,7 +57,7 @@ function AuthForm() {
                 <div className={`flex-1 flex flex-col ${isLogin ? 'justify-end' : 'justify-between'}`}>
                     <Input
                         label="Name"
-                        name="name"
+                        name={isLogin ? 'nameLogin' : 'nameRegister'}
                         type="text"
                         color={isLogin ? 'black' : 'white'}
                     />
@@ -64,7 +71,7 @@ function AuthForm() {
 
                     <Input
                         label="Password"
-                        name="password"
+                        name={isLogin ? 'passwordLogin' : 'passwordRegister'}
                         type="password"
                         color={isLogin ? 'black' : 'white'}
                     />
@@ -90,7 +97,7 @@ function AuthForm() {
                 <div className="flex-none mt-6">
                     <Link
                         to={`?mode=${isLogin ? 'signup' : 'login'}`}
-                        className='hover:underline '
+                        className='hover:underline ' onClick={onFlip}
                     >
                         {isLogin ? 'Create Account' : 'Log in'}
                     </Link>

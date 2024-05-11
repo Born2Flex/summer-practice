@@ -1,11 +1,21 @@
 import { json, redirect } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import ReactCardFlip from "react-card-flip";
+import { useState } from "react";
 
 function AuthenticationPage() {
-    return (
+    const [isFlipped, setIsFlipped] = useState(false);
 
+    const handleFlip = () => {
+        setIsFlipped(!isFlipped);
+    };
+
+    return (
         <div className='flex flex-1 justify-center'>
-            <AuthForm />
+            <ReactCardFlip flipDirection="horizontal" isFlipped={isFlipped}>
+                <AuthForm id={1} onFlip={handleFlip}/>
+                <AuthForm id={2} onFlip={handleFlip}/>
+            </ReactCardFlip>
         </div>
     )
 }
@@ -25,14 +35,14 @@ export async function action({ request }: { request: Request }) {
 
     if (mode === 'login') {
         authData = {
-            name: data.get('name'),
-            password: data.get('password'),
+            name: data.get('nameLogin'),
+            password: data.get('passwordLogin'),
         };
     } else {
         authData = {
-            name: data.get('name'),
+            name: data.get('nameRegister'),
             email: data.get('email'),
-            password: data.get('password'),
+            password: data.get('passwordRegister'),
             repeatPassword: data.get('repeatPassword'),
         };
     }
