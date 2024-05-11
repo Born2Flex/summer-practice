@@ -6,7 +6,7 @@ interface EventInfoProps {
 
 const EventInfo = ({ name, description, avatarUrl }: EventInfoProps) => {
     return (
-        <div className="flex items-center border-b border-black py-2">
+        <div className="flex items-center border-b border-black px-4 py-2">
             <div className="sm:w-[20%] md:w-[20%] lg:w-[20%] xl:w-[16%] aspect-square overflow-hidden mr-8">
                 <img src={avatarUrl} alt="User Avatar" className="w-full h-full aspect-square object-cover"/>
             </div>

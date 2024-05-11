@@ -43,9 +43,7 @@ function ProfilePage() {
                         </div>
                 </div>
 
-                <div>
-                        <UserEvents />
-                </div>
+                <UserEvents />
 
         </div>
     );
