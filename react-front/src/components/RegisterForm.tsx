@@ -19,7 +19,7 @@ function RegisterForm({ onFlip }: AuthFormProps) {
             <div className="blur rounded-2xl absolute w-full h-full inset-0 bg-gradient-to-b from-yellow-500 via-cyan-700 to-yellow-500 from-10% via-20%" />
             <Form
                 method='post'
-                className='flex flex-col px-5 py-3 z-10 w-full h-full rounded-3xl bg-cover bg-center bg-register'
+                className='flex flex-col px-5 py-3 z-10 w-fit h-fit !aspect-[0.61] rounded-3xl bg-cover bg-center bg-register'
             >
                 <div>
                     <RoundButton
