@@ -19,7 +19,10 @@ function AuthenticationPage() {
                 flipDirection="horizontal"
                 isFlipped={isFlipped}
                 containerStyle={{ display: 'flex' }}
-                cardStyles={{ front: { display: 'flex' }, back: { display: 'flex' } }}
+                cardStyles={{
+                    front: { display: 'flex' },
+                    back: { display: 'flex' }
+                }}
             >
                 <LoginForm onFlip={handleFlip} />
                 <RegisterForm onFlip={handleFlip} />
