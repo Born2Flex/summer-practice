@@ -1,10 +1,13 @@
-import { json, redirect } from "react-router-dom";
-import AuthForm from "../components/AuthForm";
+import { json, redirect, useSearchParams } from "react-router-dom";
+import LoginForm from "../components/AuthForm";
 import ReactCardFlip from "react-card-flip";
 import { useState } from "react";
+import RegisterForm from "../components/RegisterForm";
 
 function AuthenticationPage() {
-    const [isFlipped, setIsFlipped] = useState(false);
+    const [searchParams] = useSearchParams();
+    const isLogin = searchParams.get('mode') === 'login';
+    const [isFlipped, setIsFlipped] = useState(!isLogin);
 
     const handleFlip = () => {
         setIsFlipped(!isFlipped);
@@ -12,9 +15,14 @@ function AuthenticationPage() {
 
     return (
         <div className='flex flex-1 justify-center'>
-            <ReactCardFlip flipDirection="horizontal" isFlipped={isFlipped}>
-                <AuthForm id={1} onFlip={handleFlip}/>
-                <AuthForm id={2} onFlip={handleFlip}/>
+            <ReactCardFlip
+                flipDirection="horizontal"
+                isFlipped={isFlipped}
+                containerStyle={{ display: 'flex' }}
+                cardStyles={{ front: { display: 'flex' }, back: { display: 'flex' } }}
+            >
+                <LoginForm onFlip={handleFlip} />
+                <RegisterForm onFlip={handleFlip} />
             </ReactCardFlip>
         </div>
     )

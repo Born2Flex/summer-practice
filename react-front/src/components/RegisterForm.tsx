@@ -8,19 +8,18 @@ interface AuthFormProps {
     onFlip: () => void;
 }
 
-function AuthForm({ onFlip }: AuthFormProps) {
+function RegisterForm({ onFlip }: AuthFormProps) {
     const data = useActionData() as { errors?: string; message?: string };
     const navigation = useNavigation();
-
     const isSubmitting = navigation.state === 'submitting';
 
     return (
         <div className="my-3 p-1 flex justify-center items-center relative !aspect-[0.61]">
 
-            <div className="blur rounded-2xl absolute w-full h-full inset-0 bg-gradient-to-br from-yellow-500 via-cyan-700 from-20% via-30%"></div>
+            <div className="blur rounded-2xl absolute w-full h-full inset-0 bg-gradient-to-b from-yellow-500 via-cyan-700 to-yellow-500 from-10% via-20%" />
             <Form
                 method='post'
-                className={`flex flex-col px-5 py-3 z-10 w-full h-full rounded-3xl bg-cover bg-center bg-login`}
+                className='flex flex-col px-5 py-3 z-10 w-full h-full rounded-3xl bg-cover bg-center bg-register'
             >
                 <div>
                     <RoundButton
@@ -28,10 +27,10 @@ function AuthForm({ onFlip }: AuthFormProps) {
                         className='flex items-center justify-center rounded-full p-2 w-fit h-fit bg-transparent'
                     />
                 </div>
-                <div className='flex-none mt-12 mb-14'>
+                <div className='flex-none mt-10 mb-14'>
                     <Header
-                        title="Welcome back!"
-                        subtitle='Discover new events around you!'
+                        title="Create Account"
+                        subtitle="Join sharing and creating events"
                     />
                 </div>
 
@@ -45,25 +44,36 @@ function AuthForm({ onFlip }: AuthFormProps) {
                 {data && data.message && <p>{data.message}</p>}
 
 
-                <div className={`flex-1 flex flex-col justify-end`}>
+                <div className='flex-1 flex flex-col justify-between'>
                     <Input
                         label="Name"
-                        name='nameLogin'
+                        name='nameRegister'
                         type="text"
-                        color='black'
+                        color='white'
+                    />
+
+                    <Input
+                        label="Email"
+                        name="email"
+                        type="email"
                     />
 
                     <Input
                         label="Password"
-                        name='passwordLogin'
+                        name='passwordRegister'
                         type="password"
-                        color='black'
+                        color='white'
+                    />
+                    <Input
+                        label="Repeat Password"
+                        name="repeatPassword"
+                        type="password"
                     />
                 </div>
 
                 <div className="flex-none flex items-center justify-between mt-2">
-                    <div className={`text-4xl m-0 p-0 text-black`}>
-                        Log In
+                    <div className='text-4xl m-0 p-0 text-white'>
+                        Sign Up
                     </div>
                     <RoundButton
                         icon={faArrowRight}
@@ -73,10 +83,10 @@ function AuthForm({ onFlip }: AuthFormProps) {
                 </div>
                 <div className="flex-none mt-6">
                     <Link
-                        to={`?mode=signup`}
+                        to='?mode=login'
                         className='hover:underline ' onClick={onFlip}
                     >
-                        Create Account
+                        Log in
                     </Link>
                 </div>
             </Form>
@@ -85,4 +95,4 @@ function AuthForm({ onFlip }: AuthFormProps) {
 };
 
 
-export default AuthForm;
+export default RegisterForm;
