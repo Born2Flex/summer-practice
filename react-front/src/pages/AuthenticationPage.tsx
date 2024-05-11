@@ -14,15 +14,12 @@ function AuthenticationPage() {
     };
 
     return (
-        <div className='flex flex-1 justify-center items-center'>
+        <div className='flex flex-1 justify-center'>
             <ReactCardFlip
                 flipDirection="horizontal"
                 isFlipped={isFlipped}
-                containerStyle={{ display: 'flex', width: 'fit-content', height: 'fit-content', overflow: 'hidden' }}
-                cardStyles={{
-                    front: { display: 'flex', width: 'fit-content', height: 'fit-content' },
-                    back: { display: 'flex', width: 'fit-content', height: 'fit-content' }
-                }}
+                containerStyle={{ display: 'flex' }}
+                cardStyles={{ front: { display: 'flex' }, back: { display: 'flex' } }}
             >
                 <LoginForm onFlip={handleFlip} />
                 <RegisterForm onFlip={handleFlip} />
