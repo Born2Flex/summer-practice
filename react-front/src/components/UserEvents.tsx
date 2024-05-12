@@ -47,13 +47,13 @@ const UserEvents= () => {
 
     return (
         <div className="flex flex-1 border-t h-full border-black">
-            <div className="w-1/3 h-full">
-                <div className="mb-4">
-                    <div className="">
+            <div className="w-1/3 h-fit">
+                <div className="mb-4 h-fit">
+                    <div className="w-full h-fit">
                         <Calendar onChange={onChange} value={value} />
                     </div>
                 </div>
-                <div>
+                <div className="h-fit">
                     <div className="inline-block">
                         <DropList buttonIcon={faBars} items={sortingOptions}
                             className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'

@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { action as authAction } from './pages/AuthenticationPage'
+import { action as profileAction } from './pages/ProfilePage'
 import AuthenticationPage from './pages/AuthenticationPage';
 import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
@@ -32,6 +33,7 @@ function App() {
         {
           path: 'profile/edit',
           element: <ProfilePage />,
+          action: profileAction,
         },
       ],
     },

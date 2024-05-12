@@ -12,7 +12,7 @@ interface EventsListProps {
 
 const EventsList = ({ events }: EventsListProps) => {
     return (
-        <div>
+        <div className='h-fit'>
             {events.map((event, index) => (
                 <EventInfo
                     key={index}
