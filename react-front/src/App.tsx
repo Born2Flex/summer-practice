@@ -29,6 +29,10 @@ function App() {
           path: 'profile',
           element: <ProfilePage />,
         },
+        {
+          path: 'profile/edit',
+          element: <ProfilePage />,
+        },
       ],
     },
   ]);
