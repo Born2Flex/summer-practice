@@ -1,14 +1,13 @@
 import { ComponentProps, useState, useRef, useEffect } from 'react';
 
 interface EditableFieldProps extends ComponentProps<"input"> {
-    label: string;
     name: string;
     type?: string;
     color?: string;
     initialValue?: string;
 }
 
-function EditableField({ label, name, initialValue, type = "text", color = "white", ...rest }: EditableFieldProps) {
+function EditableField({name, initialValue, type = "text", color = "white", ...rest }: EditableFieldProps) {
     const [value, setValue] = useState(initialValue);
     const [inputWidth, setInputWidth] = useState<number | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +27,7 @@ function EditableField({ label, name, initialValue, type = "text", color = "whit
     };
 
     return (
-        <div ref={containerRef} className="relative z-0 w-full mb-5">
+        <div ref={containerRef} className="relative z-0 w-full mb-4">
             <input
                 {...rest}
                 ref={inputRef}

@@ -88,23 +88,22 @@ function ProfilePage() {
                                         onClick={handleCancelClick}
                                         disabled={isSubmitting}
                                         icon={faXmark}
-                                        className='flex items-center justify-center rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl' />
+                                        className='flex items-center justify-center rounded-full p-4 w-fit h-fit bg-[#FF4B4B] text-white text-xl' />
                                 <ButtonWithText
                                         text="Done"
                                         type='submit'
                                         disabled={isSubmitting}
                                         icon={faCheck}
-                                        className='flex items-center justify-center rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl' />
+                                        className='flex items-center justify-center rounded-full p-4 w-fit h-fit bg-[#7EAB1F] text-white text-xl' />
                         </div>
                 </div>
 
-                <div className="flex items-center">
-                        <div className="sm:w-[30%] md:w-[25%] lg:w-[18%] xl:w-[12%] aspect-square rounded-full overflow-hidden mr-8">
+                <div className="flex flex-row items-center">
+                        <div className="sm:w-[30%] md:w-[25%] lg:w-[18%] xl:w-[12%] sm:w-min-[20%] md:w-min-[20%] lg:w-min-[20%] xl:w-min-[16%] aspect-square rounded-full overflow-hidden mr-8">
                                 <img src={"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"} alt="User Avatar" className="w-full h-full rounded-full aspect-square object-cover"/>
                         </div>
-                        <div className='w-full'>
+                        <div className='flex flex-col flex-1'>
                                 <EditableField
-                                        label="Name"
                                         name='name'
                                         type="text"
                                         color='black'
@@ -112,7 +111,6 @@ function ProfilePage() {
                                         onChange={handleNameChange}
                                 />
                                 <EditableField
-                                        label="About me"
                                         name='description'
                                         type="text"
                                         color='black'

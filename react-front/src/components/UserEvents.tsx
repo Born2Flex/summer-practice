@@ -7,31 +7,31 @@ import DropList from "./DropList";
 
 const eventData = [
     {
-        name: "Event 1",
-        description: "Description of Event 1",
+        name: "Tech Conference 2024",
+        host: "Tech Events Inc.",
+        date: "2024-06-15",
+        place: "Convention Center",
+        description: "Join us for the biggest tech conference of the year! Explore the latest trends in AI, blockchain, and more.",
         avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     },
     {
-        name: "Event 2",
-        description: "Description of Event 2",
+        name: "Art Exhibition: Modern Masterpieces",
+        host: "Art Gallery Ltd.",
+        date: "2024-07-20",
+        place: "Downtown Art Center",
+        description: "Discover stunning modern artworks by renowned artists from around the world.",
         avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     },
     {
-        name: "Event 3",
-        description: "Description of Event 3",
+        name: "Music Festival: Summer Sounds 2024",
+        host: "Sound Productions",
+        date: "2024-08-10",
+        place: "City Park Amphitheater",
+        description: "Get ready for a day of live music performances featuring top artists across genres!",
         avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-    },
-    {
-        name: "Event 4",
-        description: "Description of Event 4",
-        avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-    },
-    {
-        name: "Event 5",
-        description: "Description of Event 5",
-        avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-    },
+    }
 ];
+
 
 // const menuItems = ['Home', 'Profile', 'Settings', 'Settings', 'Settings', 'Settings'];
 const sortingOptions = ['Order A-Z', 'Order Z-A', 'Order by date asc', 'Order by date desc'];
@@ -46,8 +46,8 @@ const UserEvents= () => {
     const [value, onChange] = useState<Value>(new Date());
 
     return (
-        <div className="flex flex-1 border-t h-full border-black">
-            <div className="w-1/3 h-fit">
+        <div className="flex flex-1 flex-row border-t h-full border-black">
+            <div className="w-1/3 h-fit flex-1">
                 <div className="mb-4 h-fit">
                     <div className="w-full h-fit">
                         <Calendar onChange={onChange} value={value} />
@@ -67,7 +67,7 @@ const UserEvents= () => {
                     </div>
                 </div>
             </div>
-            <div className="border-l border-black overflow-y-auto">
+            <div className="border-l flex-grow-0 border-black overflow-y-auto">
                 <EventsList events={eventData} />
             </div>
         </div>

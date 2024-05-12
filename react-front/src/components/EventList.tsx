@@ -2,6 +2,9 @@ import EventInfo from './EventInfo';
 
 interface EventData {
     name: string;
+    host: string;
+    date: string;
+    place: string
     description: string;
     avatarUrl: string;
 }
@@ -17,6 +20,9 @@ const EventsList = ({ events }: EventsListProps) => {
                 <EventInfo
                     key={index}
                     name={event.name}
+                    host={event.host}
+                    place={event.place}
+                    date={event.date}
                     description={event.description}
                     avatarUrl={event.avatarUrl}
                 />
