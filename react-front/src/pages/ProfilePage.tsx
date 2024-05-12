@@ -5,6 +5,16 @@ import UserInfo from "../components/UserInfo";
 import UserEvents from "../components/UserEvents";
 
 function ProfilePage() {
+        const history = useHistory();
+        const location = useLocation();
+
+        const isEditMode = location.pathname === "/profile/edit";
+
+        const handleEditClick = () => {
+                history.push("/edit");
+        };
+        
+
     return (
         <div className='flex flex-col mx-auto w-[70%] py-[2%] px-[2%] gap-8 bg-white justify-top'>
                 <div className="w-full h-fit flex justify-between">

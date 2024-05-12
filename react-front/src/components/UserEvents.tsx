@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import EventsList from "./EventList";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import DropList from "./DropList";
 
 const eventData = [
     {
@@ -31,10 +33,14 @@ const eventData = [
     },
 ];
 
+// const menuItems = ['Home', 'Profile', 'Settings', 'Settings', 'Settings', 'Settings'];
+const sortingOptions = ['Order A-Z', 'Order Z-A', 'Order by date asc', 'Order by date desc'];
+const categories = ['All categories', 'Concerts', 'Art galleries', 'Bazaar'];
+const types = ['All', 'Hosted by me', 'Subscribed'];
+
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
-
 
 const UserEvents= () => {
     const [value, onChange] = useState<Value>(new Date());
@@ -48,7 +54,17 @@ const UserEvents= () => {
                     </div>
                 </div>
                 <div>
-                    <div className="">Left Content 2</div>
+                    <div className="inline-block">
+                        <DropList buttonIcon={faBars} items={sortingOptions}
+                            className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
+                        />
+                        <DropList buttonIcon={faBars} items={categories}
+                            className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
+                        />
+                        <DropList buttonIcon={faBars} items={types}
+                            className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
+                        />
+                    </div>
                 </div>
             </div>
             <div className="border-l border-black overflow-y-auto">
