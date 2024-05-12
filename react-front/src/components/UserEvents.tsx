@@ -33,7 +33,6 @@ const eventData = [
 ];
 
 
-// const menuItems = ['Home', 'Profile', 'Settings', 'Settings', 'Settings', 'Settings'];
 const sortingOptions = ['Order A-Z', 'Order Z-A', 'Order by date asc', 'Order by date desc'];
 const categories = ['All categories', 'Concerts', 'Art galleries', 'Bazaar'];
 const types = ['All', 'Hosted by me', 'Subscribed'];

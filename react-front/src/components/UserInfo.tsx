@@ -1,5 +1,3 @@
-import EditableField from "./EditableField";
-
 interface UserInfoProps {
     name: string;
     description: string;
