@@ -2,7 +2,8 @@ import { useState } from "react";
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import EventsList from "./EventList";
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+//import 'react-calendar/dist/Calendar.css';
+import './Calendar.css';
 import DropList from "./DropList";
 
 const eventData = [
@@ -66,7 +67,7 @@ const UserEvents= () => {
                     </div>
                 </div>
             </div>
-            <div className="border-l flex-grow-0 border-black overflow-y-auto">
+            <div className="border-l flex-grow-0 border-black overflow-y-scroll">
                 <EventsList events={eventData} />
             </div>
         </div>

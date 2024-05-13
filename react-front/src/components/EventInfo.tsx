@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCalendar, faLocation, faPerson } from '@fortawesome/free-solid-svg-icons';
 
 interface EventInfoProps {

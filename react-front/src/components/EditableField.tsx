@@ -19,7 +19,7 @@ function EditableField({name, initialValue, type = "text", color = "white", ...r
             const inputWidth = inputRef.current.scrollWidth;
             setInputWidth(Math.min(containerWidth, inputWidth));
         }
-    }, [value]);
+    });
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
