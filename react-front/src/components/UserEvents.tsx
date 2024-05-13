@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { faBars } from '@fortawesome/free-solid-svg-icons';
 import EventsList from "./EventList";
 import Calendar from 'react-calendar';
 //import 'react-calendar/dist/Calendar.css';
@@ -67,15 +66,15 @@ const UserEvents = () => {
                     <Calendar onChange={onChange} value={value} />
                 </div>
                 <div className="inline-block w-full">
-                        <DropList items={sortingOptions}
-                            className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
-                        />
-                        <DropList items={categories}
-                            className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
-                        />
-                        <DropList items={types}
-                            className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
-                        />
+                    <DropList items={sortingOptions}
+                        className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
+                    />
+                    <DropList items={categories}
+                        className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
+                    />
+                    <DropList items={types}
+                        className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
+                    />
                 </div>
             </div>
             <div className="absolute ml-[30%] overflow-y-scroll h-full">
