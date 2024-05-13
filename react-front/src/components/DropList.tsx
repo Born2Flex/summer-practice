@@ -5,12 +5,11 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { ComponentProps } from 'react';
 
 interface DropListProps extends ComponentProps<"div"> {
-    buttonIcon: IconDefinition;
     items: string[];
     disabled?: boolean;
 }
 
-function DropList({ buttonIcon, items, disabled = false, ...props }: DropListProps) {
+function DropList({ items, disabled = false, ...props }: DropListProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(items[0]); 
     const dropListRef = useRef<HTMLDivElement>(null);

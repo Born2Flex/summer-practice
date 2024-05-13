@@ -67,13 +67,13 @@ const UserEvents= () => {
                     <Calendar onChange={onChange} value={value} />
                 </div>
                 <div className="inline-block w-full">
-                        <DropList buttonIcon={faBars} items={sortingOptions}
+                        <DropList items={sortingOptions}
                             className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
                         />
-                        <DropList buttonIcon={faBars} items={categories}
+                        <DropList items={categories}
                             className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
                         />
-                        <DropList buttonIcon={faBars} items={types}
+                        <DropList items={types}
                             className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
                         />
                 </div>
