@@ -41,7 +41,7 @@ type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const UserEvents= () => {
+const UserEvents = () => {
     const [value, onChange] = useState<Value>(new Date());
 
     return (
