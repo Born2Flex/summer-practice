@@ -15,7 +15,7 @@ interface EventsListProps {
 
 const EventsList = ({ events }: EventsListProps) => {
     return (
-        <div className='h-fit'>
+        <div className='h-fit border-t border-black'>
             {events.map((event, index) => (
                 <EventInfo
                     key={index}

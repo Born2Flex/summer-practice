@@ -15,8 +15,8 @@ function ProfilePage() {
         const [name, setName] = useState("John Doe");
         const [description, setDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec ultrices lectus.");
 
-        const [tempName, setTempName] = useState(name);
-        const [tempDescription, setTempDescription] = useState(description);
+        /*const [tempName, setTempName] = useState(name);
+        const [tempDescription, setTempDescription] = useState(description);*/
 
         const isEditMode = navigation.pathname === "/profile/edit";
 
@@ -30,22 +30,21 @@ function ProfilePage() {
                 navigate('/profile');
         };
 
-        const handleDoneClick = () => {
+        /*const handleDoneClick = () => {
                 setName(tempName);
                 setDescription(tempDescription);
-        };
+        };*/
 
-        const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        /*const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 setTempName(event.target.value);
         };
 
         const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 setTempDescription(event.target.value);
-        };
-
+        };*/
 
         return (
-                <div className='flex flex-col mx-auto w-[70%] py-[2%] px-[2%] gap-8 bg-white justify-top'>
+                <div className='flex flex-col mx-auto w-[75%] py-[2%] px-[2%] bg-white justify-between'>
                         {!isEditMode && (
                                 <>
                                         <div className="w-full h-fit flex justify-between">
@@ -72,8 +71,8 @@ function ProfilePage() {
                                 </>)}
 
                         {isEditMode && (
-                                <Form method='post' onSubmit={handleDoneClick}>
-                                        <div className="w-full h-fit flex justify-between mb-8">
+                                <Form method='post'>
+                                        <div className="w-full h-fit flex justify-between">
 
                                                 <div>
                                                         <RoundButton
@@ -98,7 +97,7 @@ function ProfilePage() {
                                         </div>
 
                                         <div className="flex flex-row items-center">
-                                                <div className="sm:w-[30%] md:w-[25%] lg:w-[18%] xl:w-[12%] sm:min-w-[20%] md:min-w-[20%] lg:min-w-[20%] xl:min-w-[16%] aspect-square rounded-full overflow-hidden mr-8">
+                                                <div className="sm:w-[30%] md:w-[25%] lg:w-[18%] xl:w-[12%] sm:min-w-[30%] md:min-w-[25%] lg:min-w-[18%] xl:min-w-[12%] aspect-square rounded-full overflow-hidden mr-8">
                                                         <img src={"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"} alt="User Avatar" className="w-full h-full rounded-full aspect-square object-cover" />
                                                 </div>
                                                 <div className='felx flex-grow max-w-[70%]'>
@@ -107,14 +106,14 @@ function ProfilePage() {
                                                                 type="text"
                                                                 color='black'
                                                                 initialValue={name}
-                                                                onChange={handleNameChange}
+                                                                //onChange={handleNameChange}
                                                         />
                                                         <EditableField
                                                                 name='description'
                                                                 type="text"
                                                                 color='black'
                                                                 initialValue={description}
-                                                                onChange={handleDescriptionChange}
+                                                                //onChange={handleDescriptionChange}
                                                         />
                                                 </div>
                                         </div>
@@ -133,7 +132,7 @@ function ProfilePage() {
                                         />
                                 </div>
                         </div>
-
+                        
                         <UserEvents />
 
                 </div>
