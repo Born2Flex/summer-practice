@@ -1,36 +1,32 @@
-import { ComponentProps, useState, useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 
-interface EditableFieldProps extends ComponentProps<"input"> {
+interface EditableFieldProps extends React.ComponentProps<"input"> {
     name: string;
     type?: string;
     color?: string;
     initialValue?: string;
 }
 
-function EditableField({name, initialValue, type = "text", color = "white", ...rest }: EditableFieldProps) {
-    const [value, setValue] = useState(initialValue);
-    const [inputWidth, setInputWidth] = useState<number | null>(null);
+function EditableField({ name, initialValue, type = "text", color = "white", ...rest }: EditableFieldProps) {
+    const [value, setValue] = useState<string | undefined>(initialValue);
     const inputRef = useRef<HTMLInputElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (inputRef.current && containerRef.current) {
-            const containerWidth = containerRef.current.clientWidth;
-            const inputWidth = inputRef.current.scrollWidth;
-            setInputWidth(Math.min(containerWidth, inputWidth));
-        }
-    });
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
         setValue(newValue);
+
+        if (inputRef.current) {
+            inputRef.current.style.width = '0px';
+            const newWidth = inputRef.current.scrollWidth + 'px';
+            inputRef.current.style.width = newWidth;
+        }
     };
 
     return (
-        <div ref={containerRef} className="relative z-0 w-full mb-4">
+        <div className="relative z-0 w-full mb-4">
             <input
-                {...rest}
                 ref={inputRef}
+                {...rest}
                 id={name}
                 name={name}
                 type={type}
@@ -39,20 +35,15 @@ function EditableField({name, initialValue, type = "text", color = "white", ...r
                 placeholder=" "
                 style={{
                     borderColor: `var(--color-${color})`,
-                    width: inputWidth ? `${inputWidth}px` : 'auto',
+                    width: '30%',
                     maxWidth: '100%',
+                    minWidth: '30%',
                 }}
                 className={`pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 focus:outline-none focus:ring-0 text-${color}`}
                 required
             />
-            {/*<label
-                htmlFor={name}
-                className={`absolute duration-300 top-3 -z-1 origin-0 text-${color}`}
-            >
-                {label}
-            </label>*/}
         </div>
     );
-};
+}
 
 export default EditableField;
