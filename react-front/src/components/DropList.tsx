@@ -42,6 +42,7 @@ function DropList({ buttonIcon, items, disabled = false, ...props }: DropListPro
 
 
     return (
+        <div>
         <div {...props} ref={dropListRef}>
             <button
                 onClick={toggleList}
@@ -64,6 +65,7 @@ function DropList({ buttonIcon, items, disabled = false, ...props }: DropListPro
                     ))}
                 </div>
             )}
+        </div>
         </div>
     );
 }

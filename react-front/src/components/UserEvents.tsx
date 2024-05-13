@@ -30,9 +30,24 @@ const eventData = [
         place: "City Park Amphitheater",
         description: "Get ready for a day of live music performances featuring top artists across genres!",
         avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+    },
+    {
+        name: "Music Festival: Summer Sounds 2024",
+        host: "Sound Productions",
+        date: "2024-08-10",
+        place: "City Park Amphitheater",
+        description: "Get ready for a day of live music performances featuring top artists across genres!",
+        avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+    },
+    {
+        name: "Music Festival: Summer Sounds 2024",
+        host: "Sound Productions",
+        date: "2024-08-10",
+        place: "City Park Amphitheater",
+        description: "Get ready for a day of live music performances featuring top artists across genres!",
+        avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     }
 ];
-
 
 const sortingOptions = ['Order A-Z', 'Order Z-A', 'Order by date asc', 'Order by date desc'];
 const categories = ['All categories', 'Concerts', 'Art galleries', 'Bazaar'];
@@ -46,15 +61,12 @@ const UserEvents= () => {
     const [value, onChange] = useState<Value>(new Date());
 
     return (
-        <div className="flex flex-1 flex-row border-t h-full border-black">
-            <div className="w-1/3 h-fit flex-1">
-                <div className="mb-4 h-fit">
-                    <div className="w-full h-fit">
-                        <Calendar onChange={onChange} value={value} />
-                    </div>
+        <div className="relative flex flex-row">
+            <div className="w-[30%] h-full border-r border-black">
+                <div className="mb-4 w-full border-b border-black">
+                    <Calendar onChange={onChange} value={value} />
                 </div>
-                <div className="h-fit">
-                    <div className="inline-block">
+                <div className="inline-block w-full">
                         <DropList buttonIcon={faBars} items={sortingOptions}
                             className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
                         />
@@ -64,10 +76,9 @@ const UserEvents= () => {
                         <DropList buttonIcon={faBars} items={types}
                             className='flex relative items-center justify-center mb-2 rounded-full p-4 w-fit h-fit bg-[#1BB8DA] text-white text-xl'
                         />
-                    </div>
                 </div>
             </div>
-            <div className="border-l flex-grow-0 border-black overflow-y-scroll">
+            <div className="absolute ml-[30%] overflow-y-scroll h-full">
                 <EventsList events={eventData} />
             </div>
         </div>

@@ -7,7 +7,7 @@ interface UserInfoProps {
 const UserInfo = ({ name, description, avatarUrl }: UserInfoProps) => {
     return (
         <div className="flex flex-row items-center">
-            <div className="sm:w-[30%] md:w-[25%] lg:w-[18%] xl:w-[12%] sm:w-min-[20%] md:w-min-[20%] lg:w-min-[20%] xl:w-min-[16%] aspect-square rounded-full overflow-hidden mr-8">
+            <div className="sm:w-[30%] md:w-[25%] lg:w-[18%] xl:w-[12%] sm:w-min-[30%] md:w-min-[25%] lg:w-min-[18%] xl:w-min-[12%] aspect-square rounded-full overflow-hidden mr-8">
                 <img src={avatarUrl} alt="User Avatar" className="w-full h-full rounded-full aspect-square object-cover"/>
             </div>
 
