@@ -1,5 +1,3 @@
-import { faRainbow } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink, useRouteLoaderData } from 'react-router-dom';
 import { AwesomeButton } from "react-awesome-button";
 import { FlameIcon } from "@primer/octicons-react";

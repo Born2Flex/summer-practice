@@ -1,26 +1,27 @@
-import Header from './Header.tsx';
+import Header from '../elements/Header.tsx';
 import { Form, Link, NavLink, useActionData, useNavigation } from 'react-router-dom';
 import { faArrowRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import Input from '../components/TextDataInput.tsx';
+import Input from '../inputs/TextDataInput.tsx';
 import { AwesomeButton } from 'react-awesome-button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface AuthFormProps {
+interface LogInFormProps {
     onFlip: () => void;
 }
 
-function RegisterForm({ onFlip }: AuthFormProps) {
+function LogInForm({ onFlip }: LogInFormProps) {
     const data = useActionData() as { errors?: string; message?: string };
     const navigation = useNavigation();
+
     const isSubmitting = navigation.state === 'submitting';
 
     return (
         <div className="my-3 p-1 flex justify-center items-center relative !aspect-[0.61]">
 
-            <div className="blur rounded-2xl absolute w-full h-full inset-0 bg-gradient-to-b from-yellow-500 via-cyan-700 to-yellow-500 from-10% via-20%" />
+            <div className="blur rounded-2xl absolute w-full h-full inset-0 bg-gradient-to-br from-yellow-500 via-cyan-700 from-20% via-30%"></div>
             <Form
                 method='post'
-                className='flex flex-col px-5 py-3 z-10 w-full h-full rounded-3xl bg-cover bg-center bg-register'
+                className={`flex flex-col px-5 py-3 z-10 w-full h-full rounded-3xl bg-cover bg-center bg-login`}
             >
                 <div>
                     <NavLink
@@ -31,10 +32,10 @@ function RegisterForm({ onFlip }: AuthFormProps) {
                         <FontAwesomeIcon icon={faChevronLeft} className='text-white w-6 h-6' />
                     </NavLink>
                 </div>
-                <div className='flex-none mt-10 mb-14'>
+                <div className='flex-none mt-12 mb-14'>
                     <Header
-                        title="Create Account"
-                        subtitle="Join sharing and creating events"
+                        title="Welcome back!"
+                        subtitle='Discover new events around you!'
                     />
                 </div>
 
@@ -48,51 +49,41 @@ function RegisterForm({ onFlip }: AuthFormProps) {
                 {data && data.message && <p>{data.message}</p>}
 
 
-                <div className='flex flex-col'>
+                <div className={`flex-1 flex flex-col justify-end`}>
                     <Input
                         label="Name"
-                        name='nameRegister'
+                        name='nameLogin'
                         type="text"
-                        color='white'
-                    />
-
-                    <Input
-                        label="Email"
-                        name="email"
-                        type="email"
+                        color='black'
                     />
 
                     <Input
                         label="Password"
-                        name='passwordRegister'
+                        name='passwordLogin'
                         type="password"
-                        color='white'
-                    />
-                    <Input
-                        label="Repeat Password"
-                        name="repeatPassword"
-                        type="password"
+                        color='black'
                     />
                 </div>
 
                 <div className="flex-none flex items-center justify-between mt-2">
-                    <div className='text-4xl m-0 p-0 text-white'>
-                        Sign Up
+                    <div className={`text-4xl m-0 p-0 text-black`}>
+                        Log In
                     </div>
                     <AwesomeButton disabled={isSubmitting} className='awesome-button round-awesome-button aspect-square w-14 h-14'>
                         <FontAwesomeIcon icon={faArrowRight} className='text-white w-6 h-6' />
                     </AwesomeButton>
                 </div>
-                <div className="flex-none mt-auto">
+                <div className="flex-none mt-6">
                     <Link
-                        to='?mode=login'
+                        to='?mode=signup'
                     >
                         <AwesomeButton
                             type="secondary"
-                            className='awesome-button-secondary'
+                            className='awesome-button-secondary-2'
                             onMouseDown={onFlip}
                         >
-                            Log in</AwesomeButton>
+                            Sign up
+                        </AwesomeButton>
                     </Link>
                 </div>
             </Form>
@@ -101,4 +92,4 @@ function RegisterForm({ onFlip }: AuthFormProps) {
 };
 
 
-export default RegisterForm;
+export default LogInForm;

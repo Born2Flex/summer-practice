@@ -1,8 +1,8 @@
 import { json, redirect, useSearchParams } from "react-router-dom";
-import LoginForm from "../components/AuthForm";
+import LoginForm from "../components/forms/LogInForm";
 import ReactCardFlip from "react-card-flip";
 import { useState } from "react";
-import RegisterForm from "../components/RegisterForm";
+import SignUpForm from "../components/forms/SignUpForm";
 
 function AuthenticationPage() {
     const [searchParams] = useSearchParams();
@@ -22,7 +22,7 @@ function AuthenticationPage() {
                 cardStyles={{ front: { display: 'flex' }, back: { display: 'flex' } }}
             >
                 <LoginForm onFlip={handleFlip} />
-                <RegisterForm onFlip={handleFlip} />
+                <SignUpForm onFlip={handleFlip} />
             </ReactCardFlip>
         </div>
     )
