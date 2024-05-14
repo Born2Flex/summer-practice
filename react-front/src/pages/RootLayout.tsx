@@ -1,6 +1,6 @@
 import { useOutlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import MainNavigation from '../components/MainNavigation';
+import MainNavigation from '../components/elements/MainNavigation';
 import { useState } from "react";
 
 function RootLayout() {

@@ -20,6 +20,7 @@ export default {
         'secondary': '#B1CF5F',
         'danger': '#1B512D',
         'neutral': '#a3b18a',
+        'sidebar': '#dad7cd'
       },
       textColor: {
         'neutral': '#dad7cd',

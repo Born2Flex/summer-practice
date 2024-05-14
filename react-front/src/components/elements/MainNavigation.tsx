@@ -1,6 +1,6 @@
 import { NavLink, useRouteLoaderData } from 'react-router-dom';
 import { AwesomeButton } from "react-awesome-button";
-import { FlameIcon } from "@primer/octicons-react";
+import { RocketIcon } from "@primer/octicons-react";
 import 'react-awesome-button/dist/styles.css';
 
 function MainNavigation() {
@@ -8,7 +8,7 @@ function MainNavigation() {
     const buttonClassName = 'text-xl font-semibold py-6 link link-underline-black link-underline';
 
     return (
-        <nav className="bg-gradient-to-r from-secondary via-neutral to-secondary dark:bg-gray-900 sticky w-full z-20 top-0 start-0 dark:border-gray-600 shadow-2xl">
+        <nav className="bg-gradient-to-r from-secondary via-neutral to-secondary dark:bg-gray-900 sticky w-full z-20 top-0 start-0 dark:border-gray-600 shadow-md">
             <div className="flex flex-wrap items-center justify-between mx-auto p-4 max-w-[90%]">
                 <NavLink
                     to="/"
@@ -26,7 +26,7 @@ function MainNavigation() {
                     {!token && <NavLink
                         to="/auth?mode=login"
                     >
-                        <AwesomeButton type="primary" className='awesome-button' after={<FlameIcon />} >Get started</AwesomeButton>
+                        <AwesomeButton type="primary" className='awesome-button' after={<RocketIcon />} >Get started</AwesomeButton>
 
                     </NavLink>}
                     <button data-collapse-toggle="navbar-cta" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-cta" aria-expanded="false">
