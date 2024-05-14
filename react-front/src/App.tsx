@@ -6,6 +6,9 @@ import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
+import EventsPage from './pages/EventsPage';
+
+
 
 function App() {
   const router = createBrowserRouter([
@@ -29,10 +32,17 @@ function App() {
         {
           path: 'profile',
           element: <ProfilePage />,
+          children: [
+            {
+              path: 'edit',
+              element: <ProfilePage />,
+              action: profileAction,
+            },
+          ]
         },
         {
-          path: 'profile/edit',
-          element: <ProfilePage />,
+          path: 'events',
+          element: <EventsPage />,
           action: profileAction,
         },
       ],

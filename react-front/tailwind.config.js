@@ -23,6 +23,7 @@ export default {
       },
       boxShadow: {
         "rounded": "0 0 10px rgba(0, 0, 0, 0.1)",
+        "left": "-20px 0 20px -5px rgba(0, 0, 0, 0.15)",
       },
     },
   },
