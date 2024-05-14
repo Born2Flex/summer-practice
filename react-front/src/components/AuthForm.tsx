@@ -1,6 +1,5 @@
 import Header from './Header.tsx';
-import RoundButton from './RoundButton.tsx';
-import { Form, Link, useActionData, useNavigation } from 'react-router-dom';
+import { Form, Link, NavLink, useActionData, useNavigation } from 'react-router-dom';
 import { faArrowRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Input from '../components/TextDataInput.tsx';
 import { AwesomeButton } from 'react-awesome-button';
@@ -25,10 +24,13 @@ function AuthForm({ onFlip }: AuthFormProps) {
                 className={`flex flex-col px-5 py-3 z-10 w-full h-full rounded-3xl bg-cover bg-center bg-login`}
             >
                 <div>
-                    <RoundButton
-                        icon={faChevronLeft}
+                    <NavLink
                         className='flex items-center justify-center rounded-full p-2 w-fit h-fit bg-transparent'
-                    />
+                        to='..'
+                        relative='path'
+                    >
+                        <FontAwesomeIcon icon={faChevronLeft} className='text-white w-6 h-6' />
+                    </NavLink>
                 </div>
                 <div className='flex-none mt-12 mb-14'>
                     <Header

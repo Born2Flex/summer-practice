@@ -1,4 +1,4 @@
-import { Outlet, useOutlet, useLocation } from 'react-router-dom';
+import { useOutlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import MainNavigation from '../components/MainNavigation';
 import { useState } from "react";
@@ -42,7 +42,7 @@ function RootLayout() {
                         initial="initial"
                         animate="in"
                         exit="out"
-                        transition={{ type: 'tween', duration: 0.4 }}
+                        transition={{ type: 'tween', duration: 0.3 }}
                         className='flex flex-1'
                     >
                         <AnimatedOutlet />
