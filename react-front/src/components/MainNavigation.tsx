@@ -2,7 +2,7 @@ import { faRainbow } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink, useRouteLoaderData } from 'react-router-dom';
 import { AwesomeButton } from "react-awesome-button";
-import { FlameIcon, HomeIcon } from "@primer/octicons-react";
+import { FlameIcon } from "@primer/octicons-react";
 import 'react-awesome-button/dist/styles.css';
 
 function MainNavigation() {
@@ -40,21 +40,11 @@ function MainNavigation() {
                             <NavLink
                                 to="/"
                                 end
-                            >
-                                {({ isActive }) => {
-                                    console.log(isActive);
-                                    return (
-                                        <AwesomeButton
-                                            type="primary"
-                                            key={isActive as any}
-                                            active={isActive}
-                                            className='awesome-button'
-                                            before={<HomeIcon />}
-                                        >
-                                            Home
-                                        </AwesomeButton>
-                                    )
+                                className={({ isActive }) => {
+                                    return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
                                 }}
+                            >
+                                Home
                             </NavLink>
 
                         </li>

@@ -3,6 +3,8 @@ import RoundButton from './RoundButton.tsx';
 import { Form, Link, useActionData, useNavigation } from 'react-router-dom';
 import { faArrowRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Input from '../components/TextDataInput.tsx';
+import { AwesomeButton } from 'react-awesome-button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface AuthFormProps {
     onFlip: () => void;
@@ -65,18 +67,21 @@ function AuthForm({ onFlip }: AuthFormProps) {
                     <div className={`text-4xl m-0 p-0 text-black`}>
                         Log In
                     </div>
-                    <RoundButton
-                        icon={faArrowRight}
-                        disabled={isSubmitting}
-                        className='flex p-4 items-center justify-center rounded-full w-fit h-fit bg-[#1BB8DA]'
-                    />
+                    <AwesomeButton disabled={isSubmitting} className='awesome-button round-awesome-button aspect-square w-14 h-14'>
+                        <FontAwesomeIcon icon={faArrowRight} className='text-white w-6 h-6' />
+                    </AwesomeButton>
                 </div>
                 <div className="flex-none mt-6">
                     <Link
                         to='?mode=signup'
-                        className='hover:underline ' onClick={onFlip}
                     >
-                        Create Account
+                        <AwesomeButton
+                            type="secondary"
+                            className='awesome-button-secondary-2'
+                            onMouseDown={onFlip}
+                        >
+                            Sign up
+                        </AwesomeButton>
                     </Link>
                 </div>
             </Form>
