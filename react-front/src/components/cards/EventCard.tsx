@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 function EventCard() {
     return (
-        <div className="bg-white w-full h-auto rounded-lg shadow-md flex card text-gray-700">
+        <div className="bg-white/80 backdrop-blur-sm w-full h-auto rounded-lg shadow-md flex card text-gray-700">
             <div className="w-2 text-white flex items-center rounded-l-lg shadow-xl bg-green-500" />
 
             <div className="w-full flex flex-col">
@@ -35,7 +35,7 @@ function EventCard() {
                 </div>
                 <NavLink
                     to={'puk-puk'}
-                    className="bg-gray-100 p-3 flex items-center justify-between rounded-b-lg transition ease-in-out hover:bg-gray-200">
+                    className="bg-gray-100/60 p-3 flex items-center justify-between rounded-b-lg transition ease-in-out hover:bg-gray-200">
                     See more details
                     <FontAwesomeIcon icon={faChevronRight} />
                 </NavLink>

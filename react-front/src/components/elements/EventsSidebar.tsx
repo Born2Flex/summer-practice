@@ -9,7 +9,7 @@ function EventsSidebar() {
 
             </div>
 
-            <div className="h-full overflow-y-scroll">
+            <div className="h-full overflow-y-scroll custom-scrollbar pr-2">
                 <div className="flex flex-col gap-y-3">
                     {[1, 2, 3, 4, 5].map((i) => (
                         <EventCard key={i} />
@@ -18,7 +18,7 @@ function EventsSidebar() {
             </div>
 
             <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-1 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-40rem)]" aria-hidden="true">
-                <div className="blob relative aspect-[1155/678] w-[26.125rem] -translate-x-1/2 -rotate-12 bg-gradient-to-tr from-green-500 via-emerald-500 to-lime-600 opacity-100 sm:w-[72.1875rem] -left-10 bg-[length:300%_auto] animate-blobs" ></div>
+                <div className="blob relative aspect-[1155/678] w-[26.125rem] -translate-x-1/2 -rotate-12 bg-[linear-gradient(to_top_right,#256e3d,#b1ce61,theme(colors.green.300),#0e9f6e,#b0cc63,#a4b386,#73e2a7)] opacity-100 sm:w-[72.1875rem] -left-10 bg-[length:300%_auto] animate-blobs" ></div>
             </div>
         </section>
 

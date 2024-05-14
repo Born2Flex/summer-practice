@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import plugin from 'tailwindcss/plugin';
+
 export default {
   content: [
     "./index.html",
@@ -45,7 +47,7 @@ export default {
       },
       animation: {
         'gradient': 'gradient 8s linear infinite',
-        'blobs': 'gradient 14s linear infinite',
+        'blobs': 'gradient 15s linear infinite',
       },
       keyframes: {
         'gradient': {
@@ -55,7 +57,30 @@ export default {
     },
   },
   plugins: [
-    require('flowbite/plugin')
+    require('flowbite/plugin'),
+
+    plugin(function ({ addComponents, addBase, theme }) {
+      addComponents({
+        '.custom-scrollbar::-webkit-scrollbar': {
+          width: '5px',
+          height: '3px',
+          borderRadius: '2px',
+        },
+        '.custom-scrollbar::-webkit-scrollbar-track': {
+          background: theme('colors.gray.200'),
+          borderRadius: '50px',
+        },
+        '.custom-scrollbar::-webkit-scrollbar-thumb': {
+          background: theme('colors.gray.400'),
+          borderRadius: '50px',
+        },
+        '.custom-scrollbar::-webkit-scrollbar-thumb:hover': {
+          background: theme('colors.gray.500'),
+        },
+      })
+    }),
+
+
   ],
 }
 

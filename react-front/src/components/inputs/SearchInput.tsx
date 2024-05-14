@@ -1,11 +1,10 @@
-import { faEarthAmericas, faMagnifyingGlass, faMapLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faMapLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
 import { AwesomeButton } from 'react-awesome-button'
 
 function SearchInput() {
     return (
-        <form className="flex items-center max-w-lg mx-auto">
+        <form className="flex items-center">
             <label htmlFor="voice-search" className="sr-only">Search</label>
             <div className="relative w-full">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
