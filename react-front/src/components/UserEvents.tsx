@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { faBars } from '@fortawesome/free-solid-svg-icons';
 import EventsList from "./EventList";
 import Calendar from 'react-calendar';
 //import 'react-calendar/dist/Calendar.css';
