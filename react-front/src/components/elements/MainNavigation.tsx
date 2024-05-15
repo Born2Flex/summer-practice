@@ -1,29 +1,33 @@
-import { faRainbow } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink, useRouteLoaderData } from 'react-router-dom';
+import { AwesomeButton } from "react-awesome-button";
+import { RocketIcon } from "@primer/octicons-react";
+import 'react-awesome-button/dist/styles.css';
 
 function MainNavigation() {
     const token = useRouteLoaderData('root');
-    const buttonClassName = 'text-xl py-2 link link-underline-black link-underline';
+    const buttonClassName = 'text-xl font-semibold py-6 link link-underline-black link-underline';
 
     return (
-        <nav className="bg-white/50 backdrop-blur-sm dark:bg-gray-900 sticky w-full z-20 top-0 start-0 dark:border-gray-600 shadow-lg">
-            <div className="flex flex-wrap items-center justify-between mx-auto p-4">
+        <nav className="bg-gradient-to-r from-secondary via-neutral to-secondary dark:bg-gray-900 sticky w-full z-20 top-0 start-0 dark:border-gray-600 shadow-md">
+            <div className="flex flex-wrap items-center justify-between mx-auto p-4 max-w-[90%]">
                 <NavLink
                     to="/"
                     className="flex items-center space-x-3 rtl:space-x-reverse"
                     end
                 >
-                    <FontAwesomeIcon icon={faRainbow} className='h-7' />
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Eventify</span>
+                    {/* <FontAwesomeIcon icon={faRainbow} className='h-7 ' /> */}
+                    <span
+                        className="self-center text-4xl font-bold whitespace-nowrap bg-clip-text text-transparent
+                        bg-[linear-gradient(to_right,theme(colors.green.700),theme(colors.green.500),theme(colors.emerald.700),theme(colors.emerald.500),theme(colors.green.600),theme(colors.emerald.500),theme(colors.green.700))] bg-[length:300%_auto] animate-gradient">
+                        Eventify ⨠
+                    </span>
                 </NavLink>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     {!token && <NavLink
                         to="/auth?mode=login"
-                        className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-400 
-                        font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-cyan-300 dark:hover:bg-cyan-400
-                        ark:focus:ring-cyan-800">
-                        Get started
+                    >
+                        <AwesomeButton type="primary" className='awesome-button' after={<RocketIcon />} >Get started</AwesomeButton>
+
                     </NavLink>}
                     <button data-collapse-toggle="navbar-cta" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-cta" aria-expanded="false">
                         <span className="sr-only">Open main menu</span>
@@ -37,19 +41,20 @@ function MainNavigation() {
                         <li>
                             <NavLink
                                 to="/"
-                                className={({ isActive }) => {
-                                    return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
-                                }}
                                 end
+                                className={({ isActive }) => {
+                                    return (isActive ? buttonClassName + ' text-danger link-underline-active' : buttonClassName + ' hover:text-danger text-white')
+                                }}
                             >
                                 Home
                             </NavLink>
+
                         </li>
                         <li>
                             <NavLink
                                 to="/events"
                                 className={({ isActive }) => {
-                                    return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
+                                    return (isActive ? buttonClassName + ' text-danger link-underline-active' : buttonClassName + ' hover:text-danger text-white')
                                 }}
                             >
                                 Events
@@ -60,7 +65,7 @@ function MainNavigation() {
                                 <NavLink
                                     to="/profile"
                                     className={({ isActive }) => {
-                                        return (isActive ? buttonClassName + ' text-cyan-500 link-underline-active' : buttonClassName + ' hover:text-cyan-500 text-black')
+                                        return (isActive ? buttonClassName + ' text-danger link-underline-active' : buttonClassName + ' hover:text-danger text-white')
                                     }}
                                 >
                                     Profile

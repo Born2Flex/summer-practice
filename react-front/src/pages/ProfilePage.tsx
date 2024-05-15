@@ -1,11 +1,11 @@
 import { faChevronLeft, faPen, faPlus, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import RoundButton from "../components/RoundButton";
-import ButtonWithText from "../components/ButtonWithText";
+import RoundButton from "../components/buttons/RoundButton";
+import ButtonWithText from "../components/buttons/ButtonWithText";
 import UserInfo from "../components/UserInfo";
 import UserEvents from "../components/UserEvents";
 import { Form, redirect, useLocation, useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import EditableField from '../components/EditableField';
+import EditableField from '../components/inputs/EditableField';
 
 function ProfilePage() {
         const navigate = useNavigate();
@@ -106,14 +106,14 @@ function ProfilePage() {
                                                                 type="text"
                                                                 color='black'
                                                                 initialValue={name}
-                                                                //onChange={handleNameChange}
+                                                        //onChange={handleNameChange}
                                                         />
                                                         <EditableField
                                                                 name='description'
                                                                 type="text"
                                                                 color='black'
                                                                 initialValue={description}
-                                                                //onChange={handleDescriptionChange}
+                                                        //onChange={handleDescriptionChange}
                                                         />
                                                 </div>
                                         </div>
@@ -132,7 +132,7 @@ function ProfilePage() {
                                         />
                                 </div>
                         </div>
-                        
+
                         <UserEvents />
 
                 </div>
