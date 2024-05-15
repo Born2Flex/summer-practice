@@ -18,7 +18,7 @@ function MainNavigation() {
                     {/* <FontAwesomeIcon icon={faRainbow} className='h-7 ' /> */}
                     <span
                         className="self-center text-4xl font-bold whitespace-nowrap bg-clip-text text-transparent
-                        bg-[linear-gradient(to_right,theme(colors.green.700),theme(colors.green.500),theme(colors.teal.700),theme(colors.teal.500),theme(colors.green.600),theme(colors.teal.500),theme(colors.green.700))] bg-[length:300%_auto] animate-gradient">
+                        bg-[linear-gradient(to_right,theme(colors.green.700),theme(colors.green.500),theme(colors.green.300),theme(colors.green.500),theme(colors.green.700))] bg-[length:300%_auto] animate-gradient">
                         Eventify
                     </span>
                 </NavLink>

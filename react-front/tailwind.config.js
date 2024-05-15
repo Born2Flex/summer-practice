@@ -8,6 +8,8 @@ module.exports = withMT({
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/flowbite/**/*.js",
+    "./node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -48,7 +50,7 @@ module.exports = withMT({
         "left": "-20px 0 20px -5px rgba(0, 0, 0, 0.15)",
       },
       animation: {
-        'gradient': 'gradient 8s linear infinite',
+        'gradient': 'gradient 8s ease-in-out infinite',
         'blobs': 'gradient 15s linear infinite',
       },
       keyframes: {
@@ -69,15 +71,15 @@ module.exports = withMT({
           borderRadius: '2px',
         },
         '.custom-scrollbar::-webkit-scrollbar-track': {
-          background: theme('colors.gray.200'),
+          background: '#e2e7d4',
           borderRadius: '50px',
         },
         '.custom-scrollbar::-webkit-scrollbar-thumb': {
-          background: theme('colors.gray.400'),
+          background: '#9fa68e',
           borderRadius: '50px',
         },
         '.custom-scrollbar::-webkit-scrollbar-thumb:hover': {
-          background: theme('colors.gray.500'),
+          background: '#818774',
         },
       })
     }),

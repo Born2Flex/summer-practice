@@ -4,7 +4,11 @@ import { NavLink } from 'react-router-dom'
 
 function EventCard() {
     return (
-        <div className="bg-white/80 backdrop-blur-sm w-full h-auto rounded-lg shadow-md flex card text-gray-700">
+        <div
+            className="bg-green-50/70 group/item hover:bg-gray-50/90 backdrop-blur-sm w-full h-auto 
+            rounded-lg shadow-md flex card text-gray-700"
+            style={{ transition: "background-color 0.3s" }}
+        >
             <div className="w-2 text-white flex items-center rounded-l-lg shadow-xl bg-green-500" />
 
             <div className="w-full flex flex-col">
@@ -35,9 +39,13 @@ function EventCard() {
                 </div>
                 <NavLink
                     to={'puk-puk'}
-                    className="bg-gray-100/60 p-3 flex items-center justify-between rounded-b-lg transition ease-in-out hover:bg-gray-200">
+                    className="bg-gray-100/40 group/link group-hover/item:bg-gray-200/60 p-3 flex items-center justify-between rounded-br-lg transition ease-in-out group-hover:hover:bg-gray-200">
                     See more details
-                    <FontAwesomeIcon icon={faChevronRight} />
+                    <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className='-translate-x-1 group-hover/link:translate-x-0.5'
+                        style={{ transition: "transform 0.3s" }}
+                    />
                 </NavLink>
             </div>
         </div>

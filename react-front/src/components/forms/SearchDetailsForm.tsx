@@ -32,19 +32,20 @@ export default function SearchDetailsForm() {
                 placeholder={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
+                className={(open === 1 ? "bg-green-50 p-4 rounded-lg shadow-md" : "bg-green-100/50 p-4 rounded-lg")}
+                style={{ transition: "background-color 0.3s" }}
             >
                 <AccordionHeader
                     onClick={() => handleOpen(1)}
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
+                    className="text-base py-2"
                 >
                     Advanced Search Options
                 </AccordionHeader>
                 <AccordionBody>
-                    We&apos;re not always in the position that we want to be at. We&apos;re constantly
-                    growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-                    ourselves and actualize our dreams.
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Culpa nemo voluptas ad ut, omnis, neque quisquam provident reiciendis, corrupti repudiandae debitis harum est sit voluptatibus. Fugit error magni, harum a soluta, veritatis fuga doloremque esse velit voluptatem ipsa architecto praesentium recusandae in voluptatum debitis ullam! Ipsa libero vitae laudantium necessitatibus possimus distinctio similique nisi maiores placeat! Itaque nostrum magnam, consequatur, sed nulla, sit laborum obcaecati minima repellat necessitatibus numquam eveniet?
                 </AccordionBody>
             </Accordion>
         </>
