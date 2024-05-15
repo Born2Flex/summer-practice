@@ -3,6 +3,52 @@ import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 
 function EventsSidebar() {
+    const events = [
+        {
+            name: 'Sigma Rizz Party',
+            location: 'Usa, Ohio, 1234 Street',
+            people: 10,
+            type: 'party',
+            link: '/events/1',
+            limit: 20,
+        },
+        {
+            name: 'Event 2',
+            location: 'Location 2',
+            people: 5,
+            type: 'birthday',
+            link: '/events/2',
+            limit: 10,
+            price: 5
+        },
+        {
+            name: 'Event 3',
+            location: 'Location 3',
+            people: 15,
+            type: 'meeting',
+            link: '/events/3',
+            price: 15
+        },
+        {
+            name: 'Event 4',
+            location: 'Location 4',
+            people: 20,
+            type: 'gaming',
+            link: '/events/4',
+            limit: 40,
+            price: 20
+        },
+        {
+            name: 'Event 5',
+            location: 'Location 5',
+            people: 25,
+            type: 'birthday',
+            link: '/events/5',
+            limit: 50,
+        }
+    ]
+
+
     return (
         <section className='w-1/4 min-w-[384px] flex flex-col gap-y-4 z-10 relative shadow-left p-4 bg-[#ced2c3] overflow-hidden'>
             <div className="flex flex-col gap-y-3">
@@ -12,8 +58,8 @@ function EventsSidebar() {
 
             <div className="h-full overflow-y-scroll custom-scrollbar pr-2">
                 <div className="flex flex-col gap-y-3">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <EventCard key={i} />
+                    {events.map((event, index) => (
+                        <EventCard key={index} {...event} />
                     ))}
                 </div>
             </div>
