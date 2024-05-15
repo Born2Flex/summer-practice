@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 import plugin from 'tailwindcss/plugin';
 
-export default {
+const withMT = require("@material-tailwind/react/utils/withMT");
+
+module.exports = withMT({
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -26,7 +28,7 @@ export default {
       },
       textColor: {
         'neutral': '#dad7cd',
-        'danger': '#256e3d',
+        'danger': '#1B512D',
         'accent': '#588157',
       },
       gradientColorStops: {
@@ -82,5 +84,5 @@ export default {
 
 
   ],
-}
+});
 

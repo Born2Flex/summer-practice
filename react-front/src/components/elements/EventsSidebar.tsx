@@ -1,12 +1,13 @@
 import EventCard from "../cards/EventCard"
+import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 
 function EventsSidebar() {
     return (
         <section className='w-1/4 min-w-[384px] flex flex-col gap-y-4 z-10 relative shadow-left p-4 bg-white overflow-hidden'>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-y-3">
                 <SearchInput />
-
+                <SearchDetailsForm />
             </div>
 
             <div className="h-full overflow-y-scroll custom-scrollbar pr-2">

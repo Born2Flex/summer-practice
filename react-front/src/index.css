@@ -170,3 +170,43 @@ label {
             76.1% 97.7%,
             74.1% 44.1%);
 }
+
+details {
+    user-select: none;
+
+    & summary svg {
+        transform: rotate(90deg);
+    }
+
+    transition: all 0.3s;
+}
+
+details[open] {
+    & summary svg {
+        transform: rotate(-90deg);
+
+    }
+
+}
+
+
+details[open] summary~* {
+    animation: ease-opacity-t-b .5s ease
+}
+
+summary {
+    cursor: pointer;
+}
+
+svg {
+    transition: all 0.3s;
+}
+
+/* TO JE TO - TO JE TAJ */
+summary::-webkit-details-marker {
+    display: none;
+}
+
+:focus {
+    outline: none;
+}
