@@ -1,43 +1,68 @@
-import { faLocationDot, faWifi, faUsers, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
 
-function EventCard() {
+interface EventCardProps {
+    // id: number;
+    name: string;
+    location: string;
+    people: number;
+    type: string;
+    link: string;
+    limit?: number;
+    price?: number;
+}
+
+function EventCard({ name, location, people, type, link, limit, price }: EventCardProps) {
+    let Icon = faStar
+    let Color = 'yellow-500'
+
+    if (type === 'gaming') { Icon = faDesktop; Color = 'green-500' }
+    if (type === 'birthday') { Icon = faCakeCandles; Color = 'pink-500' }
+    if (type === 'meeting') { Icon = faHandshake; Color = 'blue-500' }
+
     return (
-        <div className="bg-white/80 backdrop-blur-sm w-full h-auto rounded-lg shadow-md flex card text-gray-700">
-            <div className="w-2 text-white flex items-center rounded-l-lg shadow-xl bg-green-500" />
+        <div
+            className="bg-green-50/70 group/item hover:bg-gray-50/90 backdrop-blur-sm w-full h-auto 
+            rounded-lg shadow-md flex card text-gray-700"
+            style={{ transition: "background-color 0.3s" }}
+        >
+            <div className={`w-2 text-white flex items-center rounded-l-lg shadow-xl bg-green-500`} />
 
             <div className="w-full flex flex-col">
                 <div className="flex flex-1 p-4">
                     <div className='w-3/4'>
-                        <h3 className="text-xl mb-1 text-gray-700">Gaming Sus Party</h3>
+                        <h3 className="text-xl mb-1 text-gray-700">{name}</h3>
                         <div className="text-xs flex items-center mb-4 gap-2">
-                            <FontAwesomeIcon icon={faLocationDot} /> USA, Ohio
+                            <FontAwesomeIcon icon={faLocationDot} /> {location}
                         </div>
-                        <span className="text-xl font-thin text-gray-700">£63.00<span className="text-lg">/PPPN</span></span>
+                        {price && <span className="text-xl font-thin text-gray-700">£{price}<span className="text-lg">/PPPN</span></span>}
+                        {!price && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
                         <div className="flex items-center mt-4 gap-x-5">
                             <div className="flex text-xs gap-2">
                                 <FontAwesomeIcon icon={faWifi} /> Free WiFi
                             </div>
                             <div className="flex text-xs gap-2">
-                                <FontAwesomeIcon icon={faUsers} /> 300 people
+                                <FontAwesomeIcon icon={faUsers} /> {people}{limit && `/${limit}`} people
                             </div>
                         </div>
                     </div>
                     <div className='flex w-1/4 items-center justify-center'>
-                        <div className="w-full text-white aspect-square flex items-center justify-center rounded-full shadow-xl bg-green-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
+                        <div className={`w-full text-white aspect-square flex items-center justify-center rounded-full shadow-xl bg-${Color}`}>
+                            <FontAwesomeIcon icon={Icon} className='text-2xl' />
                         </div>
                     </div>
 
                 </div>
                 <NavLink
-                    to={'puk-puk'}
-                    className="bg-gray-100/60 p-3 flex items-center justify-between rounded-b-lg transition ease-in-out hover:bg-gray-200">
+                    to={link}
+                    className="bg-gray-100/40 group/link group-hover/item:bg-gray-200/60 p-3 flex items-center justify-between rounded-br-lg transition ease-in-out group-hover:hover:bg-gray-200">
                     See more details
-                    <FontAwesomeIcon icon={faChevronRight} />
+                    <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className='-translate-x-1 group-hover/link:translate-x-0.5'
+                        style={{ transition: "transform 0.3s" }}
+                    />
                 </NavLink>
             </div>
         </div>

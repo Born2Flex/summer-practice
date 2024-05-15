@@ -1,11 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 import plugin from 'tailwindcss/plugin';
 
-export default {
+const withMT = require("@material-tailwind/react/utils/withMT");
+
+module.exports = withMT({
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/flowbite/**/*.js",
+    "./node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -26,7 +30,7 @@ export default {
       },
       textColor: {
         'neutral': '#dad7cd',
-        'danger': '#256e3d',
+        'danger': '#1B512D',
         'accent': '#588157',
       },
       gradientColorStops: {
@@ -46,7 +50,7 @@ export default {
         "left": "-20px 0 20px -5px rgba(0, 0, 0, 0.15)",
       },
       animation: {
-        'gradient': 'gradient 8s linear infinite',
+        'gradient': 'gradient 8s ease-in-out infinite',
         'blobs': 'gradient 15s linear infinite',
       },
       keyframes: {
@@ -67,20 +71,20 @@ export default {
           borderRadius: '2px',
         },
         '.custom-scrollbar::-webkit-scrollbar-track': {
-          background: theme('colors.gray.200'),
+          background: '#e2e7d4',
           borderRadius: '50px',
         },
         '.custom-scrollbar::-webkit-scrollbar-thumb': {
-          background: theme('colors.gray.400'),
+          background: '#9fa68e',
           borderRadius: '50px',
         },
         '.custom-scrollbar::-webkit-scrollbar-thumb:hover': {
-          background: theme('colors.gray.500'),
+          background: '#818774',
         },
       })
     }),
 
 
   ],
-}
+});
 
