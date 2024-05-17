@@ -55,7 +55,6 @@ const MainContainer: React.FC<MainContainerProps> = ({ cards }) => {
 
 export default MainContainer;*/
 
-import React, { useEffect, useState } from 'react';
 
 /*interface CardProps {
   header: string;
@@ -127,7 +126,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ imageUrl, title, description }) => {
   return (
-    <div className="relative bg-gray-800 rounded-3xl overflow-hidden shadow-lg bg-gradient-to-r from-secondary via-neutral to-secondary">
+    <div className="relative bg-gray-800 rounded-3xl overflow-hidden shadow-lg bg-gradient-to-r from-danger via-neutral to-danger">
       <div className="relative clip-path-polygon">
         <img src={imageUrl} alt={title} className="w-full h-auto" />
       </div>

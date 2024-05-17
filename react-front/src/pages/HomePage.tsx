@@ -70,7 +70,7 @@ const HomePage: React.FC = () => {
   ];
 
   return (
-    <div className='relative w-full h-full overflow-y-scroll backdrop-blur-md bg-gray-200 bg-opacity-50'>
+    <div className='relative w-full h-full overflow-y-scroll custom-scrollbar backdrop-blur-md bg-gray-200 bg-opacity-50'>
       <ImageCard {...imageCardProps} />
       <MainContainer cards={cards} />
       <Footer />
