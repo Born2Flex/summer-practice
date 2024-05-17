@@ -55,7 +55,7 @@ const MainContainer: React.FC<MainContainerProps> = ({ cards }) => {
 
 export default MainContainer;*/
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 /*interface CardProps {
   header: string;
@@ -130,9 +130,8 @@ const Card: React.FC<CardProps> = ({ imageUrl, title, description }) => {
     <div className="relative bg-gray-800 rounded-3xl overflow-hidden shadow-lg bg-gradient-to-r from-secondary via-neutral to-secondary">
       <div className="relative clip-path-polygon">
         <img src={imageUrl} alt={title} className="w-full h-auto" />
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black" />
       </div>
-      <div className="p-6 w-fit">
+      <div className="p-6 w-fit ">
         <h3 className="text-white font-semibold text-2xl mb-3">{title}</h3>
         <p className="text-gray-400 text-lg">{description}</p>
       </div>
@@ -141,6 +140,56 @@ const Card: React.FC<CardProps> = ({ imageUrl, title, description }) => {
     </div>
   );
 };
+
+
+
+/*const Card: React.FC<CardProps> = ({ imageUrl, title, description }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [gradientX, setGradientX] = useState(50);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isHovered) {
+      const card = e.currentTarget.getBoundingClientRect();
+      const mouseX = e.clientX - card.left;
+      const offsetX = mouseX / card.width;
+      setGradientX(offsetX * 100);
+    }
+  };
+
+  return (
+    <div
+      className="relative bg-gray-800 rounded-3xl overflow-hidden shadow-lg"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+    >
+      <div className="relative clip-path-polygon">
+        <img src={imageUrl} alt={title} className="w-full h-auto" />
+        <div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background: isHovered
+              ? `linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.6) ${gradientX}%, rgba(0,0,0,0.6) 100%)`
+              : 'linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.6) 100%)'
+          }}
+        />
+      </div>
+      <div className="p-6 w-fit">
+        <h3 className="text-white font-semibold text-2xl mb-3">{title}</h3>
+        <p className="text-gray-400 text-lg">{description}</p>
+      </div>
+    </div>
+  );
+};*/
+
 
 /*const Card: React.FC<CardProps> = ({ imageUrl, title, description }) => {
   const [gradientCoords, setGradientCoords] = useState({ x: 0, y: 0 });
@@ -195,7 +244,7 @@ interface MainContainerProps {
 
 const MainContainer: React.FC<MainContainerProps> = ({ cards }) => {
   return (
-    <div className="bg-opacity-50 h-fit bg-gray-200 p-8">
+    <div className="h-fi p-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {cards.map((card, index) => (
           <Card key={index} {...card} />

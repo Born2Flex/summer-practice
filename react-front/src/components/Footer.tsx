@@ -7,32 +7,31 @@ function generateSinusoidPoints(amplitude: number, frequency: number, phase: num
   for (let i = 0; i <= numPoints; i++) {
     const x: number = +(i / numPoints * 100).toFixed(2);
     const y: number = +(amplitude * Math.sin((2 * Math.PI * frequency * x) / 100 + phase) + 50).toFixed(2);
-    points.push(`${x}% ${y}%`); // Обратная синусоида: 100 - y
+    points.push(`${x}% ${y}%`);
   }
   return points.join(', ');
 }
 
 const Footer: React.FC = () => {
   const sinusoidPoints = generateSinusoidPoints(10, 6, 0, 100);
+  const rotationAngle = 180;
 
   return (
-    <footer className="relative text-gray-300  h-fit flex flex-col ">
+    <footer className="text-gray-300 h-fit">
         <div 
-        className='relative bottom-full w-full h-[100px] bg-gray-900'
-        style={{ clipPath: `polygon(0% 100%, 0% 100%, ${sinusoidPoints})` }}
+        className='bottom-full w-full h-[100px] bg-gradient-to-r from-primary via-neutral to-secondary'
+        style={{ clipPath: `polygon(100% 0%, 0% 0%, ${sinusoidPoints})`, transform: `rotate(${rotationAngle}deg)`  }}
         >
-        <div 
-        className='absolute w-full bg-gray-900'
-        ></div>
-
         </div>
 
-      <div className=" w-full flex justify-between items-center bg-gray-900 py-8">
-        <div>
-          <p>Contact us: example@example.com</p>
-        </div>
-        <div>
-          <a href="#">About Us</a>
+      <div className="w-full flex justify-between items-center bg-gradient-to-r from-secondary via-neutral to-secondary py-8">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <div>
+            <p>Contact us: example@example.com</p>
+          </div>
+          <div>
+            <a href="#">About Us</a>
+          </div>
         </div>
       </div>
     </footer>
