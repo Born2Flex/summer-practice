@@ -49,6 +49,7 @@ export default Footer;*/
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { Link } from 'react-router-dom';
 
 function generateSinusoidPoints(amplitude: number, frequency: number, phase: number, numPoints: number): string {
   const points: string[] = [];
@@ -71,8 +72,8 @@ const Footer: React.FC = () => {
         style={{ clipPath: `polygon(100% 0%, 0% 0%, ${sinusoidPoints})`, transform: `rotate(${rotationAngle}deg)` }}
       >
       </div>
-      <div className="w-full text-xl bg-gradient-to-r from-secondary via-neutral to-secondary py-8">
-        <div className="max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 text-black justify-center">
+      <div className="mx-auto text-xl bg-gradient-to-r from-secondary via-neutral to-secondary py-8">
+        <div className="max-w-2xl w-fit mx-auto grid grid-cols-1 md:grid-cols-2 text-black justify-center">
           <div className="flex flex-col items-center">
             <div>
             <p>Contact us: eventifyteam@gmail.com</p>
@@ -92,13 +93,13 @@ const Footer: React.FC = () => {
             </div>
             </div>
           </div>
-          <div className="flex flex-col justify-between md:justify-between items-center">
-            <a href="#" className='w-fit'>About Us</a>
-            <a href="#" className='w-fit'>About Us</a>
-            <a href="#" className='w-fit'>About Us</a>
+          <div className="flex flex-col justify-between md:justify-between items-start md:items-center">
+            <div className="flex flex-col justify-between md:justify-between items-start">
+              <Link to="/events" className='w-fit'>Explore Events</Link>
+              <Link to="/profile" className='w-fit'>Your Profile</Link>
+              <Link to="#" className='w-fit'>About Us</Link>
+            </div>
           </div>
-          {/*<div className="flex justify-center md:justify-end items-center">
-          </div>*/}
         </div>
       </div>
     </footer>

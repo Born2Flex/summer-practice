@@ -98,6 +98,16 @@ label {
     opacity: 0
 }
 
+.awesome-button-lg {
+    --button-default-height: 60px;
+    --button-default-font-size: 24px;
+    --button-primary-color: #1C7C54;
+    --button-primary-color-dark: #1B512D;
+    --button-primary-color-light: #ffffff;
+    --button-primary-color-hover: #0b794b;
+    --button-primary-color-active: #0c6540;
+}
+
 .awesome-button {
     --button-default-height: 40px;
     --button-default-font-size: 18px;
@@ -173,5 +183,16 @@ label {
 
 .clip-path-polygon {
     clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.maskedImage {
+    -webkit-mask-image: url(./src/assets/brushstroke-long.svg);
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: url(./src/assets/brushstroke-long.svg);
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-position: center;
 }
   

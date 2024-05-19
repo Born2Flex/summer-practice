@@ -20,9 +20,9 @@ import Footer from '../components/Footer';
 const HomePage: React.FC = () => {
   const imageCardProps = {
     title: 'Start Your Journey',
-    description: 'Browse all our amazing events!',
+    description: 'Enjoy creating and sharing events!',
     buttonText: 'Start Journey',
-    imageUrl: 'your-image-url.jpg', // Add your image URL here
+    imageUrl: '../src/assets/home.png',
   };
 
   const cards = [
