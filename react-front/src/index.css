@@ -181,10 +181,6 @@ label {
             74.1% 44.1%);
 }
 
-.clip-path-polygon {
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-}
-
 .maskedImage {
     -webkit-mask-image: url(./src/assets/brushstroke-long.svg);
     -webkit-mask-size: 100% 100%;

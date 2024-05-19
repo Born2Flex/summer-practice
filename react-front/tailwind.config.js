@@ -20,6 +20,7 @@ module.exports = withMT({
         'auth': "url('/src/assets/auth-bg.jpg')",
         'register': "url('src/assets/register.svg')",
         'login': "url('src/assets/login.svg')",
+        'radialGradient': 'radial-gradient(ellipse at bottom left, #DEF4C6, transparent), radial-gradient(ellipse at top, #b0cd61, transparent), radial-gradient(ellipse at right, #33a752, transparent), radial-gradient(ellipse at bottom, #4d9f0c, transparent);'
       },
       backgroundColor: {
         "primary": '#DEF4C6',
