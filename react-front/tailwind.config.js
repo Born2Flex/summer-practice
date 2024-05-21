@@ -17,7 +17,7 @@ module.exports = withMT({
         'sans': ['Inter', 'sans-serif'],
       },
       backgroundImage: {
-        'auth': "url('/src/assets/auth-bg.jpg')",
+        'auth': "url('https://tailwindui.com/img/beams-pricing.png')",
         'register': "url('src/assets/register.svg')",
         'login': "url('src/assets/login.svg')",
         'radialGradient': 'radial-gradient(ellipse at bottom left, #DEF4C6, transparent), radial-gradient(ellipse at top, #b0cd61, transparent), radial-gradient(ellipse at right, #33a752, transparent), radial-gradient(ellipse at bottom, #4d9f0c, transparent);'
@@ -51,7 +51,7 @@ module.exports = withMT({
         "left": "-20px 0 20px -5px rgba(0, 0, 0, 0.15)",
       },
       animation: {
-        'gradient': 'gradient 8s ease-in-out infinite',
+        'gradient': 'gradient 11s linear infinite',
         'blobs': 'gradient 15s linear infinite',
       },
       keyframes: {
