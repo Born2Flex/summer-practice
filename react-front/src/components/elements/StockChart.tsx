@@ -3,7 +3,6 @@ import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, Catego
 
 
 ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale);
-const formatter = (number: number) => (number > 999999 ? (number / 1000000).toFixed(1) + 'M' : number);
 
 const buildData = ({ chartData }: { chartData: any }) => ({
     type: 'line',
@@ -12,10 +11,9 @@ const buildData = ({ chartData }: { chartData: any }) => ({
         {
             label: '',
             data: chartData.data,
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            borderColor: 'rgba(255, 255, 255, 1)',
-            pointBackgroundColor: 'rgba(255, 255, 255, 1)',
-            labelsColor: 'rgba(255, 255, 255, 1)',
+            backgroundColor: 'rgb(36, 36, 36)',
+            borderColor: 'rgb(36, 36, 36)',
+            pointBackgroundColor: 'rgb(36, 36, 36)',
             fill: 'start',
             tension: 0.4,
         },
@@ -23,19 +21,13 @@ const buildData = ({ chartData }: { chartData: any }) => ({
 });
 
 
-
-// const numberToFix = (number: any, fix: number) => (number || 0).toFixed(fix);
-
 const StockChart = ({ info }: { info: any }) => {
     const data = buildData(info);
 
     return (
         <>
-            <div className="rounded shadow-xl overflow-hidden w-full md:flex" style={{ maxWidth: '900px' }}>
-                {/* <div className="flex w-full md:w-1/2 px-5 pb-4 pt-8 bg-indigo-500 text-white items-center"> */}
+            <div className="flex flex-1 bg-gray-100/80 rounded-lg p-4 shadow-xl overflow-hidden w-full md:flex" style={{ maxWidth: '900px' }}>
                 <Line data={data} />
-                {/* </div> */}
-
             </div>
         </>
     );

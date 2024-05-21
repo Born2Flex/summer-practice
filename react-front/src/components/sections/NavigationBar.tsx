@@ -78,13 +78,13 @@ function NewNavigation() {
                 <div className="hidden lg:block">{navList}</div>
                 <div className="flex items-center gap-x-1">
                     <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        <span>Log In</span>
+                        <NavLink to='/auth?mode=login'>Log In</NavLink>
                     </Button>
                     <Button
                         variant="gradient"
                         size="sm"
                         className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
-                        <span>Sign in</span>
+                        <NavLink to='/auth?mode=signup'>Sign Up</NavLink>
                     </Button>
                 </div>
                 <IconButton
