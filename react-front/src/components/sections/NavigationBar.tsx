@@ -1,7 +1,7 @@
 import React from "react";
 import {
     Navbar,
-    MobileNav,
+    Collapse,
     Typography,
     Button,
     IconButton,
@@ -124,7 +124,7 @@ function NewNavigation() {
                     )}
                 </IconButton>
             </div>
-            <MobileNav open={openNav}>
+            <Collapse open={openNav}>
                 <div className="container mx-auto">
                     {navList}
                     <div className="flex items-center gap-x-1">
@@ -136,7 +136,7 @@ function NewNavigation() {
                         </Button>
                     </div>
                 </div>
-            </MobileNav>
+            </Collapse>
         </Navbar>
     );
 }
