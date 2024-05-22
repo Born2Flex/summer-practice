@@ -6,23 +6,19 @@ import {
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 import Props from "react-apexcharts";
-import { ArrowTrendingUpIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 
 // If you're using Next.js please use the dynamic import for react-apexcharts and remove the import from the top for the react-apexcharts
 // import dynamic from "next/dynamic";
 // const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const chartConfig = {
-    type: "line",
-    height: 340,
+    type: "bar",
+    height: 240,
     series: [
         {
-            name: "Eventify",
-            data: [50, 40, 300, 320, 500, 350, 320, 470, 600, 820, 780, 900],
-        },
-        {
-            name: "Meetup",
-            data: [300, 280, 260, 300, 400, 390, 200, 210, 400, 520, 480, 500],
+            name: "Events",
+            data: [250, 140, 300, 320, 500, 350, 200, 230, 500],
         },
     ],
     options: {
@@ -37,13 +33,12 @@ const chartConfig = {
         dataLabels: {
             enabled: false,
         },
-        colors: ["#020617", "#ff1859"],
-        stroke: {
-            lineCap: "round",
-            curve: "smooth",
-        },
-        markers: {
-            size: 0,
+        colors: ["#020617"],
+        plotOptions: {
+            bar: {
+                columnWidth: "40%",
+                borderRadius: 2,
+            },
         },
         xaxis: {
             axisTicks: {
@@ -61,9 +56,6 @@ const chartConfig = {
                 },
             },
             categories: [
-                "Jan",
-                "Feb",
-                "Mar",
                 "Apr",
                 "May",
                 "Jun",
@@ -108,7 +100,7 @@ const chartConfig = {
     },
 } as unknown as Props;
 
-export default function StockChart() {
+export default function BarChart() {
     return (
         <Card className="flex flex-1" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <CardHeader
@@ -117,18 +109,17 @@ export default function StockChart() {
                 color="transparent"
                 className="flex flex-col gap-4 rounded-none md:flex-row md:items-center" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}            >
                 <div className="w-max rounded-lg bg-gray-900 p-5 text-white">
-                    <ArrowTrendingUpIcon className="h-6 w-6" />
+                    <CalendarDaysIcon className="h-6 w-6" />
                 </div>
                 <div>
                     <Typography variant="h6" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        Userbase Growth Rate
+                        Events Monthly
                     </Typography>
                     <Typography
                         variant="small"
                         color="gray"
                         className="max-w-sm font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
-                        Compared to our main rival <span className="font-bold">"Meetup"</span> we have faster growing rates,
-                        considering we are new at the market.
+                        Amount of events available to our users stays high throughout the year.
                     </Typography>
                 </div>
             </CardHeader>

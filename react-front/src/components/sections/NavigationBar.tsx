@@ -71,7 +71,7 @@ function NewNavigation() {
                 <Typography placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                >
                     <span
                         className="self-center text-4xl font-bold whitespace-nowrap bg-clip-text text-transparent
-                        bg-[linear-gradient(to_right,theme(colors.green.50),theme(colors.gray.800),theme(colors.gray.900),theme(colors.gray.900),theme(colors.gray.800),theme(colors.green.50))] bg-[length:300%_auto] animate-gradient">
+                        bg-[linear-gradient(to_right,theme(colors.gray.800),theme(colors.gray.900),theme(colors.gray.400),theme(colors.gray.900),theme(colors.gray.800))] bg-[length:300%_auto] animate-gradient">
                         Eventify
                     </span>
                 </Typography>
