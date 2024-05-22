@@ -18,9 +18,9 @@ function EventCard({ name, location, people, type, link, limit, price }: EventCa
 
     const colorVariants = {
         'party': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
-        'gaming': 'bg-green-500 group-hover/item:shadow-green-300',
-        'birthday': 'bg-pink-500 group-hover/item:shadow-pink-300',
-        'meeting': 'bg-blue-500 group-hover/item:shadow-blue-300',
+        'gaming': 'bg-green-500 group-hover/item:shadow-green-400',
+        'birthday': 'bg-pink-500 group-hover/item:shadow-pink-400',
+        'meeting': 'bg-blue-500 group-hover/item:shadow-blue-400',
     }
 
     if (type === 'gaming') { Icon = faDesktop }
@@ -54,7 +54,7 @@ function EventCard({ name, location, people, type, link, limit, price }: EventCa
                         </div>
                     </div>
                     <div className='flex w-1/4 items-center justify-center'>
-                        <div className={`${colorVariants[type as keyof typeof colorVariants]} w-full text-white aspect-square flex items-center justify-center rounded-full shadow-lg`}>
+                        <div className={`${colorVariants[type as keyof typeof colorVariants]} w-full text-white aspect-square flex items-center justify-center rounded-full shadow-rounded-lg`}>
                             <FontAwesomeIcon icon={Icon} className='text-2xl' />
                         </div>
                     </div>

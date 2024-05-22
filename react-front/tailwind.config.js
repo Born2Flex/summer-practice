@@ -48,6 +48,7 @@ module.exports = withMT({
       },
       boxShadow: {
         "rounded": "0 0 10px rgba(0, 0, 0, 0.1)",
+        "rounded-lg": "0 0 20px rgba(0, 0, 0, 0.1)",
         "left": "-20px 0 20px -5px rgba(0, 0, 0, 0.15)",
       },
       animation: {
