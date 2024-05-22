@@ -15,11 +15,17 @@ interface EventCardProps {
 
 function EventCard({ name, location, people, type, link, limit, price }: EventCardProps) {
     let Icon = faStar
-    let Color = 'yellow-500'
 
-    if (type === 'gaming') { Icon = faDesktop; Color = 'green-500' }
-    if (type === 'birthday') { Icon = faCakeCandles; Color = 'pink-500' }
-    if (type === 'meeting') { Icon = faHandshake; Color = 'blue-500' }
+    const colorVariants = {
+        'party': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
+        'gaming': 'bg-green-500 group-hover/item:shadow-green-300',
+        'birthday': 'bg-pink-500 group-hover/item:shadow-pink-300',
+        'meeting': 'bg-blue-500 group-hover/item:shadow-blue-300',
+    }
+
+    if (type === 'gaming') { Icon = faDesktop }
+    if (type === 'birthday') { Icon = faCakeCandles }
+    if (type === 'meeting') { Icon = faHandshake }
 
     return (
         <div
@@ -48,7 +54,7 @@ function EventCard({ name, location, people, type, link, limit, price }: EventCa
                         </div>
                     </div>
                     <div className='flex w-1/4 items-center justify-center'>
-                        <div className={`w-full text-white aspect-square flex items-center justify-center rounded-full shadow-xl bg-${Color}`}>
+                        <div className={`${colorVariants[type as keyof typeof colorVariants]} w-full text-white aspect-square flex items-center justify-center rounded-full shadow-lg`}>
                             <FontAwesomeIcon icon={Icon} className='text-2xl' />
                         </div>
                     </div>
