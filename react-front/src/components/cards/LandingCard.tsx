@@ -1,11 +1,10 @@
 import { Button } from '@material-tailwind/react';
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import BrowserMockup from '../elements/BrowserMockup';
 import Sponsors from './Sponsors';
 
 
-const LandingCard: React.FC = () => {
+function LandingCard() {
   return (
     <div className="relative flex flex-col items-center justify-center">
       <div className="relative w-full h-fit flex flex-col py-10 px-4 bg-green-50/50 justify-center items-center">

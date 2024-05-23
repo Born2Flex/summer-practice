@@ -12,9 +12,7 @@ function RootLayout() {
                 <div className={`bg-auth absolute w-full h-full -z-50 inset-0 bg-cover bg-bottom`} />
                 <NewNavigation />
                 <main className='flex flex-1 overflow-hidden'>
-                    <div
-                        className='flex flex-1'
-                    >
+                    <div className='flex flex-1'>
                         <Outlet />
                     </div>
                 </main>

@@ -29,7 +29,7 @@ function EventCard({ name, location, people, type, link, limit, price }: EventCa
 
     return (
         <div
-            className="bg-green-50/70 group/item hover:bg-gray-50/90 backdrop-blur-sm w-full h-auto 
+            className="bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
             rounded-lg shadow-md flex card text-gray-700"
             style={{ transition: "background-color 0.3s" }}
         >

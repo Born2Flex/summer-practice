@@ -7,6 +7,7 @@ import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import EventsPage from './pages/EventsPage';
+import NewEventPage from './pages/NewEventPage';
 
 
 
@@ -45,6 +46,10 @@ function App() {
           element: <EventsPage />,
           action: profileAction,
         },
+        {
+          path: 'new',
+          element: <NewEventPage />,
+        }
       ],
     },
   ]);

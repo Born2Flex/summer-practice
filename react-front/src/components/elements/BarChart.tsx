@@ -8,10 +8,6 @@ import Chart from "react-apexcharts";
 import Props from "react-apexcharts";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 
-// If you're using Next.js please use the dynamic import for react-apexcharts and remove the import from the top for the react-apexcharts
-// import dynamic from "next/dynamic";
-// const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
 const chartConfig = {
     type: "bar",
     height: 240,
@@ -102,7 +98,7 @@ const chartConfig = {
 
 export default function BarChart() {
     return (
-        <Card className="flex flex-1" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <Card className="flex flex-1 h-fit" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <CardHeader
                 floated={false}
                 shadow={false}
