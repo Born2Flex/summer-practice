@@ -28,7 +28,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ title, description, buttonText, i
 
   return (
     <div className="relative flex flex-col items-center justify-center">
-      <div className="w-full h-fit flex py-10 px-4 bg-radialGradient justify-center items-center animate-gradient">
+      <div className="w-full h-fit flex py-10 px-4 bg-gradient-to-r from-secondary via-neutral to-secondary justify-center items-center animate-gradient">
         <div className='flex flex-col md:flex-row justify-center items-center lg:mx-[8%]'>
           <div className="mt-4 md:mt-0 w-fit flex flex-col justify-center items-center lg:mr-[12%]">
             <div>
