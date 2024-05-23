@@ -1,5 +1,5 @@
 import EventsMap from "../components/elements/EventsMap";
-import EventsSidebar from "../components/elements/EventsSidebar";
+import EventsSidebar from "../components/sections/EventsSidebar";
 
 
 export default function EventsPage() {
