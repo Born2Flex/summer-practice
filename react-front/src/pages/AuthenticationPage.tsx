@@ -43,43 +43,77 @@ export async function action({ request }: { request: Request }) {
 
     if (mode === 'login') {
         authData = {
-            name: data.get('nameLogin'),
+            email: data.get('emailLogin'),
             password: data.get('passwordLogin'),
         };
     } else {
+        const email = data.get('email');
+        const firstName = data.get('firstNameRegister');
+        const lastName = data.get('lastNameRegister');
+        const password = data.get('passwordRegister');
+        const repeatPassword = data.get('repeatPassword');
+
+        if (password !== repeatPassword) {
+            throw json({ message: 'Passwords do not match.' }, { status: 422 });
+        }
+
         authData = {
-            name: data.get('nameRegister'),
-            email: data.get('email'),
-            password: data.get('passwordRegister'),
-            repeatPassword: data.get('repeatPassword'),
+            email,
+            password,
+            firstName,
+            lastName
         };
     }
 
     console.log(authData);
 
-    // const response = await fetch('http://localhost:8080/' + mode, {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(authData),
-    // });
+    if (mode === 'signup') {
+        try {
+            const response = await fetch('http://localhost:8080/rest/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(authData)
+            });
 
-    // if (response.status === 422 || response.status === 401) {
-    //     return response;
-    // }
+            const responseData = await response.json();
 
-    // if (!response.ok) {
-    //     throw json({ message: 'Could not authenticate user.' }, { status: 500 });
-    // }
+            if (!response.ok) {
+                console.error(`Error ${response.status}: ${responseData}`);
+                throw new Error(`Error ${response.status}: ${responseData}`);    
+            }
 
-    // const resData = await response.json();
-    // const token = resData.token;
+            console.log('Created successfully:', responseData);
 
-    // localStorage.setItem('token', token);
-    // const expiration = new Date();
-    // expiration.setHours(expiration.getHours() + 1);
-    // localStorage.setItem('expiration', expiration.toISOString());
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('Error sending registration data:', error.message);
+            }
+            else {
+                console.error('Unexpected error:', error);
+            }
+        }
+    }
+    else if (mode === 'login') {
+        const response = await fetch('http://localhost:8080/rest/auth/authenticate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(authData)
+        });
+
+        //const responseData = await response.json();
+        const responseData = await response.text();
+        if (!response.ok) {
+            console.error(`Error ${response.status}: ${responseData}`);
+            throw new Error(`Error ${response.status}: ${responseData}`);
+        }
+
+        console.log('Logged in successfully:', responseData);
+    }
 
     return redirect('/');
-}
+} 
+

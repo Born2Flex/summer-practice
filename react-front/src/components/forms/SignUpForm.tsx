@@ -50,8 +50,15 @@ function SignUpForm({ onFlip }: LogInFormProps) {
 
                 <div className='flex flex-col'>
                     <Input
-                        label="Name"
-                        name='nameRegister'
+                        label="First Name"
+                        name='firstNameRegister'
+                        type="text"
+                        color='white'
+                    />
+
+                     <Input
+                        label="Last Name"
+                        name='lastNameRegister'
                         type="text"
                         color='white'
                     />
