@@ -77,15 +77,19 @@ function NewNavigation() {
                 </Typography>
                 <div className="hidden lg:block">{navList}</div>
                 <div className="flex items-center gap-x-1">
-                    <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        <NavLink to='/login'>Log In</NavLink>
-                    </Button>
-                    <Button
-                        variant="gradient"
-                        size="sm"
-                        className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
-                        <NavLink to='/auth?mode=signup'>Sign Up</NavLink>
-                    </Button>
+                    <NavLink to='/login'>
+                        <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                            Log In
+                        </Button>
+                    </NavLink>
+                    <NavLink to='/signup'>
+                        <Button
+                            variant="gradient"
+                            size="sm"
+                            className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
+                            Sign Up
+                        </Button>
+                    </NavLink>
                 </div>
                 <IconButton
                     variant="text"

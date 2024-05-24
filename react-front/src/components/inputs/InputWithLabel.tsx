@@ -1,7 +1,7 @@
 import { Typography, Input } from '@material-tailwind/react'
 import { ReactNode } from 'react'
 
-function InputWithLabel({ label, children, ...rest }: { label: string, children?: ReactNode, [key: string]: any }) {
+function InputWithLabel({ label, children, error, ...rest }: { label: string, children?: ReactNode, error?: boolean, [key: string]: any }) {
     return (
         <div className="mb-4">
             <label htmlFor="email">
@@ -14,7 +14,7 @@ function InputWithLabel({ label, children, ...rest }: { label: string, children?
             <div className='flex flex-row w-full gap-x-4'>
 
                 <Input
-                    className="!border focus:!border-gray-900 focus:ring-0 !border-blue-gray-200"
+                    className={`!border focus:ring-0 ${error ? '!border-red-600' : 'focus:!border-gray-900 !border-blue-gray-200'}`}
                     labelProps={{
                         className: "hidden",
                     }}

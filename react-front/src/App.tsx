@@ -1,14 +1,13 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { action as authAction } from './pages/AuthenticationPage'
 import { action as profileAction } from './pages/ProfilePage'
-import AuthenticationPage from './pages/AuthenticationPage';
 import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import EventsPage from './pages/EventsPage';
 import NewEventPage from './pages/NewEventPage';
-import LoginPage from './pages/LoginPage';
+import LoginPage, { action as loginAction } from './pages/LoginPage';
+import SignupPage, { action as signupAction } from './pages/SignupPage';
 
 
 
@@ -23,20 +22,15 @@ function App() {
       children: [
         { index: true, element: <HomePage /> },
         {
-          path: 'auth',
-          element: <AuthenticationPage />,
-          action: authAction,
-        },
-        {
           path: 'login',
           element: <LoginPage />,
-          // action: authAction,
+          action: loginAction,
         },
-        // {
-        //   path: 'register',
-        //   element: <AuthenticationPage />,
-        //   action: authAction,
-        // },
+        {
+          path: 'signup',
+          element: <SignupPage />,
+          action: signupAction,
+        },
         // {
         //   path: 'logout',
         //   action: logoutAction,

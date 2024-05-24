@@ -20,7 +20,8 @@ module.exports = withMT({
         'auth': "url('https://tailwindui.com/img/beams-pricing.png')",
         'register': "url('src/assets/register.svg')",
         'login': "url('src/assets/login.svg')",
-        'radial-blur': "radial-gradient(60% 100%, #ffff, #ffff, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3))",
+        'radial-blur': "radial-gradient(ellipse 50% 100% at center , #ffff, #ffff, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3))",
+        'radial-blur-lg': "radial-gradient(ellipse 70% 120% at center , #ffff, #ffff, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3))",
       },
       backgroundColor: {
         "primary": '#DEF4C6',
