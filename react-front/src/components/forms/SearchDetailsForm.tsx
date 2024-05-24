@@ -7,7 +7,6 @@ import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { useState } from 'react';
-// import BasicRangeShortcuts from "../inputs/DateRangePicker";
 
 function Icon({ id, open }: { id: number; open: number }) {
     return (

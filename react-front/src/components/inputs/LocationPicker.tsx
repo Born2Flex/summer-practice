@@ -2,10 +2,10 @@ import { Marker, Popup, TileLayer } from "react-leaflet"
 import { useState, useRef, useMemo, useCallback } from "react"
 import { MapContainer } from "react-leaflet"
 import { LatLngExpression } from "leaflet";
+import { Button } from "@material-tailwind/react";
 
-const center: LatLngExpression = [51.505, -0.09];
 
-function LocationPicker() {
+function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, onSetLocation: (location: LatLngExpression) => void }) {
     const [draggable, setDraggable] = useState(false)
     const [position, setPosition] = useState(center)
     const markerRef = useRef(null)
@@ -21,7 +21,18 @@ function LocationPicker() {
         [],
     )
     const toggleDraggable = useCallback(() => {
-        setDraggable((d) => !d)
+        setDraggable((d) => {
+            if (d) {
+                const marker = markerRef.current as any
+                if (marker != null) {
+                    onSetLocation([
+                        marker.getLatLng().lat.toFixed(4),
+                        marker.getLatLng().lng.toFixed(4)
+                    ])
+                }
+            }
+            return !d
+        })
     }, [])
 
     return (
@@ -37,11 +48,11 @@ function LocationPicker() {
                     position={position}
                     ref={markerRef}>
                     <Popup minWidth={90}>
-                        <span onClick={toggleDraggable}>
+                        <Button variant='filled' size='sm' onClick={toggleDraggable} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                             {draggable
-                                ? 'Marker is draggable'
-                                : 'Click here to make marker draggable'}
-                        </span>
+                                ? 'Fixate location'
+                                : 'Drag'}
+                        </Button>
                     </Popup>
                 </Marker>
             </MapContainer>

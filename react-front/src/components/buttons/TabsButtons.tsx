@@ -11,9 +11,12 @@ import {
     BanknotesIcon, KeyIcon
 } from "@heroicons/react/24/solid";
 import EventCreationFrom from "../forms/EventCreationFrom";
+import { LatLngExpression } from "leaflet";
+import useFetch from "../../hooks/useFetch";
 
-function TabsButtons() {
-
+function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
+    const { data: fetchedData, isLoading, error, refetch } = useFetch({ latLng: locationData });
+    console.log(fetchedData);
     const data = [
         {
             label: "Public",
@@ -46,7 +49,7 @@ function TabsButtons() {
             <TabsBody placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 {data.map(({ value }) => (
                     <TabPanel key={value} value={value} className="px-0">
-                        <EventCreationFrom tabName={value} />
+                        <EventCreationFrom tabName={value} location={isLoading ? 'Loading...' : fetchedData.addresses[0].formattedAddress} />
                     </TabPanel>
                 ))}
             </TabsBody>

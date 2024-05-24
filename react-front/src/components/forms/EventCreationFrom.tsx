@@ -1,6 +1,6 @@
 import { Typography, Input, Textarea, Button } from '@material-tailwind/react'
 
-function EventCreationFrom({ tabName }: { tabName: string }) {
+function EventCreationFrom({ tabName, location }: { tabName: string, location: string }) {
     const changingForm = {
         'public': (<div>
             <Typography
@@ -12,6 +12,7 @@ function EventCreationFrom({ tabName }: { tabName: string }) {
                 color="gray"
                 size="lg"
                 placeholder="Ukraine, Kyiv, Hryhoriya Skovorody Str, 2"
+                value={location}
                 name="location"
                 className="focus:!border-gray-900 !border-blue-gray-200"
                 containerProps={{
@@ -33,6 +34,7 @@ function EventCreationFrom({ tabName }: { tabName: string }) {
                     size="lg"
                     placeholder="Ukraine, Kyiv"
                     name="location"
+                    value={location}
                     className="focus:!border-gray-900 !border-blue-gray-200"
                     containerProps={{
                         className: "min-w-full",
@@ -74,6 +76,7 @@ function EventCreationFrom({ tabName }: { tabName: string }) {
                         size="lg"
                         placeholder="Ukraine, Kyiv, Hryhoriya Skovorody Str, 2"
                         name="location"
+                        value={location}
                         className="focus:!border-gray-900 !border-blue-gray-200"
                         labelProps={{
                             className: "hidden",
