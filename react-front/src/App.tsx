@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import EventsPage from './pages/EventsPage';
 import NewEventPage from './pages/NewEventPage';
+import LoginPage from './pages/LoginPage';
 
 
 
@@ -26,6 +27,16 @@ function App() {
           element: <AuthenticationPage />,
           action: authAction,
         },
+        {
+          path: 'login',
+          element: <LoginPage />,
+          // action: authAction,
+        },
+        // {
+        //   path: 'register',
+        //   element: <AuthenticationPage />,
+        //   action: authAction,
+        // },
         // {
         //   path: 'logout',
         //   action: logoutAction,

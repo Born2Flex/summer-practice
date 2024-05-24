@@ -32,7 +32,7 @@ export function NewEventPage() {
                         <LocationPicker center={center} onSetLocation={handleLocationChange} />
                         <form
                             action="#"
-                            className="flex flex-col gap-4"
+                            className="flex flex-col justify-between"
                         >
                             <Typography
                                 variant="small"

@@ -1,142 +1,86 @@
-import { Typography, Input, Textarea, Button } from '@material-tailwind/react'
+import { Typography, Textarea, Button } from '@material-tailwind/react'
+import InputWithLabel from '../inputs/InputWithLabel'
 
 function EventCreationFrom({ tabName, location }: { tabName: string, location: string }) {
     const changingForm = {
-        'public': (<div>
-            <Typography
-                variant="small"
-                className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                            >
-                Event Location
-            </Typography>
-            <Input
+        'public': (<InputWithLabel
+            label="Event Location"
+            color="gray"
+            size="lg"
+            placeholder="Ukraine, Kyiv"
+            name="location"
+            value={location}
+            containerProps={{
+                className: "min-w-full",
+            }}
+        />),
+        'paid': (<div className="grid grid-cols-2 gap-4">
+            <InputWithLabel
+                label="Event Location"
                 color="gray"
                 size="lg"
-                placeholder="Ukraine, Kyiv, Hryhoriya Skovorody Str, 2"
-                value={location}
+                placeholder="Ukraine, Kyiv"
                 name="location"
-                className="focus:!border-gray-900 !border-blue-gray-200"
+                value={location}
+                containerProps={{
+                    className: "min-w-full",
+                }}
+            />
+            <InputWithLabel
+                label="Event Price"
+                color="gray"
+                size="lg"
+                placeholder="$20-30"
+                name="price"
                 containerProps={{
                     className: "!min-w-full",
                 }}
-                labelProps={{
-                    className: "hidden",
-                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
+            />
         </div>),
-        'paid': (<div className="grid grid-cols-2 gap-4">
-            <div>
-                <Typography
-                    variant="small"
-                    className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                                >
-                    Event Location
-                </Typography>
-                <Input
-                    color="gray"
-                    size="lg"
-                    placeholder="Ukraine, Kyiv"
-                    name="location"
-                    value={location}
+        'private': (
+            <InputWithLabel
+                label="Event Location"
+                color="gray"
+                size="lg"
+                placeholder="Ukraine, Kyiv"
+                name="location"
+                value={location}
+            >
+                <Button
+                    variant='outlined'
+                    size="md"
+                    placeholder="Last Name"
+                    name="last-name"
                     className="focus:!border-gray-900 !border-blue-gray-200"
-                    containerProps={{
-                        className: "min-w-full",
-                    }}
-                    labelProps={{
-                        className: "hidden",
-                    }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
-            </div>
-            <div>
-                <Typography
-                    variant="small"
-                    className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                                >
-                    Event Price
-                </Typography>
-                <Input
-                    color="gray"
-                    size="lg"
-                    placeholder="$20-30"
-                    name="price"
-                    className="focus:!border-gray-900 !border-blue-gray-200"
-                    containerProps={{
-                        className: "!min-w-full",
-                    }}
-                    labelProps={{
-                        className: "hidden",
-                    }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
-            </div>
-        </div>),
-        'private': (<div className="grid grid-cols-2 gap-4">
-            <div className='col-span-2'>
-                <Typography
-                    variant="small"
-                    className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                                >
-                    Event Location
-                </Typography>
-                <div className='flex flex-row w-full gap-x-4'>
-                    <Input
-                        color="gray"
-                        size="lg"
-                        placeholder="Ukraine, Kyiv, Hryhoriya Skovorody Str, 2"
-                        name="location"
-                        value={location}
-                        className="focus:!border-gray-900 !border-blue-gray-200"
-                        labelProps={{
-                            className: "hidden",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
-                    <div>
-                        <Button
-                            variant='outlined'
-                            size="md"
-                            placeholder="Last Name"
-                            name="last-name"
-                            className="focus:!border-gray-900 !border-blue-gray-200 h-full"
-                            onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                        >Invite</Button>
-
-                    </div>
-                </div>
-            </div>
-        </div>),
+                    onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                >
+                    Invite
+                </Button>
+            </InputWithLabel>),
     }
     return (
         <>
             <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <Typography
-                        variant="small"
-                        className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                                >
-                        Event Name
-                    </Typography>
-                    <Input
-                        color="gray"
-                        size="lg"
-                        placeholder="First Name"
-                        name="first-name"
-                        className="focus:!border-gray-900 !border-blue-gray-200"
-                        containerProps={{
-                            className: "min-w-full",
-                        }}
-                        labelProps={{
-                            className: "hidden",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
-                </div>
-                <div>
-                    <Typography
-                        variant="small"
-                        className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                                >
-                        Event Type
-                    </Typography>
-                    <Input
-                        color="gray"
-                        size="lg"
-                        placeholder="Last Name"
-                        name="last-name"
-                        className="focus:!border-gray-900 !border-blue-gray-200"
-                        containerProps={{
-                            className: "!min-w-full",
-                        }}
-                        labelProps={{
-                            className: "hidden",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
-                </div>
+                <InputWithLabel
+                    label="Event Name"
+                    color="gray"
+                    size="lg"
+                    placeholder="First Name"
+                    name="first-name"
+                    containerProps={{
+                        className: "min-w-full",
+                    }}
+                />
+                <InputWithLabel
+                    label="Event Type"
+                    color="gray"
+                    size="lg"
+                    placeholder="Super Party"
+                    name="event-type"
+                    containerProps={{
+                        className: "!min-w-full",
+                    }}
+                />
             </div>
             {changingForm[tabName as keyof typeof changingForm]}
             <div>
