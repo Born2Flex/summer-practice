@@ -15,7 +15,7 @@ function DatePicker() {
 
     return (
         <div className="mb-4">
-            <label htmlFor="email">
+            <label htmlFor="event-date">
                 <Typography
                     variant="small"
                     className="mb-2 block text-left font-medium text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
@@ -40,7 +40,7 @@ function DatePicker() {
                             onPointerLeaveCapture={undefined}
                         />
                     </PopoverHandler>
-                    <PopoverContent className="z-50" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    <PopoverContent className="z-50 max-h-72 overflow-auto custom-scrollbar" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                         <DayPicker
                             mode="single"
                             selected={date}

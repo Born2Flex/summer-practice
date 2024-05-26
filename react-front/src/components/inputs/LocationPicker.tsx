@@ -26,8 +26,8 @@ function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, o
                 const marker = markerRef.current as any
                 if (marker != null) {
                     onSetLocation([
-                        marker.getLatLng().lat.toFixed(7),
-                        marker.getLatLng().lng.toFixed(7)
+                        marker.getLatLng().lat.toFixed(10),
+                        marker.getLatLng().lng.toFixed(10)
                     ])
                 }
             }
@@ -36,10 +36,10 @@ function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, o
     }, [])
 
     return (
-        <section className="flex-1">
-            <MapContainer center={center} zoom={13} scrollWheelZoom={true} className="h-full w-full rounded-xl border-2 border-gray-900">
+        <section className="w-full h-full max-h-[540px] min-h-[400px]">
+            <MapContainer center={position} zoom={13} scrollWheelZoom={true} className="h-full w-full rounded-xl border-2 border-gray-900">
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <Marker
