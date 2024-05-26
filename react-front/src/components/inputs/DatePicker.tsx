@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
     Input,
     Popover,
@@ -11,7 +11,7 @@ import { DayPicker } from "react-day-picker";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 function DatePicker() {
-    const [date, setDate] = React.useState<Date>();
+    const [date, setDate] = useState<Date>();
 
     return (
         <div className="mb-4">
@@ -30,6 +30,7 @@ function DatePicker() {
                             labelProps={{
                                 className: "hidden",
                             }}
+                            autoComplete="off"
                             color="gray"
                             size="lg"
                             name="event-date"

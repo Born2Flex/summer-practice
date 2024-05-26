@@ -2,8 +2,9 @@ import { Typography, Textarea, Button } from '@material-tailwind/react'
 import InputWithLabel from '../inputs/InputWithLabel'
 import DatePicker from '../inputs/DatePicker'
 import { Form } from 'react-router-dom'
+import { LatLngExpression } from 'leaflet'
 
-function EventCreationFrom({ tabName, location }: { tabName: string, location: string }) {
+function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
     const changingForm = {
         'public': (<InputWithLabel
             label="Event Location"
@@ -65,6 +66,8 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
     }
     return (
         <Form method='POST'>
+            <input type="text" className='hidden' value={tabName} readOnly name='type' />
+            <input type="text" className='hidden' value={locationData.toString()} readOnly name='locationLatLng' />
             <div className="grid grid-cols-2 gap-4">
                 <InputWithLabel
                     label="Event Name"
@@ -87,32 +90,6 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
                     }}
                 />
             </div>
-            {/* <p>
-                <label htmlFor="deadline">Deadline</label>
-                <input ref={deadline} type="date" name="deadline" id="deadline" />
-            </p> */}
-            {/* <InputWithLabel
-                label="Event Date"
-                color="gray"
-                size="lg"
-                placeholder="30.09.2025"
-                type="date"
-                name="event-date"
-                style={{
-                    "::WebkitDatetimeEdit": { padding: "1em" },
-                    "::WebkitDatetimeEditFieldsWrapper": { background: "silver" },
-                    "::WebkitDatetimeEditText": { color: "red", padding: "0 0.3em" },
-                    "::WebkitDatetimeEditMonthField": { color: "blue" },
-                    "::WebkitDatetimeEditDayField": { color: "green" },
-                    "::WebkitDatetimeEditYearField": { color: "purple" },
-                    "::WebkitInnerSpinButton": { display: "none" },
-                    "::WebkitCalendarPickerIndicator": { background: "orange" },
-                }}
-                containerProps={{
-                    className: "!min-w-full",
-
-                }}
-            /> */}
             <DatePicker />
             {changingForm[tabName as keyof typeof changingForm]}
             <div>
