@@ -1,6 +1,7 @@
 import { Typography, Textarea, Button } from '@material-tailwind/react'
 import InputWithLabel from '../inputs/InputWithLabel'
 import DatePicker from '../inputs/DatePicker'
+import { Form } from 'react-router-dom'
 
 function EventCreationFrom({ tabName, location }: { tabName: string, location: string }) {
     const changingForm = {
@@ -63,7 +64,7 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
             </InputWithLabel>),
     }
     return (
-        <>
+        <Form method='POST'>
             <div className="grid grid-cols-2 gap-4">
                 <InputWithLabel
                     label="Event Name"
@@ -133,7 +134,11 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
                         className: "hidden",
                     }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
             </div>
-        </>
+
+            <Button type="submit" className="w-full mt-4" color="gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                Create {tabName} Event
+            </Button>
+        </Form>
     )
 }
 

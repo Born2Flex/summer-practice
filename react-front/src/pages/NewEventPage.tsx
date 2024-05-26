@@ -3,6 +3,7 @@ import LocationPicker from "../components/inputs/LocationPicker";
 import TabsButtons from "../components/buttons/TabsButtons";
 import { useState } from "react";
 import { LatLngExpression } from "leaflet";
+import { Form, redirect } from "react-router-dom";
 
 const center: LatLngExpression = [50.46458696057009, 30.519340555820754];
 // navigator.geolocation.getCurrentPosition((position) => {
@@ -30,10 +31,7 @@ export function NewEventPage() {
                     <div className="grid mx-auto grid-cols-1 gap-x-12 gap-y-6 lg:grid-cols-2 items-start">
 
                         <LocationPicker center={center} onSetLocation={handleLocationChange} />
-                        <form
-                            action="#"
-                            className="flex flex-col justify-between"
-                        >
+                        <div>
                             <Typography
                                 variant="small"
                                 className="text-left !font-semibold !text-gray-600" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                        >
@@ -41,10 +39,7 @@ export function NewEventPage() {
                             </Typography>
                             {<TabsButtons locationData={eventLocation} />}
 
-                            <Button className="w-full" color="gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                                Create Event
-                            </Button>
-                        </form>
+                        </div>
                     </div>
 
                 </div>
@@ -54,3 +49,39 @@ export function NewEventPage() {
 }
 
 export default NewEventPage;
+
+export async function action({ request }: { request: Request }) {
+    const data = await request.formData();
+    const searchParams = new URL(request.url).searchParams;
+    const type = searchParams.get('type') || 'public';
+
+    let eventData: { [key: string]: string } = {
+        type,
+    };
+
+    console.log('Creating event with data:', data);
+    for (const [key, value] of data.entries()) {
+        eventData[key] = value.toString();
+    }
+
+    console.log('Gathered event data:', eventData);
+
+    // const response = await fetch('http://localhost:8080/rest/auth/authenticate', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(eventData)
+    // });
+
+    // const responseData = await response.text();
+    // if (!response.ok) {
+    //     console.error(`Error ${response.status}: ${responseData}`);
+    //     throw new Error(`Error ${response.status}: ${responseData}`);
+    // }
+
+    // console.log('Event created successfully:', responseData);
+
+    return redirect('/events');
+
+}
