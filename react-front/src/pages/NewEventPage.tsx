@@ -19,17 +19,25 @@ export function NewEventPage() {
     }
     return (
         <div className="z-10 py-2 flex flex-1 justify-center overflow-auto custom-scrollbar bg-gray-50/60">
-            <section className="px-8 py-8 h-fit bg-gray-50/80 rounded-lg">
+            <section className="px-8 py-8 h-fit w-10/12 bg-gray-50/80 rounded-lg">
                 <div className="container mx-auto text-center">
-                    <Typography
+                    {/* <Typography
                         variant="h1"
                         color="blue-gray"
                         className="mb-7 !text-3xl lg:!text-4xl" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                >
                         Create New Event!
-                    </Typography>
+                    </Typography> */}
                     <div className="grid w-11/12 mx-auto grid-cols-1 gap-x-12 gap-y-6 lg:grid-cols-2 items-start">
 
-                        <LocationPicker center={center} onSetLocation={handleLocationChange} />
+                        <div className="flex flex-col w-full h-full text-center">
+                            {/* <Typography
+                                variant="h3"
+                                color="blue-gray"
+                                className="mb-7 !text-3xl lg:!text-4xl" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                        >
+                                Pick a location for your event!
+                            </Typography> */}
+                            <LocationPicker center={center} onSetLocation={handleLocationChange} />
+                        </div>
                         <form
                             action="#"
                             className="flex flex-col justify-between"

@@ -1,5 +1,6 @@
 import { Typography, Textarea, Button } from '@material-tailwind/react'
 import InputWithLabel from '../inputs/InputWithLabel'
+import DatePicker from '../inputs/DatePicker'
 
 function EventCreationFrom({ tabName, location }: { tabName: string, location: string }) {
     const changingForm = {
@@ -10,6 +11,7 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
             placeholder="Ukraine, Kyiv"
             name="location"
             value={location}
+            readOnly
             containerProps={{
                 className: "min-w-full",
             }}
@@ -22,6 +24,7 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
                 placeholder="Ukraine, Kyiv"
                 name="location"
                 value={location}
+                readOnly
                 containerProps={{
                     className: "min-w-full",
                 }}
@@ -45,6 +48,7 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
                 placeholder="Ukraine, Kyiv"
                 name="location"
                 value={location}
+                readOnly
             >
                 <Button
                     variant='outlined'
@@ -82,6 +86,33 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
                     }}
                 />
             </div>
+            {/* <p>
+                <label htmlFor="deadline">Deadline</label>
+                <input ref={deadline} type="date" name="deadline" id="deadline" />
+            </p> */}
+            {/* <InputWithLabel
+                label="Event Date"
+                color="gray"
+                size="lg"
+                placeholder="30.09.2025"
+                type="date"
+                name="event-date"
+                style={{
+                    "::WebkitDatetimeEdit": { padding: "1em" },
+                    "::WebkitDatetimeEditFieldsWrapper": { background: "silver" },
+                    "::WebkitDatetimeEditText": { color: "red", padding: "0 0.3em" },
+                    "::WebkitDatetimeEditMonthField": { color: "blue" },
+                    "::WebkitDatetimeEditDayField": { color: "green" },
+                    "::WebkitDatetimeEditYearField": { color: "purple" },
+                    "::WebkitInnerSpinButton": { display: "none" },
+                    "::WebkitCalendarPickerIndicator": { background: "orange" },
+                }}
+                containerProps={{
+                    className: "!min-w-full",
+
+                }}
+            /> */}
+            <DatePicker />
             {changingForm[tabName as keyof typeof changingForm]}
             <div>
                 <Typography
@@ -90,11 +121,11 @@ function EventCreationFrom({ tabName, location }: { tabName: string, location: s
                     Event Description
                 </Typography>
                 <Textarea
-                    rows={6}
+                    rows={3}
                     color="gray"
                     placeholder="Message"
                     name="message"
-                    className="focus:!border-gray-900 !border-blue-gray-200 !ring-0"
+                    className="!border focus:!border-gray-900 !border-blue-gray-200 !ring-0"
                     containerProps={{
                         className: "!min-w-full",
                     }}

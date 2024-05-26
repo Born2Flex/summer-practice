@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 function InputWithLabel({ label, children, error, ...rest }: { label: string, children?: ReactNode, error?: boolean, [key: string]: any }) {
     return (
         <div className="mb-4">
-            <label htmlFor="email">
+            <label>
                 <Typography
                     variant="small"
                     className="mb-2 block text-left font-medium text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
