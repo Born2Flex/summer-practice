@@ -5,6 +5,7 @@ import com.project.eventifyspringboot.dto.RegisterRequest;
 import com.project.eventifyspringboot.entity.UserEntity;
 import com.project.eventifyspringboot.mapper.UserMapper;
 import com.project.eventifyspringboot.repository.UserRepository;
+import com.project.eventifyspringboot.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,25 +17,25 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean registerUser(RegisterRequest registerRequest) {
+    public String registerUser(RegisterRequest registerRequest) {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use");
         }
-        UserEntity user = userMapper.toEntity(registerRequest);
-        userRepository.save(user);
-        return true;
+        UserEntity user = userRepository.save(userMapper.toEntity(registerRequest));
+        return jwtService.generateToken(user.getId());
     }
 
     public String authenticateUser(AuthenticationRequest request) {
         UserEntity user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email or password"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email or password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
-        return "Generated JWT token";
+        return jwtService.generateToken(user.getId());
     }
 }

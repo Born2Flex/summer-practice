@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "${rest.prefix}/users", produces = "application/json")
-@Tag(name = "Users", description = "User management endpoints!")
-@SecurityRequirement(name = "basicAuth")
+@Tag(name = "Users", description = "User management endpoints")
+@SecurityRequirement(name = "jwt")
+@ApiResponse(responseCode = "401", content = {@Content})
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {

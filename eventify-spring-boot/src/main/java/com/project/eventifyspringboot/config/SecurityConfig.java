@@ -1,5 +1,7 @@
 package com.project.eventifyspringboot.config;
 
+import com.project.eventifyspringboot.security.AuthSecurityFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,6 +24,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
     @Value("${app.security.permitAllUris}")
     private String[] permitAllUris;
@@ -35,6 +39,7 @@ public class SecurityConfig {
     private List<String> allowedMethods;
     @Value("${cors.exposed-headers}")
     private List<String> exposedHeaders;
+    private final AuthSecurityFilter authSecurityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,13 +47,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(createCorsConfSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-//                .formLogin(FormLoginConfigurer::disable)
+                .formLogin(FormLoginConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(permitAllUris).permitAll()
-                        .requestMatchers(securedUris).permitAll()
-//                        .requestMatchers(securedUris).authenticated()
-                        .anyRequest().permitAll());
-//                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+                        .requestMatchers(securedUris).authenticated()
+                        .anyRequest().permitAll())
+                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterAfter(authSecurityFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         return http.build();
     }
 

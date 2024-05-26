@@ -26,23 +26,21 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Registers a new user.")
-    @ApiResponse(responseCode = "200",
+    @ApiResponse(responseCode = "201",
             content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "400",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
-    public boolean registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+    public String registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
         return authService.registerUser(registerRequest);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     @Operation(summary = "Get an user authentication tokens.")
     @ApiResponse(responseCode = "200",
             content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "401",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
-    @ApiResponse(responseCode = "404",
-            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
-    public String authenticate(@RequestBody AuthenticationRequest request) {
+    public String login(@RequestBody AuthenticationRequest request) {
         return authService.authenticateUser(request);
     }
 }
