@@ -1,6 +1,7 @@
 package com.project.eventifyspringboot.controller;
 
 import com.project.eventifyspringboot.dto.AuthenticationRequest;
+import com.project.eventifyspringboot.dto.JwtResponseDto;
 import com.project.eventifyspringboot.dto.RegisterRequest;
 import com.project.eventifyspringboot.handler.ApiErrorDto;
 import com.project.eventifyspringboot.service.AuthService;
@@ -37,10 +38,10 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Get an user authentication tokens.")
     @ApiResponse(responseCode = "200",
-            content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json")})
+            content = {@Content(schema = @Schema(implementation = JwtResponseDto.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "401",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
-    public String login(@RequestBody AuthenticationRequest request) {
+    public JwtResponseDto login(@RequestBody AuthenticationRequest request) {
         return authService.authenticateUser(request);
     }
 }
