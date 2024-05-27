@@ -15,7 +15,7 @@ function SearchInput() {
                     <FontAwesomeIcon icon={faMicrophone} className='text-gray-500' />
                 </button>
             </div>
-            <div className='w-auto'>
+            <div className='w-auto z-20'>
                 <Button
                     color="green"
                     type="submit"

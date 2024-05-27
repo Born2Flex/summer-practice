@@ -72,6 +72,7 @@ module.exports = withMT({
           width: '5px',
           height: '3px',
           borderRadius: '2px',
+          zIndex: 50,
         },
         '.custom-scrollbar::-webkit-scrollbar-track': {
           background: '#e2e7d4',
@@ -83,6 +84,17 @@ module.exports = withMT({
         },
         '.custom-scrollbar::-webkit-scrollbar-thumb:hover': {
           background: '#818774',
+        },
+        '.custom-scrollbar-gray::-webkit-scrollbar-track': {
+          background: theme('colors.gray.800'),
+          borderRadius: '50px',
+        },
+        '.custom-scrollbar-gray::-webkit-scrollbar-thumb': {
+          background: theme('colors.gray.500'),
+          borderRadius: '50px',
+        },
+        '.custom-scrollbar-gray::-webkit-scrollbar-thumb:hover': {
+          background: theme('colors.gray.400'),
         },
       })
     }),
