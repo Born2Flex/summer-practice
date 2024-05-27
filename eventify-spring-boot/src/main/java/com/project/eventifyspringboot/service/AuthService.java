@@ -1,6 +1,7 @@
 package com.project.eventifyspringboot.service;
 
 import com.project.eventifyspringboot.dto.AuthenticationRequest;
+import com.project.eventifyspringboot.dto.JwtResponseDto;
 import com.project.eventifyspringboot.dto.RegisterRequest;
 import com.project.eventifyspringboot.entity.UserEntity;
 import com.project.eventifyspringboot.mapper.UserMapper;
@@ -30,12 +31,12 @@ public class AuthService {
         return jwtService.generateToken(user.getId());
     }
 
-    public String authenticateUser(AuthenticationRequest request) {
+    public JwtResponseDto authenticateUser(AuthenticationRequest request) {
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
-        return jwtService.generateToken(user.getId());
+        return new JwtResponseDto(jwtService.generateToken(user.getId()));
     }
 }
