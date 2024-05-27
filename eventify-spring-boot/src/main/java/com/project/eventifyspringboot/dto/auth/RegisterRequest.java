@@ -1,4 +1,4 @@
-package com.project.eventifyspringboot.dto;
+package com.project.eventifyspringboot.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

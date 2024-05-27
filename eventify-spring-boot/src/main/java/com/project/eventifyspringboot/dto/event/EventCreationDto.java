@@ -1,5 +1,6 @@
-package com.project.eventifyspringboot.dto;
+package com.project.eventifyspringboot.dto.event;
 
+import com.project.eventifyspringboot.entity.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class EventCreationDto {
     private String title;
     private String description;
+    private EventType eventType;
     private GeoJsonPoint location;
     private LocalDateTime startDateTime;
 }

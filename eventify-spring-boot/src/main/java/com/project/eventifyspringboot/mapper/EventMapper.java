@@ -1,7 +1,7 @@
 package com.project.eventifyspringboot.mapper;
 
-import com.project.eventifyspringboot.dto.EventCreationDto;
-import com.project.eventifyspringboot.dto.EventDto;
+import com.project.eventifyspringboot.dto.event.EventCreationDto;
+import com.project.eventifyspringboot.dto.event.EventDto;
 import com.project.eventifyspringboot.entity.EventEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

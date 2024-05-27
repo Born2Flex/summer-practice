@@ -1,4 +1,4 @@
-package com.project.eventifyspringboot.handler;
+package com.project.eventifyspringboot.handler.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

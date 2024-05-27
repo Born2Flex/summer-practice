@@ -1,9 +1,9 @@
 package com.project.eventifyspringboot.controller;
 
-import com.project.eventifyspringboot.dto.CommentCreationDto;
-import com.project.eventifyspringboot.dto.CommentDto;
-import com.project.eventifyspringboot.dto.EventCreationDto;
-import com.project.eventifyspringboot.dto.EventDto;
+import com.project.eventifyspringboot.dto.event.comment.CommentCreationDto;
+import com.project.eventifyspringboot.dto.event.comment.CommentDto;
+import com.project.eventifyspringboot.dto.event.EventCreationDto;
+import com.project.eventifyspringboot.dto.event.EventDto;
 import com.project.eventifyspringboot.security.AuthDetails;
 import com.project.eventifyspringboot.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +49,15 @@ public class EventController {
     public CommentDto createComment(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId,
                                     @RequestBody @Valid CommentCreationDto comment) {
         return eventService.createComment(authDetails, eventId, comment);
+    }
+
+    @GetMapping("{eventId}")
+    @Operation(summary = "Get event by id.", description = "Get event by id.")
+    @ApiResponse(responseCode = "200", description = "Event found",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))})
+    @ApiResponse(responseCode = "404", description = "Event not found", content = {@Content})
+    public EventDto getEventById(@PathVariable String eventId) {
+        return eventService.getEventById(eventId);
     }
 
     @GetMapping

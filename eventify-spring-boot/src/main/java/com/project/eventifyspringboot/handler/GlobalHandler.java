@@ -1,5 +1,7 @@
 package com.project.eventifyspringboot.handler;
 
+import com.project.eventifyspringboot.handler.dto.ApiErrorDto;
+import com.project.eventifyspringboot.handler.dto.InvalidFieldDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,7 @@ public class GlobalHandler extends ResponseEntityExceptionHandler {
 
         ResponseValidationExceptionDto responseBody = new ResponseValidationExceptionDto(LocalDateTime.now(),
                 httpstatus.value(), "Validation failed!", 1, errors);
-        log.error("Validation failed - {}", errors, exception);
+        log.info("Validation failed - {}", errors, exception);
         return handleExceptionInternal(exception, responseBody, headers, httpstatus, request);
     }
 
@@ -45,13 +47,13 @@ public class GlobalHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleResponseStatusException(ResponseStatusException exception,
                                                                 WebRequest request) {
         ApiErrorDto responseBody = new ApiErrorDto(LocalDateTime.now(), exception.getStatusCode().value(), exception.getReason(), 2);
-        log.error("{}", responseBody.getMessage(), exception);
+        log.info("{}", responseBody.getMessage(), exception);
         return handleExceptionInternal(exception, responseBody, new HttpHeaders(), exception.getStatusCode(), request);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception exception, WebRequest request) {
-        log.warn("Unexpected error!", exception);
+        log.error("Unexpected error!", exception);
         ApiErrorDto response = new ApiErrorDto(LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 exception.getMessage(),
