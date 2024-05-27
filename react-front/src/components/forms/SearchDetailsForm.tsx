@@ -2,11 +2,27 @@ import {
     Accordion,
     AccordionHeader,
     AccordionBody,
+    Typography,
 } from "@material-tailwind/react";
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { useState } from 'react';
+import InputWithLabel from "../inputs/InputWithLabel";
+import SelectInput from "../inputs/SelectInput";
+
+const event_types = [
+    { value: 'party', label: 'Party' },
+    { value: 'birthday', label: 'Birthday' },
+    { value: 'gaming', label: 'Gaming' },
+    { value: 'meeting', label: 'Meeting' },
+]
+
+const event_categories = [
+    { value: 'public', label: 'Public' },
+    { value: 'paid', label: 'Paid' },
+    { value: 'private', label: 'Private' },
+]
 
 function Icon({ id, open }: { id: number; open: number }) {
     return (
@@ -65,16 +81,48 @@ export default function SearchDetailsForm() {
                     Advanced Search Options
                 </AccordionHeader>
                 <AccordionBody
-                    className='max-h-72 pr-2 overflow-y-auto custom-scrollbar'
+                    className='flex flex-col max-h-72 pr-2 overflow-y-auto custom-scrollbar'
                 >
-                    <DateRangePicker
-                        onChange={setDateRange}
-                        moveRangeOnFirstSelection={false}
-                        className="w-full rounded-lg"
-                        months={1}
-                        ranges={range}
-                        direction="horizontal"
-                    />
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <SelectInput name="event-type" options={event_types} />
+
+                        <SelectInput name="event-category" options={event_categories} />
+                    </div>
+
+                    <div>
+                        <Typography
+                            variant="small"
+                            className="mb-2 block text-left font-semibold text-gray-900"
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}>
+                            Pick Event Date Span
+                        </Typography>
+                        <input name='from' value={range[0].startDate?.toDateString() ?? ''} readOnly className="hidden" />
+                        <input name='to' value={range[0].endDate?.toDateString() ?? ''} readOnly className="hidden" />
+                        <DateRangePicker
+                            onChange={setDateRange}
+                            moveRangeOnFirstSelection={false}
+                            className="w-full rounded-lg"
+                            months={1}
+                            ranges={range}
+                            rangeColors={['#0e9f6e']}
+                            direction="horizontal"
+                        />
+                    </div>
+
+                    <div className="pt-4">
+                        <InputWithLabel
+                            label="Event Distance Radius (km)"
+                            color="gray"
+                            size="lg"
+                            type="number"
+                            placeholder="150"
+                            name="event-distance"
+                        />
+                    </div>
+
+
                 </AccordionBody>
             </Accordion>
         </>
