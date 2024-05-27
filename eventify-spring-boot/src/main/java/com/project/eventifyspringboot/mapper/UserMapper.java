@@ -1,6 +1,6 @@
 package com.project.eventifyspringboot.mapper;
 
-import com.project.eventifyspringboot.dto.RegisterRequest;
+import com.project.eventifyspringboot.dto.auth.RegisterRequest;
 import com.project.eventifyspringboot.dto.UserDto;
 import com.project.eventifyspringboot.entity.UserEntity;
 import org.mapstruct.*;

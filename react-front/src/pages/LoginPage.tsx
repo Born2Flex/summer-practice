@@ -4,6 +4,7 @@ import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, redirect } from "react-router-dom";
+import { setToken } from "../auth";
 
 function LoginPage() {
     const [passwordShown, setPasswordShown] = useState(false);
@@ -102,7 +103,7 @@ export async function action({ request }: { request: Request }) {
 
     console.log(authData)
 
-    const response = await fetch('http://localhost:8080/rest/auth/authenticate', {
+    const response = await fetch('http://localhost:8080/rest/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -110,13 +111,18 @@ export async function action({ request }: { request: Request }) {
         body: JSON.stringify(authData)
     });
 
-    const responseData = await response.text();
+    //const responseData = await response.text();
+    const responseData = await response.json();
     if (!response.ok) {
         console.error(`Error ${response.status}: ${responseData}`);
         throw new Error(`Error ${response.status}: ${responseData}`);
     }
 
+    const token = responseData.token;
+
     console.log('Logged in successfully:', responseData);
+
+    setToken(token);
 
     return redirect('/');
 

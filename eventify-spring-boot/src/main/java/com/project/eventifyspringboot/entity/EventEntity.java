@@ -22,6 +22,7 @@ public class EventEntity {
     private String title;
     @DocumentReference
     private UserEntity host;
+    private EventType eventType;
     private String description;
     private GeoJsonPoint location;
     private LocalDateTime startDateTime;

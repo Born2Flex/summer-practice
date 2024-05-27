@@ -1,4 +1,4 @@
-package com.project.eventifyspringboot.dto;
+package com.project.eventifyspringboot.dto.event.comment;
 
 import com.project.eventifyspringboot.entity.UserEntity;
 import lombok.Data;

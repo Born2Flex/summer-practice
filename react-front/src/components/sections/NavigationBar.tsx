@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Navbar,
     Collapse,
@@ -6,12 +6,15 @@ import {
     Button,
     IconButton,
 } from "@material-tailwind/react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faHouse, faUser, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
+import { clearToken, getToken } from "../../auth";
 
 function NewNavigation() {
     const [openNav, setOpenNav] = React.useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         window.addEventListener(
@@ -19,6 +22,12 @@ function NewNavigation() {
             () => window.innerWidth >= 960 && setOpenNav(false),
         );
     }, []);
+
+    const handleLogout = () => {
+        clearToken();
+        setIsAuthenticated(false);
+        navigate('/');
+    };
 
     const navList = (
         <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -77,7 +86,7 @@ function NewNavigation() {
                 </Typography>
                 <div className="hidden lg:block">{navList}</div>
                 <div className="flex items-center gap-x-1">
-                    <NavLink to='/login'>
+                    {/*<NavLink to='/login'>
                         <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                             Log In
                         </Button>
@@ -89,7 +98,31 @@ function NewNavigation() {
                             className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
                             Sign Up
                         </Button>
-                    </NavLink>
+                    </NavLink>*/}
+
+                    {isAuthenticated ? (
+                            <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                <span>Log Out</span>
+                            </Button>
+                        
+                        ) : (
+                            <>
+                                <NavLink to='/login'>
+                                    <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                        Log In
+                                    </Button>
+                                </NavLink>
+                                <NavLink to='/signup'>
+                                    <Button
+                                        variant="gradient"
+                                        size="sm"
+                                        className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
+                                        Sign Up
+                                    </Button>
+                                </NavLink>
+                            </>
+                        )}
+
                 </div>
                 <IconButton
                     variant="text"

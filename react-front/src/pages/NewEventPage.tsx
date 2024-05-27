@@ -45,7 +45,7 @@ export function NewEventPage() {
 export default NewEventPage;
 
 export async function action({ request }: { request: Request }) {
-    const data = await request.formData();
+    /*const data = await request.formData();
 
     let eventData: { [key: string]: string } = {};
 
@@ -54,7 +54,7 @@ export async function action({ request }: { request: Request }) {
         eventData[key] = value.toString();
     }
 
-    console.log('Gathered event data:', eventData);
+    console.log('Gathered event data:', eventData);*/
 
     // const response = await fetch('http://localhost:8080/rest/auth/authenticate', {
     //     method: 'POST',
@@ -71,6 +71,48 @@ export async function action({ request }: { request: Request }) {
     // }
 
     // console.log('Event created successfully:', responseData);
+
+    const data = await request.formData();
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        throw new Error('No JWT token found');
+    }
+
+    let eventData: any = {
+        title: data.get('title')?.toString(),
+        description: data.get('description')?.toString(),
+        eventType: data.get('event-type')?.toString(),
+        location: {
+            x: parseFloat(data.get('locationX')?.toString() || '0'),
+            y: parseFloat(data.get('locationY')?.toString() || '0'),
+            type: 'Point',
+            coordinates: [
+                parseFloat(data.get('locationX')?.toString() || '0'),
+                parseFloat(data.get('locationY')?.toString() || '0')
+            ]
+        },
+        startDateTime: data.get('event-date')?.toString()
+    };
+
+    console.log('Gathered event data:', eventData);
+
+    const response = await fetch('http://localhost:8080/rest/events', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(eventData)
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+        console.error(`Error ${response.status}: ${responseData}`);
+        throw new Error(`Error ${response.status}: ${responseData}`);
+    }
+
+    console.log('Event created successfully:', responseData);
 
     return redirect('/events');
 

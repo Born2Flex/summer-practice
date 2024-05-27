@@ -1,6 +1,6 @@
 package com.project.eventifyspringboot.mapper;
 
-import com.project.eventifyspringboot.dto.CommentDto;
+import com.project.eventifyspringboot.dto.event.comment.CommentDto;
 import com.project.eventifyspringboot.entity.CommentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

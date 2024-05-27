@@ -8,6 +8,7 @@ import EventsPage from './pages/EventsPage';
 import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage';
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
+import { requireAuth } from './loaders/authLoader.tsx';
 
 
 
@@ -38,11 +39,13 @@ function App() {
         {
           path: 'profile',
           element: <ProfilePage />,
+          loader: requireAuth,
           children: [
             {
               path: 'edit',
               element: <ProfilePage />,
               action: profileAction,
+              loader: requireAuth,
             },
           ]
         },
@@ -50,11 +53,13 @@ function App() {
           path: 'events',
           element: <EventsPage />,
           action: profileAction,
+          loader: requireAuth,
         },
         {
           path: 'new',
           element: <NewEventPage />,
           action: CreateEventAction,
+          loader: requireAuth,
         }
       ],
     },

@@ -74,7 +74,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     color="gray"
                     size="lg"
                     placeholder="First Name"
-                    name="first-name"
+                    name="title"
                     containerProps={{
                         className: "min-w-full",
                     }}
@@ -101,8 +101,8 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                 <Textarea
                     rows={3}
                     color="gray"
-                    placeholder="Message"
-                    name="message"
+                    placeholder="Description"
+                    name="description"
                     className="!border focus:!border-gray-900 !border-blue-gray-200 !ring-0"
                     containerProps={{
                         className: "!min-w-full",

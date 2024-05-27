@@ -35,7 +35,8 @@ function DatePicker() {
                             size="lg"
                             name="event-date"
                             onChange={() => null}
-                            value={date ? format(date, "PPP") : ""}
+                            //value={date ? format(date, "PPP") : ""}
+                            value={date ? format(date, "yyyy-MM-dd") : ""}
                             crossOrigin={undefined}
                             onPointerEnterCapture={undefined}
                             onPointerLeaveCapture={undefined}
