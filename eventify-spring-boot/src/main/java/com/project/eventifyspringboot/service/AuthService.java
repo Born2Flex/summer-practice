@@ -23,12 +23,12 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public String registerUser(RegisterRequest registerRequest) {
+    public JwtResponseDto registerUser(RegisterRequest registerRequest) {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use");
         }
         UserEntity user = userRepository.save(userMapper.toEntity(registerRequest));
-        return jwtService.generateToken(user.getId());
+        return new JwtResponseDto(jwtService.generateToken(user.getId()));
     }
 
     public JwtResponseDto authenticateUser(AuthenticationRequest request) {

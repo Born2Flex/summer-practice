@@ -28,10 +28,10 @@ public class AuthController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Registers a new user.")
     @ApiResponse(responseCode = "201",
-            content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json")})
+            content = {@Content(schema = @Schema(implementation = JwtResponseDto.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "400",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
-    public String registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+    public JwtResponseDto registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
         return authService.registerUser(registerRequest);
     }
 
