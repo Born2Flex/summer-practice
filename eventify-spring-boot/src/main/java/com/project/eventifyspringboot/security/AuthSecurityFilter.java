@@ -3,7 +3,6 @@ package com.project.eventifyspringboot.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.eventifyspringboot.handler.ApiErrorDto;
 import com.project.eventifyspringboot.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -34,33 +32,36 @@ public class AuthSecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("Request to uri - {}", request.getRequestURI());
         String authHeader = request.getHeader(AUTH_HEADER);
-        if (authHeader == null || authHeader.isBlank() || !authHeader.startsWith(BEARER_PREFIX)) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
+            log.info("No bearer header");
             filterChain.doFilter(request, response);
             return;
         }
         String token = authHeader.substring(BEARER_PREFIX.length());
         try {
-            String id = jwtService.getUserId(token);
-            putUserInContext(request, response, filterChain, id);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token", e);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            ApiErrorDto apiErrorDto = new ApiErrorDto(LocalDateTime.now(), 401, "JWT token expired", 6);
-            response.getWriter().write(objectMapper.writeValueAsString(apiErrorDto));
-            response.getWriter().flush();
+            if (!jwtService.isExpired(token)) {
+                String id = jwtService.getUserId(token);
+                log.info("User id - {}", id);
+
+                AuthDetails authDetails = new AuthDetails(userService.findById(id));
+                SecurityContextHolder.getContext()
+                        .setAuthentication(new UsernamePasswordAuthenticationToken(authDetails, null, authDetails.getAuthorities()));
+                filterChain.doFilter(request, response);
+            } else {
+                log.info("Token expired");
+                setApiErrorResponse(response, "Token expired", 6);
+            }
+        } catch (Exception e) {
+            log.info("Invalid token");
+            setApiErrorResponse(response, "Invalid token", 7);
         }
     }
 
-    private void putUserInContext(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String id) throws IOException, ServletException {
-        try {
-            AuthDetails authDetails = new AuthDetails(userService.findById(id));
-            SecurityContextHolder.getContext()
-                    .setAuthentication(new UsernamePasswordAuthenticationToken(authDetails, null, authDetails.getAuthorities()));
-            filterChain.doFilter(request, response);
-        } catch (ResponseStatusException e) {
-            log.info("User with id {} not found", id, e);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
+    private void setApiErrorResponse(HttpServletResponse response, String message, int errorCode) throws IOException {
+        ApiErrorDto apiError = new ApiErrorDto(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), message, errorCode);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+        response.getWriter().write(objectMapper.writeValueAsString(apiError));
+        response.getWriter().flush();
     }
 }
