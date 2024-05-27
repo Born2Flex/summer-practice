@@ -1,7 +1,7 @@
 package com.project.eventifyspringboot.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.eventifyspringboot.handler.ApiErrorDto;
+import com.project.eventifyspringboot.handler.dto.ApiErrorDto;
 import com.project.eventifyspringboot.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

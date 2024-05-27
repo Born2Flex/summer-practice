@@ -1,5 +1,7 @@
 package com.project.eventifyspringboot.handler;
 
+import com.project.eventifyspringboot.handler.dto.ApiErrorDto;
+import com.project.eventifyspringboot.handler.dto.InvalidFieldDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

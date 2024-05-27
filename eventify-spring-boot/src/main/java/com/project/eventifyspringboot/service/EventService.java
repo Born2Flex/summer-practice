@@ -1,9 +1,9 @@
 package com.project.eventifyspringboot.service;
 
-import com.project.eventifyspringboot.dto.CommentCreationDto;
-import com.project.eventifyspringboot.dto.CommentDto;
-import com.project.eventifyspringboot.dto.EventCreationDto;
-import com.project.eventifyspringboot.dto.EventDto;
+import com.project.eventifyspringboot.dto.event.comment.CommentCreationDto;
+import com.project.eventifyspringboot.dto.event.comment.CommentDto;
+import com.project.eventifyspringboot.dto.event.EventCreationDto;
+import com.project.eventifyspringboot.dto.event.EventDto;
 import com.project.eventifyspringboot.entity.CommentEntity;
 import com.project.eventifyspringboot.entity.EventEntity;
 import com.project.eventifyspringboot.mapper.CommentMapper;
@@ -30,7 +30,7 @@ public class EventService {
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         EventEntity eventEntity = eventMapper.toEntity(eventCreationDto);
-//        eventEntity.setHost(authDetails.getUser());
+        eventEntity.setHost(authDetails.getUser());
         eventEntity = eventRepository.save(eventEntity);
         return eventMapper.toDto(eventEntity);
     }
@@ -39,11 +39,17 @@ public class EventService {
         EventEntity event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No event with such id"));
         CommentEntity commentEntity = CommentEntity.builder()
-//                .userEntity(authDetails.getUser())
+                .userEntity(authDetails.getUser())
                 .eventEntity(event)
                 .comment(comment.getComment())
                 .build();
         return commentMapper.toDto(commentRepository.save(commentEntity));
+    }
+
+    public EventDto getEventById(String eventId) {
+        EventEntity event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
+        return eventMapper.toDto(event);
     }
 
     public List<EventDto> getAllEvents() {

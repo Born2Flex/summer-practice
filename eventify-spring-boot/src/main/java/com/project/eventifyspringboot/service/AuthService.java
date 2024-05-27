@@ -1,8 +1,8 @@
 package com.project.eventifyspringboot.service;
 
-import com.project.eventifyspringboot.dto.AuthenticationRequest;
-import com.project.eventifyspringboot.dto.JwtResponseDto;
-import com.project.eventifyspringboot.dto.RegisterRequest;
+import com.project.eventifyspringboot.dto.auth.LoginRequest;
+import com.project.eventifyspringboot.dto.auth.JwtResponseDto;
+import com.project.eventifyspringboot.dto.auth.RegisterRequest;
 import com.project.eventifyspringboot.entity.UserEntity;
 import com.project.eventifyspringboot.mapper.UserMapper;
 import com.project.eventifyspringboot.repository.UserRepository;
@@ -31,7 +31,7 @@ public class AuthService {
         return new JwtResponseDto(jwtService.generateToken(user.getId()));
     }
 
-    public JwtResponseDto authenticateUser(AuthenticationRequest request) {
+    public JwtResponseDto authenticateUser(LoginRequest request) {
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {

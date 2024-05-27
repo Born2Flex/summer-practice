@@ -1,4 +1,4 @@
-package com.project.eventifyspringboot.dto;
+package com.project.eventifyspringboot.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class LoginRequest {
     @NotBlank
     private String email;
     @NotBlank

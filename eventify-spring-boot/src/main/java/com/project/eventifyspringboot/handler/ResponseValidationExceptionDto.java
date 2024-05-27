@@ -1,5 +1,6 @@
 package com.project.eventifyspringboot.handler;
 
+import com.project.eventifyspringboot.handler.dto.InvalidFieldDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;

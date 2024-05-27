@@ -1,9 +1,9 @@
 package com.project.eventifyspringboot.controller;
 
-import com.project.eventifyspringboot.dto.AuthenticationRequest;
-import com.project.eventifyspringboot.dto.JwtResponseDto;
-import com.project.eventifyspringboot.dto.RegisterRequest;
-import com.project.eventifyspringboot.handler.ApiErrorDto;
+import com.project.eventifyspringboot.dto.auth.LoginRequest;
+import com.project.eventifyspringboot.dto.auth.JwtResponseDto;
+import com.project.eventifyspringboot.dto.auth.RegisterRequest;
+import com.project.eventifyspringboot.handler.dto.ApiErrorDto;
 import com.project.eventifyspringboot.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,7 +41,7 @@ public class AuthController {
             content = {@Content(schema = @Schema(implementation = JwtResponseDto.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "401",
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
-    public JwtResponseDto login(@RequestBody AuthenticationRequest request) {
+    public JwtResponseDto login(@RequestBody LoginRequest request) {
         return authService.authenticateUser(request);
     }
 }

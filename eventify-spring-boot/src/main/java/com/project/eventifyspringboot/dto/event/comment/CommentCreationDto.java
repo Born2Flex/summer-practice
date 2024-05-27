@@ -1,4 +1,4 @@
-package com.project.eventifyspringboot.dto;
+package com.project.eventifyspringboot.dto.event.comment;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CommentCreationDto {
-//    private String id;
-//    private int f;
     @NotBlank
     private String comment;
 }
