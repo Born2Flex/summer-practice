@@ -84,8 +84,6 @@ export async function action({ request }: { request: Request }) {
         description: data.get('description')?.toString(),
         eventType: data.get('event-type')?.toString(),
         location: {
-            x: parseFloat(data.get('locationX')?.toString() || '0'),
-            y: parseFloat(data.get('locationY')?.toString() || '0'),
             type: 'Point',
             coordinates: [
                 parseFloat(data.get('locationX')?.toString() || '0'),
