@@ -1,4 +1,4 @@
-import { Form, redirect } from "react-router-dom"
+import { Form } from "react-router-dom"
 import EventCard from "../cards/EventCard"
 import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"

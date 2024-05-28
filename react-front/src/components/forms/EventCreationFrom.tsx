@@ -41,6 +41,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                 containerProps={{
                     className: "!min-w-full",
                 }}
+                required
             />
         </div>),
         'private': (
@@ -69,7 +70,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
         <Form method='POST'>
             <input type="text" className='hidden' value={tabName} readOnly name='type' />
             <input type="text" className='hidden' value={locationData.toString()} readOnly name='locationLatLng' />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-x-4">
                 <InputWithLabel
                     label="Event Name"
                     color="gray"
@@ -79,6 +80,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     containerProps={{
                         className: "min-w-full",
                     }}
+                    required
                 />
                 <InputWithLabel
                     label="Event Type"
@@ -89,9 +91,21 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     containerProps={{
                         className: "!min-w-full",
                     }}
+                    required
+                />
+                <DatePicker />
+                <InputWithLabel
+                    label="Event Time"
+                    color="gray"
+                    size="lg"
+                    type="time"
+                    name="event-time"
+                    containerProps={{
+                        className: "!min-w-full",
+                    }}
+                    required
                 />
             </div>
-            <DatePicker />
             {changingForm[tabName as keyof typeof changingForm]}
             <div>
                 <Typography
