@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon, ChevronLeftIcon, CalendarIcon } from "@heroicons/react/24/outline";
 
 function DatePicker() {
     const [date, setDate] = useState<Date>();
@@ -19,14 +19,15 @@ function DatePicker() {
                 <Typography
                     variant="small"
                     className="mb-2 block text-left font-medium text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                    Pick Event Date
+                    Event Date
                 </Typography>
             </label>
             <div className='flex flex-row w-full gap-x-4'>
                 <Popover placement="bottom">
                     <PopoverHandler>
+
                         <Input
-                            className='!border focus:ring-0 focus:!border-gray-900 !border-blue-gray-200'
+                            className='!border focus:ring-0 placeholder:opacity-100 placeholder:text-black focus:!border-gray-900 !border-blue-gray-200'
                             labelProps={{
                                 className: "hidden",
                             }}
@@ -34,12 +35,17 @@ function DatePicker() {
                             color="gray"
                             size="lg"
                             name="event-date"
+                            placeholder="yyyy-mm-dd"
+                            icon={<CalendarIcon className="h-4 w-4 stroke-2 text-black" />}
                             onChange={() => null}
-                            //value={date ? format(date, "PPP") : ""}
-                            value={date ? format(date, "yyyy-MM-dd") : ""}
+                            value={date ? format(date, 'yyyy-MM-dd') : ""}
                             crossOrigin={undefined}
                             onPointerEnterCapture={undefined}
                             onPointerLeaveCapture={undefined}
+                            containerProps={{
+                                className: "min-w-full",
+                            }}
+                            required
                         />
                     </PopoverHandler>
                     <PopoverContent className="z-50 max-h-72 overflow-auto custom-scrollbar" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
