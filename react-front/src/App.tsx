@@ -4,11 +4,12 @@ import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
-import EventsPage from './pages/EventsPage';
+import EventsMapPage from './pages/EventsMapPage';
 // import { action as searchEventsAction } from './components/sections/EventsSidebar';
 import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage';
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
+import EventPage from './pages/EventPage';
 
 
 
@@ -49,8 +50,17 @@ function App() {
         },
         {
           path: 'events',
-          element: <EventsPage />,
           // action: searchEventsAction,
+          children: [
+            {
+              index: true,
+              element: <EventsMapPage />,
+            },
+            {
+              path: ':id',
+              element: <EventPage />,
+            }
+          ]
         },
         {
           path: 'new',

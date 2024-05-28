@@ -3,54 +3,9 @@ import EventCard from "../cards/EventCard"
 import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
+import { Event } from "../../pages/EventsMapPage"
 
-const events = [
-    {
-        name: 'Sigma Rizz Party',
-        location: 'Usa, Ohio, 1234 Street',
-        people: 10,
-        type: 'party',
-        link: '/events/1',
-        limit: 20,
-    },
-    {
-        name: 'Event 2',
-        location: 'Location 2',
-        people: 5,
-        type: 'birthday',
-        link: '/events/2',
-        limit: 10,
-        price: 5
-    },
-    {
-        name: 'Event 3',
-        location: 'Location 3',
-        people: 15,
-        type: 'meeting',
-        link: '/events/3',
-        price: 15
-    },
-    {
-        name: 'Event 4',
-        location: 'Location 4',
-        people: 20,
-        type: 'gaming',
-        link: '/events/4',
-        limit: 40,
-        price: 20
-    },
-    {
-        name: 'Event 5',
-        location: 'Location 5',
-        people: 25,
-        type: 'birthday',
-        link: '/events/5',
-        limit: 50,
-    }
-]
-
-
-function EventsSidebar() {
+function EventsSidebar({ events }: { events: Event[] }) {
 
     return (
         <section className='transition-all duration-500 delay-150 w-1/4 has-[nav]:w-1/2 min-w-[384px] flex flex-col bg-white gap-y-4 z-10 relative shadow-left p-4 pb-0 bg-white/70 overflow-hidden'>
