@@ -5,7 +5,7 @@ import { getToken } from '../auth.tsx';
 export function requireAuth(): null | Response {
   const token = getToken();
   if (!token) {
-    return redirect('/signup');
+    return redirect('/login');
   }
   return null; // No redirection means access is granted
 }

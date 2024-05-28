@@ -35,6 +35,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                 label="Event Price"
                 color="gray"
                 size="lg"
+                type="number"
                 placeholder="$20-30"
                 name="price"
                 containerProps={{

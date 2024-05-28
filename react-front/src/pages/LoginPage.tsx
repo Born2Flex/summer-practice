@@ -95,7 +95,6 @@ export default LoginPage;
 
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
-
     const authData = {
         email: data.get('email'),
         password: data.get('password'),

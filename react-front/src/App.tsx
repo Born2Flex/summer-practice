@@ -5,6 +5,7 @@ import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import EventsPage from './pages/EventsPage';
+// import { action as searchEventsAction } from './components/sections/EventsSidebar';
 import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage';
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
@@ -54,6 +55,7 @@ function App() {
           element: <EventsPage />,
           action: profileAction,
           loader: requireAuth,
+          // action: searchEventsAction,
         },
         {
           path: 'new',
