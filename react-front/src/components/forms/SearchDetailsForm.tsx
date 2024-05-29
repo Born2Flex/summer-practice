@@ -16,6 +16,7 @@ const event_types = [
     { value: 'birthday', label: 'Birthday' },
     { value: 'gaming', label: 'Gaming' },
     { value: 'meeting', label: 'Meeting' },
+    { value: 'other', label: 'Other' },
 ]
 
 const event_categories = [

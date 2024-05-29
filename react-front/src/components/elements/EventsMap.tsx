@@ -2,6 +2,8 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Event } from '../../pages/EventsMapPage';
+import EventCard from '../cards/EventCard';
+import EventPopup from '../cards/EventPopup';
 const position: LatLngExpression = [40.7128, -74.0060];
 
 
@@ -66,8 +68,11 @@ function EventsMap({ events }: { events: Event[] }) {
                         position={event.coordinates}
                         icon={iconMapper(event.category)}
                     >
-                        <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
+                        <Popup
+                            closeButton={false}
+                            className='w-max'
+                        >
+                            <EventPopup {...event} />
                         </Popup>
                     </Marker>
                 ))}

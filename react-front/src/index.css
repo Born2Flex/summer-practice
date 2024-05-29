@@ -191,4 +191,7 @@ label {
     mask-repeat: no-repeat;
     mask-position: center;
 }
-  
+
+.leaflet-popup-content {
+    margin: 0px !important;
+}
