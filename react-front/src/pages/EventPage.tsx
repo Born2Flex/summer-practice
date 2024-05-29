@@ -1,7 +1,6 @@
 import { Button } from "@material-tailwind/react";
 import { NavLink, useParams } from "react-router-dom";
 import Sponsors from "../components/cards/Sponsors";
-import BrowserMockup from "../components/elements/BrowserMockup";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 function EventPage() {
@@ -19,13 +18,11 @@ function EventPage() {
                             <section className="flex flex-1 max-h-[700px] min-h-[400px]">
                                 <MapContainer center={[40.7128, -74.0070]} zoom={13} scrollWheelZoom={true} className="flex-1 rounded-xl border-2 border-gray-900">
                                     <TileLayer
-                                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+                                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                                    />
                                     <Marker
                                         position={[40.7128, -74.0070]}
                                     >
-                                        <Popup>
-                                            A pretty CSS3 popup. <br /> Easily customizable.
-                                        </Popup>
                                     </Marker>
                                 </MapContainer>
                             </section>

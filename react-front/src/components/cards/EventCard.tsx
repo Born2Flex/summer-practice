@@ -3,27 +3,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
 import { Event } from '../../pages/EventsMapPage'
 
+export const colorVariants = {
+    'party': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
+    'gaming': 'bg-green-500 group-hover/item:shadow-green-400',
+    'birthday': 'bg-pink-500 group-hover/item:shadow-pink-400',
+    'meeting': 'bg-blue-500 group-hover/item:shadow-blue-400',
+}
+
+export const iconVariants = {
+    'party': faStar,
+    'gaming': faDesktop,
+    'birthday': faCakeCandles,
+    'meeting': faHandshake,
+}
+
+export const ribbonVariants = {
+    'public': 'bg-green-500',
+    'paid': 'bg-yellow-300',
+    'private': 'bg-red-500',
+}
+
 function EventCard({ name, location, category, people, type, link, limit, price }: Event) {
-
-    const colorVariants = {
-        'party': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
-        'gaming': 'bg-green-500 group-hover/item:shadow-green-400',
-        'birthday': 'bg-pink-500 group-hover/item:shadow-pink-400',
-        'meeting': 'bg-blue-500 group-hover/item:shadow-blue-400',
-    }
-
-    const iconVariants = {
-        'party': faStar,
-        'gaming': faDesktop,
-        'birthday': faCakeCandles,
-        'meeting': faHandshake,
-    }
-
-    const ribbonVariants = {
-        'public': 'bg-green-500',
-        'paid': 'bg-yellow-300',
-        'private': 'bg-red-500',
-    }
 
     return (
         <div

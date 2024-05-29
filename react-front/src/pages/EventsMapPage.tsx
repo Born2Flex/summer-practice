@@ -34,7 +34,7 @@ const events = [
         link: '/events/2',
         limit: 10,
         price: 5,
-        coordinates: [40.7128, -74.0050],
+        coordinates: [40.7228, -74.0050],
     },
     {
         name: 'Event 3',
@@ -44,7 +44,7 @@ const events = [
         type: 'meeting',
         link: '/events/3',
         price: 15,
-        coordinates: [40.7128, -74.0030],
+        coordinates: [40.7008, -74.0130],
     },
     {
         name: 'Event 4',
@@ -66,7 +66,37 @@ const events = [
         link: '/events/5',
         limit: 50,
         coordinates: [40.7128, -74.0090],
-    }
+    },
+    {
+        name: 'Event 6',
+        location: 'Location 6',
+        category: 'private',
+        people: 25,
+        type: 'birthday',
+        link: '/events/6',
+        limit: 50,
+        coordinates: [40.7148, -74.0120],
+    },
+    {
+        name: 'Event 7',
+        location: 'Location 7',
+        category: 'private',
+        people: 25,
+        type: 'birthday',
+        link: '/events/7',
+        limit: 50,
+        coordinates: [40.7158, -74.0040],
+    },
+    {
+        name: 'Event 8',
+        location: 'Location 7t',
+        category: 'public',
+        people: 10,
+        type: 'birthday',
+        link: '/events/8',
+        limit: 20,
+        coordinates: [40.7178, -74.0090],
+    },
 ] as Event[];
 
 

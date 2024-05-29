@@ -1,8 +1,7 @@
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import L, { LatLngExpression } from 'leaflet';
+import { LayersControl, MapContainer, Marker, Popup, LayerGroup, TileLayer } from 'react-leaflet';
+import L, { Circle, FeatureGroup, LatLngExpression, Rectangle, rectangle } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Event } from '../../pages/EventsMapPage';
-import EventCard from '../cards/EventCard';
 import EventPopup from '../cards/EventPopup';
 const position: LatLngExpression = [40.7128, -74.0060];
 
@@ -35,18 +34,22 @@ const redIcon = new L.Icon({
 });
 
 function EventsMap({ events }: { events: Event[] }) {
-    const iconMapper = (category: string) => {
-        switch (category) {
-            case 'public':
-                return greenIcon;
-            case 'paid':
-                return yellowIcon;
-            case 'private':
-                return redIcon;
-            default:
-                return greenIcon;
-        }
-    }
+    // const iconMapper = (category: string) => {
+    //     switch (category) {
+    //         case 'public':
+    //             return greenIcon;
+    //         case 'paid':
+    //             return yellowIcon;
+    //         case 'private':
+    //             return redIcon;
+    //         default:
+    //             return greenIcon;
+    //     }
+    // }
+
+    const publicEvents = events.filter(event => event.category === 'public');
+    const paidEvents = events.filter(event => event.category === 'paid');
+    const privateEvents = events.filter(event => event.category === 'private');
 
     return (
         <section className='w-3/4 z-0'>
@@ -59,23 +62,64 @@ function EventsMap({ events }: { events: Event[] }) {
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                // url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-
                 />
-                {events.map((event, index) => (
-                    <Marker
-                        key={index}
-                        position={event.coordinates}
-                        icon={iconMapper(event.category)}
-                    >
-                        <Popup
-                            closeButton={false}
-                            className='w-max'
-                        >
-                            <EventPopup {...event} />
-                        </Popup>
-                    </Marker>
-                ))}
+
+                <LayersControl position="topright">
+                    <LayersControl.Overlay name="Public Events">
+                        <LayerGroup>
+                            {publicEvents.map((event, index) => (
+                                <Marker
+                                    key={index}
+                                    position={event.coordinates}
+                                    icon={greenIcon}
+                                >
+                                    <Popup
+                                        closeButton={false}
+                                        className='w-max'
+                                    >
+                                        <EventPopup {...event} />
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </LayerGroup>
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay checked name="Paid Events">
+                        <LayerGroup>
+                            {paidEvents.map((event, index) => (
+                                <Marker
+                                    key={index}
+                                    position={event.coordinates}
+                                    icon={yellowIcon}
+                                >
+                                    <Popup
+                                        closeButton={false}
+                                        className='w-max'
+                                    >
+                                        <EventPopup {...event} />
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </LayerGroup>
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay name="Private Events">
+                        <LayerGroup>
+                            {privateEvents.map((event, index) => (
+                                <Marker
+                                    key={index}
+                                    position={event.coordinates}
+                                    icon={redIcon}
+                                >
+                                    <Popup
+                                        closeButton={false}
+                                        className='w-max'
+                                    >
+                                        <EventPopup {...event} />
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </LayerGroup>
+                    </LayersControl.Overlay>
+                </LayersControl>
             </MapContainer>
         </section>
     )
