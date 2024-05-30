@@ -89,18 +89,29 @@ export async function action({ request }: { request: Request }) {
 
         const date = new Date(Date.UTC(
             parseInt(year),
-            parseInt(month),
+            parseInt(month) - 1,
             parseInt(day),
             parseInt(hours),
             parseInt(minutes),
             0
         ));
     
-        isoDateString = date.toISOString();
-    
+        //isoDateString = date.toISOString();
+
+        isoDateString = date.toLocaleString('en-US', {
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            timeZoneName: 'short',
+            hour12: false,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+            
         console.log(isoDateString);    
     }
-
 
     let eventData: any = {
         title: data.get('title')?.toString(),
@@ -114,7 +125,6 @@ export async function action({ request }: { request: Request }) {
             ]
         },
         startDateTime: isoDateString
-
     };
 
     console.log('Gathered event data:', eventData);
