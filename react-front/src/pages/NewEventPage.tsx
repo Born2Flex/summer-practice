@@ -79,6 +79,29 @@ export async function action({ request }: { request: Request }) {
         throw new Error('No JWT token found');
     }
 
+    const eventDate: string | undefined = data.get('event-date')?.toString();
+    const eventTime: string | undefined = data.get('event-time')?.toString();
+    let isoDateString: string | undefined;
+
+    if (eventDate && eventTime) {
+        const [year, month, day] = eventDate.split('-');
+        const [hours, minutes] = eventTime.split(':');
+
+        const date = new Date(Date.UTC(
+            parseInt(year),
+            parseInt(month),
+            parseInt(day),
+            parseInt(hours),
+            parseInt(minutes),
+            0
+        ));
+    
+        isoDateString = date.toISOString();
+    
+        console.log(isoDateString);    
+    }
+
+
     let eventData: any = {
         title: data.get('title')?.toString(),
         description: data.get('description')?.toString(),
@@ -90,7 +113,8 @@ export async function action({ request }: { request: Request }) {
                 parseFloat(data.get('locationY')?.toString() || '0')
             ]
         },
-        startDateTime: data.get('event-date')?.toString()
+        startDateTime: isoDateString
+
     };
 
     console.log('Gathered event data:', eventData);
