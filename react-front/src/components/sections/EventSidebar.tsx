@@ -6,15 +6,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
 import BirthdayCard from "../../assets/birthday-card.jpg"
 import { NavLink } from "react-router-dom"
+import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 
 function EventSidebar({ name, location, category, people, type, link, limit, price }: Event) {
 
     return (
-        <section className='transition-all duration-500 delay-150 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
+        <section className='transition-all duration-500 delay-150 has-[nav]:w-1/2 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
             <Background />
             <div className="absolute z-0 pointer-events-none top-0 left-0 w-full h-full bg-white/65" />
 
-            <div className="flex flex-col z-10">
+            <div className="flex flex-1 max-h-full flex-col z-10">
 
                 <div className="flex flex-row justify-between">
                     <NavLink to='..'>
@@ -25,6 +26,8 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                             <ArrowLeftIcon className="w-5 h-5" />
                         </IconButton>
                     </NavLink>
+
+                    <p className="flex items-center text-sm font-semibold">{category.toUpperCase()} {type.toUpperCase()}</p>
 
                     <div className="flex gap-x-4">
                         <IconButton
@@ -42,16 +45,15 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                     </div>
                 </div>
 
-                <div className="w-full mt-4 mx-auto rounded-2xl shadow-rounded">
-                    <img src={BirthdayCard} alt="Event" className="w-full border-2 border-gray-800 object-cover rounded-2xl" />
-                </div>
+                {/* <div className="w-full mt-4 mx-auto rounded-2xl shadow-rounded">
+                    <img src={BirthdayCard} alt="Event" className="w-full h-24 border-2 border-gray-800 object-cover rounded-2xl" />
+                </div> */}
 
                 <div className="mt-4">
-                    <h1 className="text-2xl font-bold">Dmytro's birthday party!
-                    </h1>
+                    <h1 className="text-2xl font-bold text-center">Dmytro's birthday party!</h1>
                 </div>
 
-                <div className="my-6 flex flex-row justify-between">
+                <div className="my-5 flex flex-row justify-between">
                     <div className="flex flex-row">
                         <div className="px-6 flex flex-col justify-center text-center">
                             <h3 className="font-semibold">29</h3>
@@ -70,13 +72,7 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                     </IconButton>
                 </div>
 
-                <div className="flex flex-col gap-y-2">
-                    <h2 className="text-lg font-bold">About this event:</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id iure expedita consequuntur,
-                        nisi fuga soluta omnis! ...
-                    </p>
-                    <a href="#" className="text-green-500">Read more</a>
-                </div>
+                <EventSidebarAccordion />
 
             </div>
             <div className="flex flex-row justify-between z-10">
