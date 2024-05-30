@@ -11,6 +11,7 @@ import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
 import EventPage from './pages/EventPage';
 import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
+import { requireAuth } from './loaders/authLoader.tsx';
 
 
 
@@ -41,17 +42,21 @@ function App() {
         {
           path: 'profile',
           element: <ProfilePage />,
+          loader: requireAuth,
           children: [
             {
               path: 'edit',
               element: <ProfilePage />,
               action: profileAction,
+              loader: requireAuth,
             },
           ]
         },
         {
           path: 'events',
           element: <MapWithSidebarLayout />,
+          action: profileAction,
+          loader: requireAuth,
           // action: searchEventsAction,
           children: [
             {
@@ -68,6 +73,7 @@ function App() {
           path: 'new',
           element: <NewEventPage />,
           action: CreateEventAction,
+          loader: requireAuth,
         }
       ],
     },

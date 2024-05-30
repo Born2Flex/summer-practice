@@ -4,14 +4,13 @@ import { Button, IconButton } from "@material-tailwind/react"
 import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
-import BirthdayCard from "../../assets/birthday-card.jpg"
 import { NavLink } from "react-router-dom"
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 
 function EventSidebar({ name, location, category, people, type, link, limit, price }: Event) {
 
     return (
-        <section className='transition-all duration-500 delay-150 has-[nav]:w-1/2 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
+        <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
             <Background />
             <div className="absolute z-0 pointer-events-none top-0 left-0 w-full h-full bg-white/65" />
 

@@ -53,7 +53,7 @@ export function EventSidebarAccordion() {
     const handleOpen = (value: number) => setOpen(open === value ? 3 - value : value);
 
     return (
-        <div className="flex flex-1 flex-col pb-1">
+        <div className="flex flex-1 flex-col pb-1.5">
             <Accordion className={`${open === 1 ? 'flex flex-col flex-1' : undefined}`} open={open === 1} icon={<Icon id={1} open={open} />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <AccordionHeader onClick={() => handleOpen(1)} className="text-lg font-semibold text-gray-800  border-gray-800" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>About this event</AccordionHeader>
                 <AccordionBody className='flex flex-1 flex-col gap-y-6'>

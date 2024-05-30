@@ -5,6 +5,22 @@ import { Form } from 'react-router-dom'
 import { LatLngExpression } from 'leaflet'
 
 function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
+
+    let lat, lng;
+    if (Array.isArray(locationData)) {
+        lat = locationData[0];
+        lng = locationData[1];
+    } else if (locationData.lat !== undefined && locationData.lng !== undefined) {
+        lat = locationData.lat;
+        lng = locationData.lng;
+    } else {
+        throw new Error("Invalid latLngExpression format");
+    }
+    console.log( {
+        latitude: lat.toString(),
+        longitude: lng.toString()
+    })
+
     const changingForm = {
         'public': (<InputWithLabel
             label="Event Location"
@@ -68,6 +84,8 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
     }
     return (
         <Form method='POST'>
+            <input type="text" className='hidden' name="locationX" readOnly value={lat} />
+            <input type="text" className='hidden' name="locationY" readOnly value={lng} />
             <input type="text" className='hidden' value={tabName} readOnly name='type' />
             <input type="text" className='hidden' value={locationData.toString()} readOnly name='locationLatLng' />
             <div className="grid grid-cols-2 gap-x-4">
@@ -76,7 +94,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     color="gray"
                     size="lg"
                     placeholder="First Name"
-                    name="first-name"
+                    name="title"
                     containerProps={{
                         className: "min-w-full",
                     }}
@@ -116,8 +134,8 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                 <Textarea
                     rows={3}
                     color="gray"
-                    placeholder="Message"
-                    name="message"
+                    placeholder="Description"
+                    name="description"
                     className="!border focus:!border-gray-900 !border-blue-gray-200 !ring-0"
                     containerProps={{
                         className: "!min-w-full",
