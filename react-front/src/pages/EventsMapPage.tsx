@@ -14,7 +14,7 @@ export interface Event {
     coordinates: LatLngExpression;
 }
 
-const events = [
+export const events = [
     {
         name: 'Sigma Rizz Party',
         location: 'Usa, Ohio, 1234 Street',
@@ -102,9 +102,6 @@ const events = [
 
 export default function EventsMapPage() {
     return (
-        <div className='flex flex-1'>
-            <EventsMap events={events} />
-            <EventsSidebar events={events} />
-        </div>
+        <EventsSidebar events={events} />
     );
 }

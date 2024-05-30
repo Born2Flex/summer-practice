@@ -1,5 +1,5 @@
 import { LayersControl, MapContainer, Marker, Popup, LayerGroup, TileLayer } from 'react-leaflet';
-import L, { Circle, FeatureGroup, LatLngExpression, Rectangle, rectangle } from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Event } from '../../pages/EventsMapPage';
 import EventPopup from '../cards/EventPopup';
@@ -65,7 +65,7 @@ function EventsMap({ events }: { events: Event[] }) {
                 />
 
                 <LayersControl position="topright">
-                    <LayersControl.Overlay name="Public Events">
+                    <LayersControl.Overlay checked name="Public Events">
                         <LayerGroup>
                             {publicEvents.map((event, index) => (
                                 <Marker
@@ -101,7 +101,7 @@ function EventsMap({ events }: { events: Event[] }) {
                             ))}
                         </LayerGroup>
                     </LayersControl.Overlay>
-                    <LayersControl.Overlay name="Private Events">
+                    <LayersControl.Overlay checked name="Private Events">
                         <LayerGroup>
                             {privateEvents.map((event, index) => (
                                 <Marker

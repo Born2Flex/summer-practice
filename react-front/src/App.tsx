@@ -10,6 +10,7 @@ import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage'
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
 import EventPage from './pages/EventPage';
+import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
 
 
 
@@ -50,6 +51,7 @@ function App() {
         },
         {
           path: 'events',
+          element: <MapWithSidebarLayout />,
           // action: searchEventsAction,
           children: [
             {
