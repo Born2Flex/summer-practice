@@ -10,14 +10,26 @@ const animatedComponents = makeAnimated();
 // ]
 
 const colourStyles: StylesConfig<any> = {
-    control: (styles) => ({
+    control: (styles, { isFocused }) => ({
         ...styles,
         backgroundColor: 'transparent',
         outline: 'none !important',
-        border: '1px solid #b0bec5 !important',
+        border: isFocused ? '1px solid black !important' : '1px solid #b0bec5 !important',
         boxShadow: 'none !important',
+
+        ':active': {
+            ...styles[':active'],
+            outline: 'none',
+            border: '1px solid black !important',
+        },
+        ':focus': {
+            ...styles[':focus'],
+            outline: 'none',
+            border: '1px solid black !important',
+        }
+
     }),
-    option: (styles, { }) => {
+    option: (styles) => {
         return {
             ...styles,
 
@@ -33,6 +45,26 @@ const colourStyles: StylesConfig<any> = {
             }
         };
     },
+    multiValue: (styles) => {
+        return {
+            ...styles,
+            backgroundColor: '#0e9f6e',
+            fontWeight: 'bold',
+            borderRadius: '4px',
+        };
+    },
+    multiValueLabel: (styles) => ({
+        ...styles,
+        color: 'white',
+    }),
+    multiValueRemove: (styles) => ({
+        ...styles,
+        color: 'white',
+        ':hover': {
+            background: '#075239',
+            color: 'white',
+        },
+    }),
 };
 
 function SelectInput({ name, options }: { name: string, options: { value: string, label: string }[] }) {

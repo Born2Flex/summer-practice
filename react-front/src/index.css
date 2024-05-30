@@ -191,4 +191,15 @@ label {
     mask-repeat: no-repeat;
     mask-position: center;
 }
-  
+
+.leaflet-popup-content {
+    margin: 0px !important;
+}
+
+.leaflet-control-layers-selector {
+    @apply !ring-0 !outline-none mb-3 text-green-500
+}
+
+.leaflet-control-layers-overlays {
+    @apply text-sm;
+}
