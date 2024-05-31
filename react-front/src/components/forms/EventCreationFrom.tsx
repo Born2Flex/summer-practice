@@ -4,6 +4,7 @@ import DatePicker from '../inputs/DatePicker'
 import { Form } from 'react-router-dom'
 import { LatLngExpression } from 'leaflet'
 import SingleSelectInput from '../inputs/SingleSelectInput'
+import ImageInput from '../inputs/ImageInput'
 
 const eventTypes = ['party', 'meeting', 'birthday', 'gaming']
 
@@ -92,19 +93,22 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
             <input type="text" className='hidden' name="locationY" readOnly value={lng} />
             <input type="text" className='hidden' value={tabName} readOnly name='type' />
             <input type="text" className='hidden' value={locationData.toString()} readOnly name='locationLatLng' />
-            <div className="grid grid-cols-2 gap-x-4">
-                <InputWithLabel
-                    label="Event Name"
-                    color="gray"
-                    size="lg"
-                    placeholder="First Name"
-                    name="title"
-                    containerProps={{
-                        className: "min-w-full",
-                    }}
-                    required
-                />
-                {/* <InputWithLabel
+
+            <div className='grid grid-cols-3 gap-x-4'>
+
+                <div className="col-span-2 grid grid-cols-2 gap-x-4">
+                    <InputWithLabel
+                        label="Event Name"
+                        color="gray"
+                        size="lg"
+                        placeholder="First Name"
+                        name="title"
+                        containerProps={{
+                            className: "min-w-full",
+                        }}
+                        required
+                    />
+                    {/* <InputWithLabel
                     label="Event Type"
                     color="gray"
                     size="lg"
@@ -115,20 +119,22 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     }}
                     required
                 /> */}
-                <SingleSelectInput eventTypes={eventTypes} />
+                    <SingleSelectInput eventTypes={eventTypes} />
 
-                <DatePicker />
-                <InputWithLabel
-                    label="Event Time"
-                    color="gray"
-                    size="lg"
-                    type="time"
-                    name="event-time"
-                    containerProps={{
-                        className: "!min-w-full",
-                    }}
-                    required
-                />
+                    <DatePicker />
+                    <InputWithLabel
+                        label="Event Time"
+                        color="gray"
+                        size="lg"
+                        type="time"
+                        name="event-time"
+                        containerProps={{
+                            className: "!min-w-full",
+                        }}
+                        required
+                    />
+                </div>
+                <ImageInput />
             </div>
             {changingForm[tabName as keyof typeof changingForm]}
             <div>

@@ -15,8 +15,16 @@ import { LatLngExpression } from "leaflet";
 import useFetch from "../../hooks/useFetch";
 
 function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
-    const { data: fetchedData, isLoading, error, refetch } = useFetch({ latLng: locationData });
-    console.log(fetchedData);
+    // const { data: fetchedData, isLoading, error, refetch } = useFetch({ latLng: locationData });
+    // console.log(fetchedData);
+    const isLoading = false;
+    const fetchedData = {
+        addresses: [
+            {
+                formattedAddress: "Ukraine, Kyiv",
+            },
+        ],
+    }
     const data = [
         {
             label: "Public",
