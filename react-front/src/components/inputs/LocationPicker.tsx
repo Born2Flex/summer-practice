@@ -47,7 +47,9 @@ function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, o
                     eventHandlers={eventHandlers}
                     position={position}
                     ref={markerRef}>
-                    <Popup minWidth={90}>
+                    <Popup
+                        closeButton={false}
+                    >
                         <Button variant='filled' size='sm' onClick={toggleDraggable} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                             {draggable
                                 ? 'Fixate location'

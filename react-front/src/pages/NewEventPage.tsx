@@ -82,7 +82,7 @@ export async function action({ request }: { request: Request }) {
     let eventData: any = {
         title: data.get('title')?.toString(),
         description: data.get('description')?.toString(),
-        eventType: data.get('event-type')?.toString(),
+        eventType: data.get('event-type'),
         location: {
             type: 'Point',
             coordinates: [

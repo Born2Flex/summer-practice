@@ -5,6 +5,7 @@ import UserReview from '../components/elements/UserReview';
 import ChartCard from '../components/cards/ChartCard';
 
 const HomePage: React.FC = () => {
+  console.log('HomePage');
   return (
     <div className='flex flex-col gap-y-8 relative w-full h-full overflow-y-scroll custom-scrollbar backdrop-blur-md bg-gray-200 bg-opacity-20'>
       <LandingCard />

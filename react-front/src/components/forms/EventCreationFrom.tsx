@@ -3,6 +3,9 @@ import InputWithLabel from '../inputs/InputWithLabel'
 import DatePicker from '../inputs/DatePicker'
 import { Form } from 'react-router-dom'
 import { LatLngExpression } from 'leaflet'
+import SingleSelectInput from '../inputs/SingleSelectInput'
+
+const eventTypes = ['party', 'meeting', 'birthday', 'gaming']
 
 function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
 
@@ -16,10 +19,11 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
     } else {
         throw new Error("Invalid latLngExpression format");
     }
-    console.log( {
+    console.log({
         latitude: lat.toString(),
         longitude: lng.toString()
     })
+
 
     const changingForm = {
         'public': (<InputWithLabel
@@ -100,7 +104,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     }}
                     required
                 />
-                <InputWithLabel
+                {/* <InputWithLabel
                     label="Event Type"
                     color="gray"
                     size="lg"
@@ -110,7 +114,9 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         className: "!min-w-full",
                     }}
                     required
-                />
+                /> */}
+                <SingleSelectInput eventTypes={eventTypes} />
+
                 <DatePicker />
                 <InputWithLabel
                     label="Event Time"
