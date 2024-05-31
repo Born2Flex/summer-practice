@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     Navbar,
     Collapse,
@@ -9,11 +9,12 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faHouse, faUser, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
-import { clearToken, getToken } from "../../auth";
+import { useAuth } from "../../context/AuthProvider";
 
 function NewNavigation() {
     const [openNav, setOpenNav] = React.useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
+    //const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
+    const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -24,8 +25,9 @@ function NewNavigation() {
     }, []);
 
     const handleLogout = () => {
-        clearToken();
-        setIsAuthenticated(false);
+        //clearToken();
+        //setIsAuthenticated(false);
+        logout();
         navigate('/');
     };
 

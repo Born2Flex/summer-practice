@@ -12,6 +12,7 @@ import SignupPage, { action as signupAction } from './pages/SignupPage';
 import EventPage from './pages/EventPage';
 import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
 import { requireAuth } from './loaders/authLoader.tsx';
+import { AuthProvider } from './context/AuthProvider.tsx';
 
 
 
@@ -19,7 +20,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <RootLayout />,
+      element:     <AuthProvider><RootLayout /></AuthProvider>,
       errorElement: <ErrorPage />,
       id: 'root',
       // loader: tokenLoader,

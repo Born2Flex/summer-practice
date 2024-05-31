@@ -121,8 +121,9 @@ export async function action({ request }: { request: Request }) {
 
     console.log('Logged in successfully:', responseData);
 
+    //const { login } = useAuth();
     setToken(token);
+    //loginstate();
 
     return redirect('/');
-
 }
