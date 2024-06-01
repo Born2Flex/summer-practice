@@ -103,27 +103,27 @@ function NewNavigation() {
                     </NavLink>*/}
 
                     {isAuthenticated ? (
-                            <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                                <span>Log Out</span>
-                            </Button>
-                        
-                        ) : (
-                            <>
-                                <NavLink to='/login'>
-                                    <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                                        Log In
-                                    </Button>
-                                </NavLink>
-                                <NavLink to='/signup'>
-                                    <Button
-                                        variant="gradient"
-                                        size="sm"
-                                        className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
-                                        Sign Up
-                                    </Button>
-                                </NavLink>
-                            </>
-                        )}
+                        <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                            <span>Log Out</span>
+                        </Button>
+
+                    ) : (
+                        <>
+                            <NavLink to='/login'>
+                                <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                    Log In
+                                </Button>
+                            </NavLink>
+                            <NavLink to='/signup'>
+                                <Button
+                                    variant="gradient"
+                                    size="sm"
+                                    className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
+                                    Sign Up
+                                </Button>
+                            </NavLink>
+                        </>
+                    )}
 
                 </div>
                 <IconButton
@@ -167,12 +167,23 @@ function NewNavigation() {
                 <div className="container mx-auto">
                     {navList}
                     <div className="flex items-center gap-x-1">
-                        <Button fullWidth variant="text" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                            <span>Log In</span>
-                        </Button>
-                        <Button fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                            <span>Sign in</span>
-                        </Button>
+                        {isAuthenticated ? (
+                            <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                <span>Log Out</span>
+                            </Button>
+                        ) : (
+                            <>
+                                <NavLink to='/login'>
+                                    <Button fullWidth variant="text" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                        <span>Log In</span>
+                                    </Button>
+                                </NavLink><NavLink to='/signup'>
+                                    <Button fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                        <span>Sign up</span>
+                                    </Button>
+                                </NavLink>
+                            </>
+                        )}
                     </div>
                 </div>
             </Collapse>
