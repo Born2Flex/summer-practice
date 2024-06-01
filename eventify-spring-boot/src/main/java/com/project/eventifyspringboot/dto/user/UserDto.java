@@ -1,4 +1,4 @@
-package com.project.eventifyspringboot.dto;
+package com.project.eventifyspringboot.dto.user;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserDto {
     private String id;
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
+    private String imgUrl;
 }

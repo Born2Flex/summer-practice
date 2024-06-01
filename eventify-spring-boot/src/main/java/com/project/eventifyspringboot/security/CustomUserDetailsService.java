@@ -1,6 +1,6 @@
 package com.project.eventifyspringboot.security;
 
-import com.project.eventifyspringboot.entity.UserEntity;
+import com.project.eventifyspringboot.entity.User;
 import com.project.eventifyspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByEmail(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can`t find user by email: " + username));
         return new AuthDetails(user);
     }

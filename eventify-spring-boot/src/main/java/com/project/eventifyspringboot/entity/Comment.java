@@ -12,14 +12,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("comments")
-public class CommentEntity {
+public class Comment {
     @Id
     private String id;
-    private String comment;
-    @Field(name = "event_id")
-    @DocumentReference
-    private EventEntity eventEntity;
+    private String text;
     @Field(name = "user_id")
     @DocumentReference
-    private UserEntity userEntity;
+    private User user;
 }

@@ -1,6 +1,6 @@
 package com.project.eventifyspringboot.security;
 
-import com.project.eventifyspringboot.entity.UserEntity;
+import com.project.eventifyspringboot.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class AuthDetails implements UserDetails {
-    private UserEntity user;
+    private User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

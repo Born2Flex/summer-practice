@@ -1,10 +1,10 @@
 package com.project.eventifyspringboot.repository;
 
-import com.project.eventifyspringboot.entity.UserEntity;
+import com.project.eventifyspringboot.entity.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<UserEntity, String> {
-    Optional<UserEntity> findByEmail(String email);
+public interface UserRepository extends MongoRepository<User, String> {
+    Optional<User> findByEmail(String email);
 }

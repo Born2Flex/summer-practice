@@ -1,7 +1,7 @@
 package com.project.eventifyspringboot.repository;
 
-import com.project.eventifyspringboot.entity.CommentEntity;
+import com.project.eventifyspringboot.entity.Comment;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface CommentRepository extends MongoRepository<CommentEntity, String> {
+public interface CommentRepository extends MongoRepository<Comment, String> {
 }

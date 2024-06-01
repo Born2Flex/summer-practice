@@ -9,11 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("users")
-public class UserEntity {
+public class User {
     @Id
     private String id;
     private String email;
     private String password;
     private String firstName;
     private String lastName;
+    private String description;
+    private String imgUrl;
+//  Attended Events ...
 }
