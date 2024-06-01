@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -31,10 +33,10 @@ public class Event {
     private List<User> participants;
     private EventType eventType;
     private String locationName;
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
     private LocalDateTime startDateTime;
     @DocumentReference(collection = "comments", lazy = true)
     private List<Comment> comments;
     private String imgUrl;
-    // Tags
 }

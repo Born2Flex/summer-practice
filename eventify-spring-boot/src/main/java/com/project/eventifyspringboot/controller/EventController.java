@@ -5,7 +5,8 @@ import com.project.eventifyspringboot.dto.event.comment.CommentCreationDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentDto;
 import com.project.eventifyspringboot.dto.event.EventCreationDto;
 import com.project.eventifyspringboot.dto.event.EventDto;
-import com.project.eventifyspringboot.handler.dto.ApiErrorDto;
+import com.project.eventifyspringboot.enumeration.EventAvailability;
+import com.project.eventifyspringboot.enumeration.EventType;
 import com.project.eventifyspringboot.security.AuthDetails;
 import com.project.eventifyspringboot.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -68,6 +70,20 @@ public class EventController {
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class)))})
     public List<EventShortDto> getEvents() {
         return eventService.getAllEvents();
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Search events based on various criteria",
+            description = "Provide criteria such as event type, availability, date range, radius, and location to search for events.")
+    @ApiResponse(responseCode = "200", description = "Events found",
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class))))
+    public List<EventShortDto> searchEvents(@RequestParam(required = false) EventType type,
+                                            @RequestParam(required = false) EventAvailability availability,
+                                            @RequestParam(required = false) LocalDateTime from,
+                                            @RequestParam(required = false) LocalDateTime to,
+                                            @RequestParam int radius,
+                                            @RequestParam double longitude, @RequestParam double latitude) {
+        return eventService.searchEvents(type, availability, from, to, radius, longitude, latitude);
     }
 
     @PatchMapping("/{eventId}/participate")

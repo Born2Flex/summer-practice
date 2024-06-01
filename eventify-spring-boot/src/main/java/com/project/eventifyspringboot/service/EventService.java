@@ -7,6 +7,8 @@ import com.project.eventifyspringboot.dto.event.EventCreationDto;
 import com.project.eventifyspringboot.dto.event.EventDto;
 import com.project.eventifyspringboot.entity.Comment;
 import com.project.eventifyspringboot.entity.Event;
+import com.project.eventifyspringboot.enumeration.EventAvailability;
+import com.project.eventifyspringboot.enumeration.EventType;
 import com.project.eventifyspringboot.mapper.CommentMapper;
 import com.project.eventifyspringboot.mapper.EventMapper;
 import com.project.eventifyspringboot.repository.CommentRepository;
@@ -14,10 +16,20 @@ import com.project.eventifyspringboot.repository.EventRepository;
 import com.project.eventifyspringboot.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.NearQuery;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,6 +40,7 @@ public class EventService {
     private final CommentRepository commentRepository;
     private final EventMapper eventMapper;
     private final CommentMapper commentMapper;
+    private final MongoTemplate template;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -63,5 +76,31 @@ public class EventService {
         event.getParticipants().add(authDetails.getUser());
         eventRepository.save(event);
         return true;
+    }
+
+    public List<EventShortDto> searchEvents(EventType type, EventAvailability availability,
+                                            LocalDateTime from, LocalDateTime to, int radius,
+                                            double longitude, double latitude) {
+        Query query = new Query();
+
+        if (type != null) {
+            query.addCriteria(Criteria.where("eventType").is(type));
+        }
+        if (availability != null) {
+            query.addCriteria(Criteria.where("availability").is(availability));
+        }
+        if (from != null) {
+            query.addCriteria(Criteria.where("startDateTime").gte(from));
+        }
+        if (to != null) {
+            query.addCriteria(Criteria.where("endDateTime").lte(to));
+        }
+
+        Point location = new Point(longitude, latitude);
+        Distance distance = new Distance(radius, Metrics.KILOMETERS);
+        query.addCriteria(Criteria.where("location").nearSphere(location).maxDistance(distance.getNormalizedValue()));
+
+        List<Event> events = template.find(query, Event.class);
+        return eventMapper.toListDto(events);
     }
 }
