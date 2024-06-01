@@ -21,11 +21,6 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
     } else {
         throw new Error("Invalid latLngExpression format");
     }
-    console.log({
-        latitude: lat.toString(),
-        longitude: lng.toString()
-    })
-
 
     const changingForm = {
         'public': (<InputWithLabel

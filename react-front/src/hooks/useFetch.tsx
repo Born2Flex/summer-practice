@@ -11,7 +11,7 @@ const useFetch = ({ latLng }: { latLng: LatLngExpression }) => {
         method: 'GET',
         url: `https://api.radar.io/v1/geocode/reverse?coordinates=${latLng}&layers=address`,
         headers: {
-            'Authorization': 'prj_test_pk_8ab5a350d35e2eafbed74c4204f776b301f4708f',
+            'Authorization': import.meta.env.VITE_RADAR_API_KEY as string,
         },
     };
 

@@ -126,7 +126,8 @@ export async function action({ request }: { request: Request }) {
                 parseFloat(data.get('locationY')?.toString() || '0')
             ]
         },
-        startDateTime: isoDateString
+        startDateTime: isoDateString,
+        image: data.get('event-image') || undefined
     };
 
     console.log('Gathered event data:', eventData);
