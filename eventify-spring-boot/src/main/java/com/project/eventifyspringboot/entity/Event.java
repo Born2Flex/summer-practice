@@ -31,6 +31,8 @@ public class Event {
     private EventAvailability availability;
     @DocumentReference(collection = "users", lazy = true)
     private List<User> participants;
+    private Integer maxParticipants;
+    private Double entranceFee;
     private EventType eventType;
     private String locationName;
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)

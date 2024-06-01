@@ -21,6 +21,8 @@ public class EventCreationDto {
     @NotBlank
     private String description;
     private EventAvailability availability;
+    private Integer maxParticipants;
+    private Double entranceFee;
     private EventType eventType;
     @NotBlank
     private String locationName;

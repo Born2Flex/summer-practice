@@ -93,4 +93,10 @@ public class EventController {
     public boolean submitParticipation(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId) {
         return eventService.submitParticipation(authDetails, eventId);
     }
+
+    @GetMapping("/types")
+    @Operation(summary = "Return types of events", description = "Return types of events")
+    public List<EventType> getEventTypes() {
+        return List.of(EventType.values());
+    }
 }

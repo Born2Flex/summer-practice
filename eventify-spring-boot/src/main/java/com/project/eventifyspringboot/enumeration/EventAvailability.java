@@ -1,7 +1,7 @@
 package com.project.eventifyspringboot.enumeration;
 
 public enum EventAvailability {
-    OPEN,
+    PUBLIC,
     PAID,
     PRIVATE
 }
