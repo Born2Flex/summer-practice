@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import { ChevronRightIcon, ChevronLeftIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 function DatePicker() {
     const [date, setDate] = useState<Date>();
@@ -27,7 +27,7 @@ function DatePicker() {
                     <PopoverHandler>
 
                         <Input
-                            className='!border focus:ring-0 placeholder:opacity-100 placeholder:text-black focus:!border-gray-900 !border-blue-gray-200'
+                            className='!border focus:ring-0 placeholder:opacity-100 focus:!border-gray-900 !border-blue-gray-200'
                             labelProps={{
                                 className: "hidden",
                             }}
@@ -36,7 +36,6 @@ function DatePicker() {
                             size="lg"
                             name="event-date"
                             placeholder="yyyy-mm-dd"
-                            icon={<CalendarIcon className="h-4 w-4 stroke-2 text-black" />}
                             onChange={() => null}
                             value={date ? format(date, 'yyyy-MM-dd') : ""}
                             crossOrigin={undefined}

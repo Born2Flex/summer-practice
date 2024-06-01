@@ -36,7 +36,7 @@ function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, o
     }, [])
 
     return (
-        <section className="w-full h-full max-h-[540px] min-h-[400px]">
+        <section className="w-full h-full max-h-[545px] min-h-[400px]">
             <MapContainer center={position} zoom={13} scrollWheelZoom={true} className="h-full w-full rounded-xl border-2 border-gray-900">
                 <TileLayer
 

@@ -5,6 +5,7 @@ import { Form } from 'react-router-dom'
 import { LatLngExpression } from 'leaflet'
 import SingleSelectInput from '../inputs/SingleSelectInput'
 import ImageInput from '../inputs/ImageInput'
+import TimePicker from '../inputs/TimePicker'
 
 const eventTypes = ['party', 'meeting', 'birthday', 'gaming']
 
@@ -101,7 +102,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         label="Event Name"
                         color="gray"
                         size="lg"
-                        placeholder="First Name"
+                        placeholder="Event Name"
                         name="title"
                         containerProps={{
                             className: "min-w-full",
@@ -122,14 +123,14 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     <SingleSelectInput eventTypes={eventTypes} />
 
                     <DatePicker />
-                    <InputWithLabel
+                    <TimePicker
                         label="Event Time"
+                        name="event-time"
                         color="gray"
                         size="lg"
-                        type="time"
-                        name="event-time"
+                        placeholder="Event Name"
                         containerProps={{
-                            className: "!min-w-full",
+                            className: "min-w-full",
                         }}
                         required
                     />

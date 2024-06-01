@@ -13,9 +13,11 @@ const center: LatLngExpression = [50.46458696057009, 30.519340555820754];
 // });
 
 export function NewEventPage() {
+    console.log('New event page');
     const [eventLocation, setEventLocation] = useState<LatLngExpression>(center);
 
     function handleLocationChange(location: LatLngExpression) {
+        console.log('Location changed:', eventLocation, location);
         setEventLocation(_old => location);
     }
     return (
@@ -95,7 +97,7 @@ export async function action({ request }: { request: Request }) {
             parseInt(minutes),
             0
         ));
-    
+
         //isoDateString = date.toISOString();
 
         isoDateString = date.toLocaleString('en-US', {
@@ -109,8 +111,8 @@ export async function action({ request }: { request: Request }) {
             minute: '2-digit',
             second: '2-digit'
         });
-            
-        console.log(isoDateString);    
+
+        console.log(isoDateString);
     }
 
     let eventData: any = {

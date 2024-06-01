@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/24/solid";
 import EventCreationFrom from "../forms/EventCreationFrom";
 import { LatLngExpression } from "leaflet";
-import useFetch from "../../hooks/useFetch";
+// import useFetch from "../../hooks/useFetch";
 
 function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
     // const { data: fetchedData, isLoading, error, refetch } = useFetch({ latLng: locationData });
@@ -56,7 +56,7 @@ function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
             </TabsHeader>
             <TabsBody placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 {data.map(({ value }) => (
-                    <TabPanel key={value} value={value} className="px-0">
+                    <TabPanel key={value} value={value} className="px-0 pb-0">
                         <EventCreationFrom tabName={value} location={isLoading ? 'Loading...' : fetchedData.addresses[0].formattedAddress} locationData={locationData} />
                     </TabPanel>
                 ))}
