@@ -16,6 +16,7 @@ public class EventDto {
     private String title;
     private UserShortDto host;
     private EventAvailability availability;
+    private Integer currentParticipants;
     private Integer maxParticipants;
     private Double entranceFee;
     private EventType eventType;
