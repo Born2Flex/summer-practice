@@ -14,5 +14,7 @@ public enum EventType {
     DISCUSSION,
     LECTURE,
     FUNDRAISER,
-    CEREMONY
+    BIRTHDAY,
+    GAMING,
+    PARTY
 }
