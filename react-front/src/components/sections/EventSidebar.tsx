@@ -100,7 +100,7 @@ function EventSidebar({ id, title, host, description, availability, locationName
                 </div> */}
 
                 <div className="mt-4">
-                    <h1 className="text-2xl font-bold text-center">{title}</h1>
+                    <h1 className="text-lg font-bold text-center">{title}</h1>
                 </div>
 
                 <div className="my-5 flex flex-row justify-between">
