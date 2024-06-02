@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom";
+import { redirect, useRouteLoaderData } from "react-router-dom";
 import EventSidebar from "../components/sections/EventSidebar";
-import { useEffect, useState } from "react";
+import { getToken } from "../auth";
 
 interface Host {
     id: string;
@@ -53,9 +53,7 @@ const localDateTimeString = (utcDateTimeString: string): string => {
 };
 
 function EventPage() {
-    console.log('EventPage useEffect');
-    const { id } = useParams();
-    //console.log(id);
+   //console.log(id);
     /*const event = {
         name: 'Event 8',
         location: 'Location 7t',
@@ -67,74 +65,67 @@ function EventPage() {
         coordinates: [40.7178, -74.0090],
     } as Event;*/
 
-    const [event, setEvent] = useState<Event | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const event = useRouteLoaderData(':id') as Event;
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            const token = localStorage.getItem('jwt');
-            if (!token) {
-                throw new Error('No JWT token found');
-            }
-
-            try {
-                const response = await fetch(`http://localhost:8080/rest/events/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch events');
-                }
-
-                const eventData = await response.json();
-                const event: Event = {
-                    id: eventData.id,
-                    title: eventData.title,
-                    host: eventData.host,
-                    availability: eventData.availability,
-                    currentParticipants: eventData.currentParticipants,
-                    maxParticipants: eventData.maxParticipants,
-                    entranceFee: eventData.entranceFee,
-                    eventType: eventData.eventType,
-                    description: eventData.description,
-                    locationName: eventData.locationName,
-                    location: eventData.location,
-                    startDateTime: localDateTimeString(eventData.startDateTime),
-                    comments: eventData.comments,
-                    imgUrl: eventData.imgUrl,
-                    tags: eventData.tags,
-                    participants: eventData.participants,
-                };
-                console.log(event);
-                setEvent(event);
-
-            } catch (error) {
-                console.error('Error fetching events:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchEvents();
-    }, [id]);
-
-
-    // Styled loader needed
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (!event) {
-        return <div>No event found</div>;
-    }
-
+    console.log(event);
     return (
         <EventSidebar {...event} />
     );
 }
+
+export async function loader({ request }: { request: Request }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    const url = new URL(request.url);
+    const pathComponents = url.pathname.split('/');
+    const id = pathComponents[pathComponents.length - 1];
+
+    try {
+        const response = await fetch(`http://localhost:8080/rest/events/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch events');
+        }
+
+        /*const event = await response.json();
+
+        return await new Promise<Event>((resolve, reject) => {
+            try {
+                event.startDateTime = localDateTimeString(event.startDateTime);
+                console.log(event);
+                resolve(event);
+            } catch (error) {
+                console.error('Error processing event date:', error);
+                reject(error);
+            }
+        });*/
+
+        const event = await new Promise<Event>((resolve, reject) => {
+            response.json().then((data: Event) => {
+                // Transform the startDateTime and resolve the event
+                data.startDateTime = localDateTimeString(data.startDateTime);
+                resolve(data);
+            }).catch((error) => {
+                console.error('Error processing event data:', error);
+                reject(error);
+            });
+        });
+        console.log(event);
+        return event;
+
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return null; 
+    }
+};
 
 export default EventPage;

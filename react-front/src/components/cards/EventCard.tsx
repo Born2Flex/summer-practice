@@ -58,6 +58,7 @@ export const ribbonVariants = {
 }
 
 function EventCard(event: Event) {
+    console.log(event.id);
 
     return (
         <div

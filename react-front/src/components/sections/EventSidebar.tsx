@@ -8,15 +8,14 @@ import { NavLink } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 import { useEffect, useState } from "react"
-import { Comment } from "../../pages/EventPage"
 
 //function EventSidebar({ id, title, locationName, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
 //function EventSidebar({ event }: { event: Event }) {
     //const {id, title, description, availability, locationName, eventType, entranceFee, currentParticipants, maxParticipants } = event;
 function EventSidebar({ id, title, host, description, availability, locationName, eventType, startDateTime, entranceFee, currentParticipants, maxParticipants, participants, comments }: Event) {
+    console.log(id);
     const date = new Date(startDateTime);
 
-    // Extract and format the components
     const day = format(date, 'd');
     const month = format(date, 'MMM');
     const weekday = format(date, 'EEEE');
@@ -109,6 +108,7 @@ function EventSidebar({ id, title, host, description, availability, locationName
 
                 <div className="my-5 flex flex-row justify-between">
                     <div className="flex flex-row">
+                        
                         <div className="px-6 flex flex-col justify-center text-center">
                             <h3 className="font-semibold">{day}</h3>
                             <p className="text-sm font-semibold text-gray-500">{month}</p>
