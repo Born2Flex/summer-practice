@@ -3,18 +3,15 @@ import LocationPicker from "../components/inputs/LocationPicker";
 import TabsButtons from "../components/buttons/TabsButtons";
 import { useState } from "react";
 import { LatLngExpression } from "leaflet";
-import { redirect } from "react-router-dom";
+import { redirect, useLoaderData } from "react-router-dom";
 
-const center: LatLngExpression = [50.46458696057009, 30.519340555820754];
-// navigator.geolocation.getCurrentPosition((position) => {
-//     console.log(position.coords.latitude, position.coords.longitude);
-//     center[0] = position.coords.latitude;
-//     center[1] = position.coords.longitude;
-// });
+// const center: LatLngExpression = [50.46458696057009, 30.519340555820754];
 
 export function NewEventPage() {
-    console.log('New event page');
-    const [eventLocation, setEventLocation] = useState<LatLngExpression>(center);
+    const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
+    console.log('NewEventPage data:', data);
+    console.log('NewEventPage data:', data.eventTypes);
+    const [eventLocation, setEventLocation] = useState<LatLngExpression>(data.currentLocation);
 
     function handleLocationChange(location: LatLngExpression) {
         console.log('Location changed:', eventLocation, location);
@@ -26,7 +23,7 @@ export function NewEventPage() {
                 <div className="mx-auto text-center">
                     <div className="grid mx-auto grid-cols-1 gap-x-12 gap-y-6 lg:grid-cols-2 items-start">
 
-                        <LocationPicker center={center} onSetLocation={handleLocationChange} />
+                        <LocationPicker center={data.currentLocation} onSetLocation={handleLocationChange} />
                         <div>
                             <Typography
                                 variant="small"
@@ -46,34 +43,53 @@ export function NewEventPage() {
 
 export default NewEventPage;
 
-export async function action({ request }: { request: Request }) {
-    /*const data = await request.formData();
-
-    let eventData: { [key: string]: string } = {};
-
-    console.log('Creating event with data:', data);
-    for (const [key, value] of data.entries()) {
-        eventData[key] = value.toString();
+export async function loader() {
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        return redirect('/login');
     }
 
-    console.log('Gathered event data:', eventData);*/
+    try {
+        const response = await fetch('http://localhost:8080/rest/events/types', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
 
-    // const response = await fetch('http://localhost:8080/rest/auth/authenticate', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(eventData)
-    // });
+        if (!response.ok) {
+            throw new Error('Failed to fetch event types');
+        }
 
-    // const responseData = await response.text();
-    // if (!response.ok) {
-    //     console.error(`Error ${response.status}: ${responseData}`);
-    //     throw new Error(`Error ${response.status}: ${responseData}`);
-    // }
+        const eventTypes = await response.json();
 
-    // console.log('Event created successfully:', responseData);
+        const currentLocation = await new Promise<LatLngExpression>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    resolve([latitude, longitude]);
+                },
+                () => {
+                    console.log('Location access denied by user.');
+                    resolve([40.7128, -74.0060]);
+                }
+            );
+        });
 
+        return {
+            eventTypes: eventTypes,
+            currentLocation: currentLocation
+        };
+
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return null;
+    }
+}
+
+
+export async function action({ request }: { request: Request }) {
     const data = await request.formData();
 
     const token = localStorage.getItem('jwt');
@@ -117,13 +133,13 @@ export async function action({ request }: { request: Request }) {
 
     let eventData: any;
 
-    if(data.get('event-type') === 'paid') {
+    if (data.get('event-type') === 'paid') {
         eventData = {
             title: data.get('title')?.toString(),
             description: data.get('description')?.toString(),
             eventType: data.get('event-type'),
             locationName: data.get('location'),
-            
+
             location: {
                 type: 'Point',
                 coordinates: [

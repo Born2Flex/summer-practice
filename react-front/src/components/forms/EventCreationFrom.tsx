@@ -1,15 +1,14 @@
 import { Typography, Textarea, Button } from '@material-tailwind/react'
 import InputWithLabel from '../inputs/InputWithLabel'
 import DatePicker from '../inputs/DatePicker'
-import { Form } from 'react-router-dom'
+import { Form, useLoaderData } from 'react-router-dom'
 import { LatLngExpression } from 'leaflet'
 import SingleSelectInput from '../inputs/SingleSelectInput'
 import ImageInput from '../inputs/ImageInput'
 import TimePicker from '../inputs/TimePicker'
 
-const eventTypes = ['party', 'meeting', 'birthday', 'gaming']
-
 function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
+    const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
 
     let lat, lng;
     if (Array.isArray(locationData)) {
@@ -115,7 +114,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     }}
                     required
                 /> */}
-                    <SingleSelectInput eventTypes={eventTypes} />
+                    <SingleSelectInput eventTypes={data.eventTypes} />
 
                     <DatePicker />
                     <TimePicker
