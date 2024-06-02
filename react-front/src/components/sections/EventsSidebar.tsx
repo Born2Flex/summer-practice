@@ -29,10 +29,17 @@ function EventsSidebar({ events }: { events: Event[] }) {
         formData.forEach((value, key) => {
             if (key !== 'search-value' && value.toString().trim() !== '') {
                 queryParams.append(key, value.toString());
+                console.log(key, value);
             }
         });
 
         const queryString = queryParams.toString();
+
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            throw new Error('No JWT token found');
+        }
+
         navigate(`/events?${queryString}`);
     };
 

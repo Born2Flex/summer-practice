@@ -131,7 +131,7 @@ function EventSidebar({ id, title, host, description, availability, locationName
             </div>
             <div className="flex flex-row justify-between z-10">
                 <div>
-                    <h3 className="font-semibold">${entranceFee}</h3>
+                    <h3 className="font-semibold">{maxParticipants === null ? 'FREE' : `$${entranceFee}`}</h3>
                     <p className="text-sm font-semibold text-gray-500">{maxParticipants === null ? 'Unlimited spots' : `${maxParticipants - stateCurrentParticipants} Spots left`}</p>
                 </div>
 
