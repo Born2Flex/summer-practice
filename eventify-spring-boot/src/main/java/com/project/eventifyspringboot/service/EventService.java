@@ -116,7 +116,7 @@ public class EventService {
             query.addCriteria(Criteria.where("title").regex(searchValue));
         }
 
-        Point location = new Point(longitude, latitude);
+        Point location = new Point(latitude, longitude);
         Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
         query.addCriteria(Criteria.where("location").nearSphere(location).maxDistance(distance.getNormalizedValue()));
 
