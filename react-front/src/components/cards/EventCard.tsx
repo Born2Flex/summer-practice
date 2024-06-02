@@ -58,8 +58,6 @@ export const ribbonVariants = {
 }
 
 function EventCard(event: Event) {
-    console.log(event.id);
-
     return (
         <div
             className="bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 

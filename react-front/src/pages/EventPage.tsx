@@ -1,4 +1,4 @@
-import { redirect, useRouteLoaderData } from "react-router-dom";
+import { redirect, useLoaderData } from "react-router-dom";
 import EventSidebar from "../components/sections/EventSidebar";
 import { getToken } from "../auth";
 
@@ -53,19 +53,8 @@ const localDateTimeString = (utcDateTimeString: string): string => {
 };
 
 function EventPage() {
-   //console.log(id);
-    /*const event = {
-        name: 'Event 8',
-        location: 'Location 7t',
-        category: 'public',
-        people: 10,
-        type: 'birthday',
-        link: '/events/8',
-        limit: 20,
-        coordinates: [40.7178, -74.0090],
-    } as Event;*/
 
-    const event = useRouteLoaderData(':id') as Event;
+    const event = useLoaderData() as Event;
 
     console.log(event);
     return (
@@ -73,15 +62,14 @@ function EventPage() {
     );
 }
 
-export async function loader({ request }: { request: Request }) {
+export async function loader({ params }: { params: any }) {
     const token = getToken();
     if (!token) {
         return redirect('/login');
     }
 
-    const url = new URL(request.url);
-    const pathComponents = url.pathname.split('/');
-    const id = pathComponents[pathComponents.length - 1];
+    const id = params.id;
+    console.log(id);
 
     try {
         const response = await fetch(`http://localhost:8080/rest/events/${id}`, {
@@ -95,19 +83,6 @@ export async function loader({ request }: { request: Request }) {
         if (!response.ok) {
             throw new Error('Failed to fetch events');
         }
-
-        /*const event = await response.json();
-
-        return await new Promise<Event>((resolve, reject) => {
-            try {
-                event.startDateTime = localDateTimeString(event.startDateTime);
-                console.log(event);
-                resolve(event);
-            } catch (error) {
-                console.error('Error processing event date:', error);
-                reject(error);
-            }
-        });*/
 
         const event = await new Promise<Event>((resolve, reject) => {
             response.json().then((data: Event) => {
@@ -124,7 +99,7 @@ export async function loader({ request }: { request: Request }) {
 
     } catch (error) {
         console.error('Error fetching events:', error);
-        return null; 
+        return null;
     }
 };
 

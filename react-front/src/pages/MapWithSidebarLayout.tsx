@@ -6,8 +6,6 @@ import { Event } from '../pages/EventsMapPage';
 function MapWithSidebarLayout() {
 
     const events = useRouteLoaderData('map-layout') as Event[];
-    console.log("From loading c", events);
-
     return (
         <div className='flex flex-1'>
             <EventsMap events={events} />
