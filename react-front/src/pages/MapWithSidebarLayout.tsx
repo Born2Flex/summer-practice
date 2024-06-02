@@ -16,7 +16,7 @@ function MapWithSidebarLayout() {
 
 export default MapWithSidebarLayout
 
-export async function loader({ request }: { request: Request }) {
+export async function loader({ request, params }: { request: Request, params: any }) {
     const token = getToken();
     if (!token) {
         return redirect('/login');
@@ -24,17 +24,13 @@ export async function loader({ request }: { request: Request }) {
 
     const url = new URL(request.url);
 
-    if (url.pathname !== '/events') {
-        return null;
-    }
-
     if (url.searchParams) {
         for (const [key, value] of url.searchParams.entries()) {
             console.log(`${key}: ${value}`);
         }
     }
 
-    if (url.pathname === '/events' && !url.searchParams.toString()) {
+    if (!url.searchParams.toString() || params.id) {
         try {
             const response = await fetch('http://localhost:8080/rest/events', {
                 method: 'GET',
