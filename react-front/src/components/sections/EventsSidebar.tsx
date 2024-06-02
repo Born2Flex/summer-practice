@@ -12,7 +12,6 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
 };
 
 function EventsSidebar({ events }: { events: Event[] }) {
-    console.log(events);
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -68,50 +67,6 @@ function EventsSidebar({ events }: { events: Event[] }) {
         }
 
         const queryString = queryParams.toString();
-
-        const token = localStorage.getItem('jwt');
-        if (!token) {
-            throw new Error('No JWT token found');
-        }
-
-        try {
-            const response = await fetch(`http://localhost:8080/rest/events/search?${queryString}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch events');
-            }
-
-            //const eventData = await response.json();
-            const eventData = await response.json();
-            // setEvents(eventData.map((event: any) => ({
-            //     id: event.id,
-            //     title: event.title,
-            //     description: event.description,
-            //     locationName: event.locationName,
-            //     availability: event.availability,
-            //     eventType: event.eventType,
-            //     currentParticipants: event.currentParticipants,
-            //     maxParticipants: event.maxParticipants,
-            //     entranceFee: event.entranceFee,
-            //     location: {
-            //         x: event.location.x,
-            //         y: event.location.y,
-            //         //x: 40.7178,
-            //         //y: -74.0090,
-            //     },
-            // })));
-
-            console.log(eventData);
-            // Handle the event data here (e.g., update state with the new events)
-        } catch (error) {
-            console.error('Error fetching events:', error);
-        }
 
         navigate(`/events?${queryString}`);
     };
