@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 //function EventSidebar({ id, title, locationName, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
 //function EventSidebar({ event }: { event: Event }) {
     //const {id, title, description, availability, locationName, eventType, entranceFee, currentParticipants, maxParticipants } = event;
-function EventSidebar({ id, title, description, availability, locationName, eventType, startDateTime, entranceFee, currentParticipants, maxParticipants, participants, comments }: Event) {
+function EventSidebar({ id, title, host, description, availability, locationName, eventType, startDateTime, entranceFee, currentParticipants, maxParticipants, participants, comments }: Event) {
     const date = new Date(startDateTime);
 
     // Extract and format the components
@@ -24,18 +24,16 @@ function EventSidebar({ id, title, description, availability, locationName, even
     const [stateCurrentParticipants, setCurrentParticipants] = useState(currentParticipants);
     const [stateParticipants, setParticipants] = useState(participants);
     const [isJoinDisabled, setIsJoinDisabled] = useState((maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
-            stateParticipants.some(participant => participant.id === id));
+            stateParticipants.some(participant => participant.id === host.id));
 
     useEffect(() => {
         setIsJoinDisabled(
             (maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
-            stateParticipants.some(participant => participant.id === id)
+            stateParticipants.some(participant => participant.id == host.id)
         );
-    }, [stateCurrentParticipants, stateParticipants, maxParticipants, id]);
-
+    }, [stateCurrentParticipants, stateParticipants, maxParticipants]);
 
     const handleJoin = async () => {
-        console.log("Action");
         const token = localStorage.getItem('jwt');
         if (!token) {
             throw new Error('No JWT token found');
