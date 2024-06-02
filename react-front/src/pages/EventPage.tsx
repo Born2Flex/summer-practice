@@ -56,7 +56,6 @@ function EventPage() {
 
     const event = useLoaderData() as Event;
 
-    console.log("EVENT:", event);
     return (
         <EventSidebar {...event} />
     );
@@ -69,7 +68,6 @@ export async function loader({ params }: { params: any }) {
     }
 
     const id = params.id;
-    console.log(id);
 
     try {
         const response = await fetch(`http://localhost:8080/rest/events/${id}`, {
@@ -88,7 +86,6 @@ export async function loader({ params }: { params: any }) {
             response.json().then((data: Event) => {
                 // Transform the startDateTime and resolve the event
                 data.startDateTime = localDateTimeString(data.startDateTime);
-                console.log("DATA:", data);
                 resolve(data);
             }).catch((error) => {
                 console.error('Error processing event data:', error);
