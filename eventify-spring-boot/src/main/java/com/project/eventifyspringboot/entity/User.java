@@ -8,9 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Document("users")
 public class User {
     @Id
+    @EqualsAndHashCode.Include
     private String id;
     private String email;
     private String password;

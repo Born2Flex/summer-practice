@@ -72,6 +72,9 @@ public class EventService {
     public EventParticipantsDto submitParticipation(AuthDetails authDetails, String eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
+        if (event.getParticipants().contains(authDetails.getUser())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
+        }
         event.getParticipants().add(authDetails.getUser());
         return eventMapper.toParticipantsDto(eventRepository.save(event));
     }
