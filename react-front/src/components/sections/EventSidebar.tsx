@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 import { useEffect, useState } from "react"
+import { Comment } from "../../pages/EventPage"
 
 //function EventSidebar({ id, title, locationName, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
 //function EventSidebar({ event }: { event: Event }) {
@@ -125,7 +126,7 @@ function EventSidebar({ id, title, host, description, availability, locationName
                     </IconButton>
                 </div>
 
-                <EventSidebarAccordion id={id} description={description} locationName={locationName} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants} comments={comments}/>
+                <EventSidebarAccordion id={id} description={description} locationName={locationName} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants} eventComments={comments}/>
 
             </div>
             <div className="flex flex-row justify-between z-10">
@@ -153,4 +154,15 @@ function EventSidebar({ id, title, host, description, availability, locationName
     )
 }
 
-export default EventSidebar
+export default EventSidebar;
+
+export async function action({ request }: { request: Request }) {
+    const data = await request.formData();
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        throw new Error('No JWT token found');
+    }
+
+    return null;
+}

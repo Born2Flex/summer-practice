@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Accordion,
     AccordionHeader,
@@ -48,8 +48,10 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
-export function EventSidebarAccordion( {id, description, locationName, currentParticipants, maxParticipants}: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, comments: Comment[]}) {
+export function EventSidebarAccordion( {id, description, locationName, currentParticipants, maxParticipants, eventComments}: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, eventComments: Comment[]}) {
     const [open, setOpen] = React.useState(1);
+
+    const [stateComments, setComments] = useState(eventComments);
 
     const handleOpen = (value: number) => setOpen(open === value ? 3 - value : value);
 
@@ -58,6 +60,40 @@ export function EventSidebarAccordion( {id, description, locationName, currentPa
             ? `${currentParticipants}/${maxParticipants} people`
             : `${currentParticipants}/∞ people`;
     };
+
+    const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            throw new Error('No JWT token found');
+        }
+
+        const formData = new FormData(event.currentTarget);
+        const newCommentText = formData.get('comment') as string;
+
+        try {
+            const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: `"${newCommentText}"`
+            });
+
+            if (response.ok) {
+                const newCommentFromServer = await response.json();
+                console.log(newCommentFromServer);
+                setComments([...stateComments, newCommentFromServer]);
+            } else {
+                console.error('Failed to add comment');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
 
     return (
         <div className="flex flex-1 flex-col pb-1.5">
@@ -145,7 +181,7 @@ export function EventSidebarAccordion( {id, description, locationName, currentPa
                         <ChatBubble />
                         <ChatBubble />
                     </div>
-                    <CommentInputForm />
+                    <CommentInputForm onSubmit={handleCommentSubmit}/>
                 </AccordionBody>
             </Accordion>
         </div>
