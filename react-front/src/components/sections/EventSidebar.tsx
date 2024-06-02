@@ -7,7 +7,7 @@ import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
 import { NavLink } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 //function EventSidebar({ id, title, locationName, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
 //function EventSidebar({ event }: { event: Event }) {
@@ -23,15 +23,26 @@ function EventSidebar({ id, title, description, availability, locationName, even
 
     const [stateCurrentParticipants, setCurrentParticipants] = useState(currentParticipants);
     const [stateParticipants, setParticipants] = useState(participants);
+    const [isJoinDisabled, setIsJoinDisabled] = useState((maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
+            stateParticipants.some(participant => participant.id === id));
+
+    useEffect(() => {
+        setIsJoinDisabled(
+            (maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
+            stateParticipants.some(participant => participant.id === id)
+        );
+    }, [stateCurrentParticipants, stateParticipants, maxParticipants, id]);
+
 
     const handleJoin = async () => {
+        console.log("Action");
         const token = localStorage.getItem('jwt');
         if (!token) {
             throw new Error('No JWT token found');
         }
 
         try {
-            const response = await fetch(`/rest/events/${id}/participate`, {
+            const response = await fetch(`http://localhost:8080/rest/events/${id}/participate`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,6 +52,7 @@ function EventSidebar({ id, title, description, availability, locationName, even
 
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 setCurrentParticipants(data.currentParticipants);
                 setParticipants(data.participants);
             } else {
@@ -50,6 +62,8 @@ function EventSidebar({ id, title, description, availability, locationName, even
             console.error('Error:', error);
         }
     };
+
+    //const isJoinDisabled = (maxParticipants !== null && stateCurrentParticipants >= maxParticipants) || stateParticipants.some(participant => participant.id === id);
 
     return (
         <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
@@ -119,7 +133,7 @@ function EventSidebar({ id, title, description, availability, locationName, even
             <div className="flex flex-row justify-between z-10">
                 <div>
                     <h3 className="font-semibold">${entranceFee}</h3>
-                    <p className="text-sm font-semibold text-gray-500">10 Spots left</p>
+                    <p className="text-sm font-semibold text-gray-500">{maxParticipants === null ? 'Unlimited spots' : `${maxParticipants - stateCurrentParticipants} Spots left`}</p>
                 </div>
 
                 <div className="w-1/2">
@@ -130,6 +144,7 @@ function EventSidebar({ id, title, description, availability, locationName, even
                         color="green"
                         placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
                         onClick={handleJoin}
+                        disabled={isJoinDisabled}
                     >
                         Join
                     </Button>

@@ -64,14 +64,14 @@ function EventCard({ event }: { event: Event }) {
                         <div className="text-xs flex items-center mb-4 gap-2">
                             <FontAwesomeIcon icon={faLocationDot} /> {locationName}
                         </div>
-                        {entranceFee && <span className="text-xl font-thin text-gray-700">£{entranceFee}<span className="text-lg">/PPPN</span></span>}
-                        {!entranceFee && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
+                        {entranceFee !== null && <span className="text-xl font-thin text-gray-700">£{entranceFee}<span className="text-lg">/PPPN</span></span>}
+                        {entranceFee === null && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
                         <div className="flex items-center mt-4 gap-x-5">
                             <div className="flex text-xs gap-2">
                                 <FontAwesomeIcon icon={faWifi} /> Free WiFi
                             </div>
                             <div className="flex text-xs gap-2">
-                                <FontAwesomeIcon icon={faUsers} /> {currentParticipants}{maxParticipants && `/${maxParticipants}`} people
+                                <FontAwesomeIcon icon={faUsers} /> {currentParticipants}{maxParticipants !== null && `/${maxParticipants}`} people
                             </div>
                         </div>
                     </div>

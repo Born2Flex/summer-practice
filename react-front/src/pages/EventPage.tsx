@@ -44,6 +44,7 @@ export interface Event {
     location: Location;
     startDateTime: string;
     comments: Comment[];
+    tags: string[];
     imgUrl: string | null;
     participants: any[];
 }
@@ -101,6 +102,7 @@ function EventPage() {
                     startDateTime: eventData.startDateTime,
                     comments: eventData.comments,
                     imgUrl: eventData.imgUrl,
+                    tags: eventData.tags,
                     participants: eventData.participants,
                 };
                 console.log(event);
@@ -116,6 +118,8 @@ function EventPage() {
         fetchEvents();
     }, [id]);
 
+
+    // Styled loader needed
     if (loading) {
         return <div>Loading...</div>;
     }

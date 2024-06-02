@@ -156,12 +156,14 @@ export default function EventsMapPage() {
                     maxParticipants: event.maxParticipants,
                     entranceFee: event.entranceFee,
                     location: {
-                        //x: event.location.x,
-                        //y: event.location.y,
-                        x: 40.7178,
-                        y: -74.0090,
+                        x: event.location.x,
+                        y: event.location.y,
+                        //x: 40.7178,
+                        //y: -74.0090,
                     },
                 })));
+
+                console.log(data);
 
             } catch (error) {
                 console.error('Error fetching events:', error);
