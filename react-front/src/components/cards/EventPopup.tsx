@@ -7,7 +7,7 @@ import { colorVariants, iconVariants, ribbonVariants } from './EventCard'
 
 function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
 
-    let link: string = "#";
+    const link: string = `/events/${id}`;
 
     return (
         <div
