@@ -24,7 +24,7 @@ interface User {
     imgUrl: string;
 }
 
-interface Comment {
+export interface Comment {
     id: string;
     text: string;
     user: User;

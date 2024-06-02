@@ -113,7 +113,7 @@ function EventSidebar({ id, title, description, availability, locationName, even
                     </IconButton>
                 </div>
 
-                <EventSidebarAccordion description={description} locationName={locationName} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants}/>
+                <EventSidebarAccordion id={id} description={description} locationName={locationName} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants} comments={comments}/>
 
             </div>
             <div className="flex flex-row justify-between z-10">

@@ -12,6 +12,7 @@ import Pic3 from "../../assets/photo_2024-05-30_16-21-05.jpg";
 import Pic4 from "../../assets/photo_2024-05-30_16-21-10.jpg";
 import Pic5 from "../../assets/photo_2024-05-30_16-21-17.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Comment } from "../../pages/EventPage";
 import { faLightbulb, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const comments = [
@@ -47,10 +48,16 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
-export function EventSidebarAccordion( {description, locationName, currentParticipants, maxParticipants}: {description: string, locationName: string, currentParticipants: number, maxParticipants: number | null}) {
+export function EventSidebarAccordion( {id, description, locationName, currentParticipants, maxParticipants}: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, comments: Comment[]}) {
     const [open, setOpen] = React.useState(1);
 
     const handleOpen = (value: number) => setOpen(open === value ? 3 - value : value);
+
+    const renderParticipantCount = () => {
+        return maxParticipants !== null
+            ? `${currentParticipants}/${maxParticipants} people`
+            : `${currentParticipants}/∞ people`;
+    };
 
     return (
         <div className="flex flex-1 flex-col pb-1.5">
@@ -71,7 +78,7 @@ export function EventSidebarAccordion( {description, locationName, currentPartic
                                 Participants:
                             </span>
                             <span className="text-xs">
-                                {currentParticipants}/{maxParticipants} people
+                                {renderParticipantCount()}
                             </span>
 
                             <div className='mt-3 flex items-center justify-center gap-2'>
