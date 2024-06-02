@@ -1,23 +1,7 @@
-import { LatLngExpression } from "leaflet";
 import EventsSidebar from "../components/sections/EventsSidebar";
 import { useAuth } from "../context/AuthProvider";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useEventsContext } from "../context/EventsProvider";
-
-/*export interface Event {
-    name: string;
-    location: string;
-    category: string;
-    people: number;
-    type: string;
-    link: string;
-    limit?: number;
-    price?: number;
-    coordinates: LatLngExpression;
-}
-
-*/
-
 export interface Event {
     id: string;
     title: string;

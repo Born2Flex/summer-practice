@@ -1,9 +1,9 @@
-import { LayersControl, MapContainer, Marker, Popup, LayerGroup, TileLayer } from 'react-leaflet';
+import { LayersControl, MapContainer, Marker, Popup, LayerGroup, TileLayer, Circle } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Event } from '../../pages/EventsMapPage';
 import EventPopup from '../cards/EventPopup';
-const position: LatLngExpression = [40.7128, -74.0060];
+import { useEffect, useState } from 'react';
 
 
 const greenIcon = new L.Icon({
@@ -34,22 +34,21 @@ const redIcon = new L.Icon({
 });
 
 function EventsMap({ events }: { events: Event[] }) {
-    // const iconMapper = (category: string) => {
-    //     switch (category) {
-    //         case 'public':
-    //             return greenIcon;
-    //         case 'paid':
-    //             return yellowIcon;
-    //         case 'private':
-    //             return redIcon;
-    //         default:
-    //             return greenIcon;
-    //     }
-    // }
+    const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null);
 
-    // const publicEvents = events.filter(event => event.availability === 'public');
-    // const paidEvents = events.filter(event => event.availability === 'paid');
-    // const privateEvents = events.filter(event => event.availability === 'private');
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                setUserLocation([latitude, longitude]);
+            },
+        );
+    }, []);
+
+
+    if (!userLocation) {
+        return <div>Loading map...</div>;
+    }
 
     const publicEvents = events.filter(event => event.availability === 'PUBLIC');
     const paidEvents = events.filter(event => event.availability === 'PAID');
@@ -58,7 +57,7 @@ function EventsMap({ events }: { events: Event[] }) {
     return (
         <section className='w-3/4 z-0'>
             <MapContainer
-                center={position}
+                center={userLocation}
                 zoom={15}
                 scrollWheelZoom={true}
                 className="h-full w-full"
@@ -67,7 +66,12 @@ function EventsMap({ events }: { events: Event[] }) {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-
+                <Circle
+                    center={userLocation}
+                    pathOptions={{ color: '#058afd' }}
+                    fillOpacity={0.8}
+                    radius={15}
+                />
                 <LayersControl position="topright">
                     <LayersControl.Overlay checked name="Public Events">
                         <LayerGroup>
