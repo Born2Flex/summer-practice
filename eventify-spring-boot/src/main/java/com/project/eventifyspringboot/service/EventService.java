@@ -43,6 +43,9 @@ public class EventService {
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
+        if (event.getAvailability() == EventAvailability.PAID && event.getEntranceFee() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paid event should have entrance fee");
+        }
         event.setHost(authDetails.getUser());
         event.setTags(normalizeTags(eventCreationDto.getTags()));
         event = eventRepository.save(event);
