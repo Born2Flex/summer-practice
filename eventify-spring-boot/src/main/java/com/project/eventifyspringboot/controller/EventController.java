@@ -78,15 +78,15 @@ public class EventController {
             description = "Provide criteria such as event type, availability, date range, radius, and location to search for events.")
     @ApiResponse(responseCode = "200", description = "Events found",
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class))))
-    public List<EventShortDto> searchEvents(@RequestParam(required = false) List<EventType> type,
-                                            @RequestParam(required = false) List<EventAvailability> availability,
+    public List<EventShortDto> searchEvents(@RequestParam(required = false, name = "event-type") List<EventType> type,
+                                            @RequestParam(required = false, name = "event-category") List<EventAvailability> availability,
                                             @RequestParam(required = false) LocalDateTime from,
                                             @RequestParam(required = false) LocalDateTime to,
-                                            @RequestParam(required = false) List<String> tags,
-                                            @RequestParam(required = false) String name,
-                                            @RequestParam int radius,
+                                            @RequestParam(required = false, name = "tag") List<String> tags,
+                                            @RequestParam(required = false, name = "search-value") String searchValue,
+                                            @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
                                             @RequestParam double longitude, @RequestParam double latitude) {
-        return eventService.searchEvents(type, availability, from, to, tags, name, radius, longitude, latitude);
+        return eventService.searchEvents(type, availability, from, to, tags, searchValue, eventDistance, longitude, latitude);
     }
 
     @PatchMapping("/{eventId}/participate")
