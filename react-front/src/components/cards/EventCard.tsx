@@ -1,20 +1,48 @@
-import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake, faUsersViewfinder, faShop, faGlobe, faMusic, faPalette, faComments, faRobot, faMoneyBill, faHotdog, faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
 import { Event } from '../../pages/EventsMapPage'
 
 export const colorVariants = {
-    'party': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
-    'gaming': 'bg-green-500 group-hover/item:shadow-green-400',
-    'birthday': 'bg-pink-500 group-hover/item:shadow-pink-400',
-    'meeting': 'bg-blue-500 group-hover/item:shadow-blue-400',
+    'PARTY': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
+    'GAMING': 'bg-green-500 group-hover/item:shadow-green-400',
+    'BIRTHDAY': 'bg-pink-500 group-hover/item:shadow-pink-400',
+    'MEETING': 'bg-blue-500 group-hover/item:shadow-blue-400',
+    'CONFERENCE': 'bg-purple-500 group-hover/item:shadow-purple-400',
+    'WORKSHOP': 'bg-red-500 group-hover/item:shadow-red-400',
+    'WEBINAR': 'bg-indigo-500 group-hover/item:shadow-indigo-400',
+    'CONCERT': 'bg-teal-500 group-hover/item:shadow-teal-400',
+    'EXHIBITION': 'bg-orange-500 group-hover/item:shadow-orange-400',
+    'NETWORKING': 'bg-cyan-500 group-hover/item:shadow-cyan-400',
+    'SEMINAR': 'bg-lime-500 group-hover/item:shadow-lime-400',
+    'HACKATHON': 'bg-amber-500 group-hover/item:shadow-amber-400',
+    'CHARITY': 'bg-deep-purple-500 group-hover/item:shadow-deep-purple-400',
+    'FESTIVAL': 'bg-light-blue-500 group-hover/item:shadow-light-blue-400',
+    'DISCUSSION': 'bg-amber-500 group-hover/item:shadow-amber-400',
+    'LECTURE': 'bg-cyan-500 group-hover/item:shadow-cyan-400',
+    'FUNDRAISER': 'bg-lime-500 group-hover/item:shadow-lime-400',
+    'CEREMONY': 'bg-light-blue-500 group-hover/item:shadow-light-blue-400',
 }
 
 export const iconVariants = {
-    'party': faStar,
-    'gaming': faDesktop,
-    'birthday': faCakeCandles,
-    'meeting': faHandshake,
+    'PARTY': faStar,
+    'GAMING': faDesktop,
+    'BIRTHDAY': faCakeCandles,
+    'MEETING': faHandshake,
+    "CONFERENCE": faUsersViewfinder,
+    "WORKSHOP": faShop,
+    "WEBINAR": faGlobe,
+    "CONCERT": faMusic,
+    "EXHIBITION": faPalette,
+    "NETWORKING": faWifi,
+    "SEMINAR": faComments,
+    "HACKATHON": faRobot,
+    "CHARITY": faMoneyBill,
+    "FESTIVAL": faHotdog,
+    "DISCUSSION": faComments,
+    "LECTURE": faGraduationCap,
+    "FUNDRAISER": faMoneyBill,
+    "CEREMONY": faGraduationCap,
 }
 
 /*export const ribbonVariants = {
@@ -29,9 +57,6 @@ export const ribbonVariants = {
     'PRIVATE': 'bg-red-500',
 }
 
-
-
-//function EventCard({ name, location, category, people, type, link, limit, price }: Event) {
 function EventCard(event: Event) {
 
     return (
