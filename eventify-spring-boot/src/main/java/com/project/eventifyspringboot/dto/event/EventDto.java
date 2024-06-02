@@ -20,6 +20,7 @@ public class EventDto {
     private Integer maxParticipants;
     private Double entranceFee;
     private EventType eventType;
+    private List<String> tags;
     private String description;
     private String locationName;
     private Point location;

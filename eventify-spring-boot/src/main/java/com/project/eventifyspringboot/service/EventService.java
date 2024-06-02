@@ -1,5 +1,6 @@
 package com.project.eventifyspringboot.service;
 
+import com.project.eventifyspringboot.dto.event.EventParticipantsDto;
 import com.project.eventifyspringboot.dto.event.EventShortDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentCreationDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentDto;
@@ -20,13 +21,10 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -45,6 +43,7 @@ public class EventService {
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
         event.setHost(authDetails.getUser());
+        event.setTags(normalizeTags(eventCreationDto.getTags()));
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
     }
@@ -70,30 +69,40 @@ public class EventService {
         return eventMapper.toListDto(eventEntities);
     }
 
-    public boolean submitParticipation(AuthDetails authDetails, String eventId) {
+    public EventParticipantsDto submitParticipation(AuthDetails authDetails, String eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
         event.getParticipants().add(authDetails.getUser());
-        eventRepository.save(event);
-        return true;
+        return eventMapper.toParticipantsDto(eventRepository.save(event));
     }
 
-    public List<EventShortDto> searchEvents(EventType type, EventAvailability availability,
-                                            LocalDateTime from, LocalDateTime to, int radius,
+    public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
+                                            LocalDateTime from, LocalDateTime to,
+                                            List<String> tags, String name, int radius,
                                             double longitude, double latitude) {
         Query query = new Query();
 
         if (type != null) {
-            query.addCriteria(Criteria.where("eventType").is(type));
+            query.addCriteria(Criteria.where("eventType").in(type));
         }
         if (availability != null) {
-            query.addCriteria(Criteria.where("availability").is(availability));
+            query.addCriteria(Criteria.where("availability").in(availability));
         }
-        if (from != null) {
-            query.addCriteria(Criteria.where("startDateTime").gte(from));
+        if (from != null || to != null) {
+            Criteria criteria = Criteria.where("startDateTime");
+            if (from != null) {
+                criteria = criteria.gte(from);
+            }
+            if (to != null) {
+                criteria = criteria.lte(to);
+            }
+            query.addCriteria(criteria);
         }
-        if (to != null) {
-            query.addCriteria(Criteria.where("endDateTime").lte(to));
+        if (tags != null) {
+            query.addCriteria(Criteria.where("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags))));
+        }
+        if (name != null) {
+            query.addCriteria(Criteria.where("title").regex(name));
         }
 
         Point location = new Point(longitude, latitude);
@@ -102,5 +111,9 @@ public class EventService {
 
         List<Event> events = template.find(query, Event.class);
         return eventMapper.toListDto(events);
+    }
+
+    private List<String> normalizeTags(List<String> tags) {
+        return tags.stream().map(String::toLowerCase).toList();
     }
 }

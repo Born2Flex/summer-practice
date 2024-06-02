@@ -29,11 +29,12 @@ public class Event {
     @DocumentReference
     private User host;
     private EventAvailability availability;
+    private EventType eventType;
+    private List<String> tags;
     @DocumentReference(collection = "users", lazy = true)
     private List<User> participants;
     private Integer maxParticipants;
     private Double entranceFee;
-    private EventType eventType;
     private String locationName;
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
