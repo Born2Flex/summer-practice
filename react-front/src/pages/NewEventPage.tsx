@@ -9,8 +9,7 @@ import { redirect, useLoaderData } from "react-router-dom";
 
 export function NewEventPage() {
     const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
-    console.log('NewEventPage data:', data);
-    console.log('NewEventPage data:', data.eventTypes);
+
     const [eventLocation, setEventLocation] = useState<LatLngExpression>(data.currentLocation);
 
     function handleLocationChange(location: LatLngExpression) {

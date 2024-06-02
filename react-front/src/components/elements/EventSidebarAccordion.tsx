@@ -48,7 +48,7 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
-export function EventSidebarAccordion( {id, description, locationName, currentParticipants, maxParticipants, eventComments}: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, eventComments: Comment[]}) {
+export function EventSidebarAccordion({ id, description, locationName, currentParticipants, maxParticipants, eventComments }: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, eventComments: Comment[] }) {
     const [open, setOpen] = React.useState(1);
 
     const [stateComments, setComments] = useState(eventComments);
@@ -105,7 +105,7 @@ export function EventSidebarAccordion( {id, description, locationName, currentPa
                         growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
                         ourselves and actualize our dreams.
                     </div>*/}
-                    <div>
+                    <div className="max-h-[80px] overflow-y-auto custom-scrollbar">
                         {description}
                     </div>
                     <div className="flex flex-1 justify-between px-2">
@@ -181,7 +181,7 @@ export function EventSidebarAccordion( {id, description, locationName, currentPa
                         <ChatBubble />
                         <ChatBubble />
                     </div>
-                    <CommentInputForm onSubmit={handleCommentSubmit}/>
+                    <CommentInputForm onSubmit={handleCommentSubmit} />
                 </AccordionBody>
             </Accordion>
         </div>
