@@ -58,7 +58,7 @@ export function EventSidebarAccordion( {id, description, locationName, currentPa
     const renderParticipantCount = () => {
         return maxParticipants !== null
             ? `${currentParticipants}/${maxParticipants} people`
-            : `${currentParticipants}/∞ people`;
+            : `${currentParticipants} people`;
     };
 
     const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -79,7 +79,7 @@ export function EventSidebarAccordion( {id, description, locationName, currentPa
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: `"${newCommentText}"`
+                body: `"${newCommentText.trim()}"`
             });
 
             if (response.ok) {

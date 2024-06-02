@@ -49,6 +49,12 @@ export interface Event {
     participants: any[];
 }
 
+const localDateTimeString = (utcDateTimeString: string): string => {
+    const utcDate = new Date(utcDateTimeString);
+    const localDate = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60000);
+    return localDate.toISOString().split('T')[0] + ' ' + localDate.toTimeString().split(' ')[0];
+};
+
 function EventPage() {
     const { id } = useParams();
     //console.log(id);
@@ -99,7 +105,7 @@ function EventPage() {
                     description: eventData.description,
                     locationName: eventData.locationName,
                     location: eventData.location,
-                    startDateTime: eventData.startDateTime,
+                    startDateTime: localDateTimeString(eventData.startDateTime),
                     comments: eventData.comments,
                     imgUrl: eventData.imgUrl,
                     tags: eventData.tags,
