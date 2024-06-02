@@ -22,44 +22,69 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
     }
 
     const changingForm = {
-        'public': (<InputWithLabel
-            label="Event Location"
-            color="gray"
-            size="lg"
-            placeholder="Ukraine, Kyiv"
-            name="location"
-            value={location}
-            readOnly
-            containerProps={{
-                className: "min-w-full",
-            }}
-        />),
-        'paid': (<div className="grid grid-cols-2 gap-4">
-            <InputWithLabel
-                label="Event Location"
-                color="gray"
-                size="lg"
-                placeholder="Ukraine, Kyiv"
-                name="location"
-                value={location}
-                readOnly
-                containerProps={{
-                    className: "min-w-full",
-                }}
-            />
-            <InputWithLabel
-                label="Event Price"
-                color="gray"
-                size="lg"
-                type="number"
-                placeholder="$20-30"
-                name="price"
-                containerProps={{
-                    className: "!min-w-full",
-                }}
-                required
-            />
-        </div>),
+        'public': (
+            <div className='grid grid-cols-2 gap-x-4'>
+                <InputWithLabel
+                    label="Event Location"
+                    color="gray"
+                    size="lg"
+                    placeholder="Ukraine, Kyiv"
+                    name="location"
+                    value={location}
+                    readOnly
+                    containerProps={{
+                        className: "min-w-full",
+                    }}
+                />
+                <InputWithLabel
+                    label="Event Tags"
+                    color="gray"
+                    size="lg"
+                    placeholder="#event"
+                    name="tags"
+                    containerProps={{
+                        className: "min-w-full",
+                    }}
+                />
+            </div>),
+        'paid': (
+            <div className="grid grid-cols-3 gap-4">
+                <InputWithLabel
+                    label="Event Location"
+                    color="gray"
+                    size="lg"
+                    placeholder="Ukraine, Kyiv"
+                    name="location"
+                    value={location}
+                    readOnly
+                    containerProps={{
+                        className: "min-w-full",
+                    }}
+                />
+                <InputWithLabel
+                    label="Event Tags"
+                    color="gray"
+                    size="lg"
+                    placeholder="#event"
+                    name="tags"
+                    containerProps={{
+                        className: "min-w-full",
+                    }}
+                />
+                <InputWithLabel
+                    label="Event Price"
+                    color="gray"
+                    size="lg"
+                    type="number"
+                    placeholder="$20-30"
+                    name="event-price"
+                    containerProps={{
+                        className: "!min-w-full",
+                    }}
+                    required
+                />
+            </div>
+        ),
         'private': (
             <InputWithLabel
                 label="Event Location"
@@ -86,7 +111,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
         <Form method='POST'>
             <input type="text" className='hidden' name="locationX" readOnly value={lat} />
             <input type="text" className='hidden' name="locationY" readOnly value={lng} />
-            <input type="text" className='hidden' value={tabName} readOnly name='type' />
+            <input type="text" className='hidden' value={tabName} readOnly name='availability' />
             <input type="text" className='hidden' value={locationData.toString()} readOnly name='locationLatLng' />
 
             <div className='grid grid-cols-3 gap-x-4'>
@@ -103,17 +128,6 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         }}
                         required
                     />
-                    {/* <InputWithLabel
-                    label="Event Type"
-                    color="gray"
-                    size="lg"
-                    placeholder="Super Party"
-                    name="event-type"
-                    containerProps={{
-                        className: "!min-w-full",
-                    }}
-                    required
-                /> */}
                     <SingleSelectInput eventTypes={data.eventTypes} />
 
                     <DatePicker />
@@ -132,6 +146,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                 <ImageInput />
             </div>
             {changingForm[tabName as keyof typeof changingForm]}
+
             <div>
                 <Typography
                     variant="small"

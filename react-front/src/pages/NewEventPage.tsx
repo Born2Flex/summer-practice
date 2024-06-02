@@ -131,43 +131,30 @@ export async function action({ request }: { request: Request }) {
         console.log(isoDateString);
     }
 
+    // const eventPrice: Number | null = data.get('event-price') ? parseFloat(data.get('event-price')?.toString()) : null;
+
     let eventData: any;
 
-    if (data.get('event-type') === 'paid') {
-        eventData = {
-            title: data.get('title')?.toString(),
-            description: data.get('description')?.toString(),
-            eventType: data.get('event-type'),
-            locationName: data.get('location'),
+    eventData = {
+        title: data.get('title')?.toString(),
+        description: data.get('description')?.toString(),
+        availability: data.get('availability')?.toString(),
+        maxParticipants: null,
+        entranceFee: Number(data.get('event-price')) || null,
+        eventType: data.get('event-type'),
+        locationName: data.get('location'),
+        tags: data.get('tags')?.toString().split(',').map((tag: string) => tag.trim()),
 
-            location: {
-                type: 'Point',
-                coordinates: [
-                    parseFloat(data.get('locationX')?.toString() || '0'),
-                    parseFloat(data.get('locationY')?.toString() || '0')
-                ]
-            },
-            startDateTime: isoDateString,
-            image: data.get('event-image') || undefined
-        };
-    }
-    else {
-        eventData = {
-            title: data.get('title')?.toString(),
-            description: data.get('description')?.toString(),
-            eventType: data.get('event-type'),
-            locationName: data.get('location'),
-            location: {
-                type: 'Point',
-                coordinates: [
-                    parseFloat(data.get('locationX')?.toString() || '0'),
-                    parseFloat(data.get('locationY')?.toString() || '0')
-                ]
-            },
-            startDateTime: isoDateString,
-            image: data.get('event-image') || undefined
-        };
-    }
+        location: {
+            type: 'Point',
+            coordinates: [
+                parseFloat(data.get('locationX')?.toString() || '0'),
+                parseFloat(data.get('locationY')?.toString() || '0')
+            ]
+        },
+        startDateTime: isoDateString,
+        imgUrl: data.get('event-image') || null
+    };
 
     console.log('Gathered event data:', eventData);
 
