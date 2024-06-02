@@ -58,7 +58,7 @@ function EventsSidebar({ events }: { events: Event[] }) {
         }
 
         try {
-            const response = await fetch(`/rest/events/search?${queryString}`, {
+            const response = await fetch(`http://localhost:8080/rest/events/search?${queryString}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
