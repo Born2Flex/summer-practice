@@ -96,33 +96,36 @@ export async function loader({ request }: { request: Request }) {
             throw new Error('Failed to fetch events');
         }
 
-        const eventData = await response.json();
-        const event: Event = {
-            id: eventData.id,
-            title: eventData.title,
-            host: eventData.host,
-            availability: eventData.availability,
-            currentParticipants: eventData.currentParticipants,
-            maxParticipants: eventData.maxParticipants,
-            entranceFee: eventData.entranceFee,
-            eventType: eventData.eventType,
-            description: eventData.description,
-            locationName: eventData.locationName,
-            location: eventData.location,
-            startDateTime: localDateTimeString(eventData.startDateTime),
-            comments: eventData.comments,
-            imgUrl: eventData.imgUrl,
-            tags: eventData.tags,
-            participants: eventData.participants,
-        };
+        /*const event = await response.json();
+
+        return await new Promise<Event>((resolve, reject) => {
+            try {
+                event.startDateTime = localDateTimeString(event.startDateTime);
+                console.log(event);
+                resolve(event);
+            } catch (error) {
+                console.error('Error processing event date:', error);
+                reject(error);
+            }
+        });*/
+
+        const event = await new Promise<Event>((resolve, reject) => {
+            response.json().then((data: Event) => {
+                // Transform the startDateTime and resolve the event
+                data.startDateTime = localDateTimeString(data.startDateTime);
+                resolve(data);
+            }).catch((error) => {
+                console.error('Error processing event data:', error);
+                reject(error);
+            });
+        });
         console.log(event);
-        return eventData;
+        return event;
 
     } catch (error) {
         console.error('Error fetching events:', error);
+        return null; 
     }
-
-    return null;
 };
 
 export default EventPage;
