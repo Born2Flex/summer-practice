@@ -111,11 +111,14 @@ export async function action({ request }: { request: Request }) {
             parseInt(year),
             parseInt(month) - 1,
             parseInt(day),
-            parseInt(hours) - 3,
+            //parseInt(hours) - 3,
             parseInt(minutes)
         ));
 
-        isoDateString = date.toISOString().replace('Z', '');
+        const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
+        const adjustedDate = new Date(date.getTime() - timezoneOffsetMs);
+
+        isoDateString = adjustedDate.toISOString().replace('Z', '');
 
         console.log('Combined ISO date string:', isoDateString);
     }
