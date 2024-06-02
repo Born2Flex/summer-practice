@@ -28,22 +28,22 @@ function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
     const data = [
         {
             label: "Public",
-            value: "public",
+            value: "PUBLIC",
             icon: EyeIcon,
         },
         {
             label: "Paid",
-            value: "paid",
+            value: "PAID",
             icon: BanknotesIcon,
         },
         {
             label: "Private",
-            value: "private",
+            value: "PRIVATE",
             icon: KeyIcon,
         },
     ];
     return (
-        <Tabs value="public">
+        <Tabs value="PUBLIC">
             <TabsHeader placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 {data.map(({ label, value, icon }) => (
                     <Tab key={value} value={value} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>

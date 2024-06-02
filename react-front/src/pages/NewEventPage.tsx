@@ -102,6 +102,8 @@ export async function action({ request }: { request: Request }) {
     let isoDateString: string | undefined;
 
     if (eventDate && eventTime) {
+        console.log('Event date and time:', eventDate, eventTime);
+
         const [year, month, day] = eventDate.split('-');
         const [hours, minutes] = eventTime.split(':');
 
@@ -109,29 +111,14 @@ export async function action({ request }: { request: Request }) {
             parseInt(year),
             parseInt(month) - 1,
             parseInt(day),
-            parseInt(hours),
-            parseInt(minutes),
-            0
+            parseInt(hours) - 3,
+            parseInt(minutes)
         ));
 
-        //isoDateString = date.toISOString();
+        isoDateString = date.toISOString().replace('Z', '');
 
-        isoDateString = date.toLocaleString('en-US', {
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            timeZoneName: 'short',
-            hour12: false,
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-
-        console.log(isoDateString);
+        console.log('Combined ISO date string:', isoDateString);
     }
-
-    // const eventPrice: Number | null = data.get('event-price') ? parseFloat(data.get('event-price')?.toString()) : null;
 
     let eventData: any;
 
@@ -146,11 +133,8 @@ export async function action({ request }: { request: Request }) {
         tags: data.get('tags')?.toString().split(',').map((tag: string) => tag.trim()),
 
         location: {
-            type: 'Point',
-            coordinates: [
-                parseFloat(data.get('locationX')?.toString() || '0'),
-                parseFloat(data.get('locationY')?.toString() || '0')
-            ]
+            x: parseFloat(data.get('locationX')?.toString() || '0'),
+            y: parseFloat(data.get('locationY')?.toString() || '0')
         },
         startDateTime: isoDateString,
         imgUrl: data.get('event-image') || null

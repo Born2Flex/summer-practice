@@ -22,7 +22,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
     }
 
     const changingForm = {
-        'public': (
+        'PUBLIC': (
             <div className='grid grid-cols-2 gap-x-4'>
                 <InputWithLabel
                     label="Event Location"
@@ -47,7 +47,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     }}
                 />
             </div>),
-        'paid': (
+        'PAID': (
             <div className="grid grid-cols-3 gap-4">
                 <InputWithLabel
                     label="Event Location"
@@ -85,7 +85,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                 />
             </div>
         ),
-        'private': (
+        'PRIVATE': (
             <InputWithLabel
                 label="Event Location"
                 color="gray"
