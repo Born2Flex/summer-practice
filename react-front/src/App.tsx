@@ -5,7 +5,7 @@ import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import EventsMapPage from './pages/EventsMapPage';
 // import { action as searchEventsAction } from './components/sections/EventsSidebar';
-import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage';
+import NewEventPage, { action as createEventAction, loader as createEventLoader } from './pages/NewEventPage';
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
 import EventPage from './pages/EventPage';
@@ -68,8 +68,8 @@ function App() {
         {
           path: 'new',
           element: <NewEventPage />,
-          action: CreateEventAction,
-          loader: requireAuth,
+          action: createEventAction,
+          loader: createEventLoader,
         }
       ],
     },
