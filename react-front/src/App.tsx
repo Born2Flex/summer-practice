@@ -9,7 +9,7 @@ import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage'
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
 import EventPage from './pages/EventPage';
-import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
+import MapWithSidebarLayout, { loader as eventsLoader } from './pages/MapWithSidebarLayout';
 import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
 import { EventsProvider } from './context/EventsProvider.tsx';
@@ -24,7 +24,6 @@ function App() {
       element: <AuthProvider><RootLayout /></AuthProvider>,
       errorElement: <ErrorPage />,
       id: 'root',
-      // loader: tokenLoader,
       children: [
         { index: true, element: <HomePage /> },
         {
@@ -37,10 +36,6 @@ function App() {
           element: <SignupPage />,
           action: signupAction,
         },
-        // {
-        //   path: 'logout',
-        //   action: logoutAction,
-        // },
         {
           path: 'profile',
           element: <Profile />,
@@ -57,9 +52,8 @@ function App() {
         {
           path: 'events',
           element: <EventsProvider><MapWithSidebarLayout /></EventsProvider>,
-          action: profileAction,
-          loader: requireAuth,
-          // action: searchEventsAction,
+          id: 'map-layout',
+          loader: eventsLoader,
           children: [
             {
               index: true,

@@ -1,7 +1,4 @@
-import { Button } from "@material-tailwind/react";
-import { NavLink, useParams } from "react-router-dom";
-import Sponsors from "../components/cards/Sponsors";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useParams } from "react-router-dom";
 import EventSidebar from "../components/sections/EventSidebar";
 import { useEffect, useState } from "react";
 
@@ -56,6 +53,7 @@ const localDateTimeString = (utcDateTimeString: string): string => {
 };
 
 function EventPage() {
+    console.log('EventPage useEffect');
     const { id } = useParams();
     //console.log(id);
     /*const event = {
@@ -87,7 +85,7 @@ function EventPage() {
                         'Authorization': `Bearer ${token}`
                     },
                 });
-            
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch events');
                 }

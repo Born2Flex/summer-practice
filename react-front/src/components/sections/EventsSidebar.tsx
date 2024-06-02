@@ -4,7 +4,6 @@ import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 import { Event } from "../../pages/EventsMapPage"
-import { useEventsContext } from "../../context/EventsProvider"
 
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
@@ -13,8 +12,8 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
 };
 
 function EventsSidebar({ events }: { events: Event[] }) {
+    console.log(events);
     const navigate = useNavigate();
-    const { setEvents } = useEventsContext();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -48,7 +47,7 @@ function EventsSidebar({ events }: { events: Event[] }) {
                     console.log(isoDateString);
                 } else {
                     queryParams.append(key, value.toString().toUpperCase());
-                }        
+                }
                 console.log(key, value)
             }
         });
@@ -67,7 +66,7 @@ function EventsSidebar({ events }: { events: Event[] }) {
             console.error('Error getting current position:', error);
             // Handle error (e.g., fallback to default location)
         }
-    
+
         const queryString = queryParams.toString();
 
         const token = localStorage.getItem('jwt');
@@ -83,30 +82,30 @@ function EventsSidebar({ events }: { events: Event[] }) {
                     'Content-Type': 'application/json'
                 }
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch events');
             }
-    
+
             //const eventData = await response.json();
             const eventData = await response.json();
-            setEvents(eventData.map((event: any) => ({
-                id: event.id,
-                title: event.title,
-                description: event.description,
-                locationName: event.locationName,
-                availability: event.availability,
-                eventType: event.eventType,
-                currentParticipants: event.currentParticipants,
-                maxParticipants: event.maxParticipants,
-                entranceFee: event.entranceFee,
-                location: {
-                    x: event.location.x,
-                    y: event.location.y,
-                    //x: 40.7178,
-                    //y: -74.0090,
-                },
-            })));
+            // setEvents(eventData.map((event: any) => ({
+            //     id: event.id,
+            //     title: event.title,
+            //     description: event.description,
+            //     locationName: event.locationName,
+            //     availability: event.availability,
+            //     eventType: event.eventType,
+            //     currentParticipants: event.currentParticipants,
+            //     maxParticipants: event.maxParticipants,
+            //     entranceFee: event.entranceFee,
+            //     location: {
+            //         x: event.location.x,
+            //         y: event.location.y,
+            //         //x: 40.7178,
+            //         //y: -74.0090,
+            //     },
+            // })));
 
             console.log(eventData);
             // Handle the event data here (e.g., update state with the new events)

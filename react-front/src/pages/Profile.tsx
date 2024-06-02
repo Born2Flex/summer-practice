@@ -11,7 +11,6 @@ import {
 import {
     Square3Stack3DIcon,
     UserCircleIcon,
-    Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
