@@ -1,13 +1,55 @@
 import Background from "../elements/Background"
-import { Event } from "../../pages/EventsMapPage"
+import { Event } from "../../pages/EventPage"
 import { Button, IconButton } from "@material-tailwind/react"
 import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
 import { NavLink } from "react-router-dom"
+import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
+import { useState } from "react"
 
-function EventSidebar({ name, location, category, people, type, link, limit, price }: Event) {
+//function EventSidebar({ id, title, locationName, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
+//function EventSidebar({ event }: { event: Event }) {
+    //const {id, title, description, availability, locationName, eventType, entranceFee, currentParticipants, maxParticipants } = event;
+function EventSidebar({ id, title, description, availability, locationName, eventType, startDateTime, entranceFee, currentParticipants, maxParticipants, participants, comments }: Event) {
+    const date = new Date(startDateTime);
+
+    // Extract and format the components
+    const day = format(date, 'd');
+    const month = format(date, 'MMM');
+    const weekday = format(date, 'EEEE');
+    const time = format(date, 'h:mm a');
+
+    const [stateCurrentParticipants, setCurrentParticipants] = useState(currentParticipants);
+    const [stateParticipants, setParticipants] = useState(participants);
+
+    const handleJoin = async () => {
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            throw new Error('No JWT token found');
+        }
+
+        try {
+            const response = await fetch(`/rest/events/${id}/participate`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setCurrentParticipants(data.currentParticipants);
+                setParticipants(data.participants);
+            } else {
+                console.error('Failed to join the event');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     return (
         <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
@@ -26,7 +68,7 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                         </IconButton>
                     </NavLink>
 
-                    <p className="flex items-center text-sm font-semibold">{category.toUpperCase()} {type.toUpperCase()}</p>
+                    <p className="flex items-center text-sm font-semibold">{availability.toUpperCase()} {eventType.toUpperCase()}</p>
 
                     <div className="flex gap-x-4">
                         <IconButton
@@ -49,18 +91,18 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                 </div> */}
 
                 <div className="mt-4">
-                    <h1 className="text-2xl font-bold text-center">Dmytro's birthday party!</h1>
+                    <h1 className="text-2xl font-bold text-center">{title}</h1>
                 </div>
 
                 <div className="my-5 flex flex-row justify-between">
                     <div className="flex flex-row">
                         <div className="px-6 flex flex-col justify-center text-center">
-                            <h3 className="font-semibold">29</h3>
-                            <p className="text-sm font-semibold text-gray-500">Mar</p>
+                            <h3 className="font-semibold">{day}</h3>
+                            <p className="text-sm font-semibold text-gray-500">{month}</p>
                         </div>
                         <div className="flex flex-col">
-                            <h3 className="font-semibold">Tuesday</h3>
-                            <p className="text-sm font-semibold text-gray-500">10:00 PM - End</p>
+                            <h3 className="font-semibold">{weekday}</h3>
+                            <p className="text-sm font-semibold text-gray-500">{time}</p>
                         </div>
                     </div>
                     <IconButton
@@ -71,12 +113,12 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                     </IconButton>
                 </div>
 
-                <EventSidebarAccordion />
+                <EventSidebarAccordion description={description} locationName={locationName} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants}/>
 
             </div>
             <div className="flex flex-row justify-between z-10">
                 <div>
-                    <h3 className="font-semibold">$25.00-$30.00</h3>
+                    <h3 className="font-semibold">${entranceFee}</h3>
                     <p className="text-sm font-semibold text-gray-500">10 Spots left</p>
                 </div>
 
@@ -87,6 +129,7 @@ function EventSidebar({ name, location, category, people, type, link, limit, pri
                         size="lg"
                         color="green"
                         placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                        onClick={handleJoin}
                     >
                         Join
                     </Button>

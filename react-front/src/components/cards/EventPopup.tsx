@@ -5,7 +5,9 @@ import { Event } from '../../pages/EventsMapPage'
 import { colorVariants, iconVariants, ribbonVariants } from './EventCard'
 
 
-function EventPopup({ name, location, category, people, type, link, limit, price }: Event) {
+function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
+
+    let link: string = "#";
 
     return (
         <div
@@ -13,28 +15,28 @@ function EventPopup({ name, location, category, people, type, link, limit, price
             rounded-lg shadow-md flex card text-gray-700"
             style={{ transition: "background-color 0.3s" }}
         >
-            <div className={`w-2 -ml-[1px] text-white flex items-center rounded-l-lg shadow-xl ${ribbonVariants[category as keyof typeof ribbonVariants]}`} />
+            <div className={`w-2 -ml-[1px] text-white flex items-center rounded-l-lg shadow-xl ${ribbonVariants[availability as keyof typeof ribbonVariants]}`} />
 
             <div className="w-full flex flex-col">
                 <div className="grid grid-cols-2 gap-4 p-4">
                     <div>
                         <div className='flex flex-row justify-between gap-6 mb-4'>
-                            <div className="text-xl font-bold text-gray-700">{name}</div>
+                            <div className="text-xl font-bold text-gray-700">{title}</div>
 
                         </div>
 
-                        {price && <span className="text-xl font-thin text-gray-700">£{price}<span className="text-lg">/PPPN</span></span>}
-                        {!price && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
+                        {entranceFee && <span className="text-xl font-thin text-gray-700">£{entranceFee}<span className="text-lg">/PPPN</span></span>}
+                        {!entranceFee && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
                         <div className="flex items-center mt-4 gap-x-5">
 
                             <div className="flex text-xs gap-2">
-                                <FontAwesomeIcon icon={faUsers} /> {people}{limit && `/${limit}`} people
+                                <FontAwesomeIcon icon={faUsers} /> {currentParticipants}{maxParticipants && `/${maxParticipants}`} people
                             </div>
                         </div>
                     </div>
                     <div className='flex items-center justify-center'>
-                        <div className={`${colorVariants[type as keyof typeof colorVariants]} w-3/4 text-white aspect-square flex items-center justify-center rounded-full shadow-rounded-lg`}>
-                            <FontAwesomeIcon icon={iconVariants[type as keyof typeof iconVariants]} className='text-2xl' />
+                        <div className={`${colorVariants[eventType as keyof typeof colorVariants]} w-3/4 text-white aspect-square flex items-center justify-center rounded-full shadow-rounded-lg`}>
+                            <FontAwesomeIcon icon={iconVariants[eventType as keyof typeof iconVariants]} className='text-2xl' />
                         </div>
                     </div>
 

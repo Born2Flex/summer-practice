@@ -19,7 +19,7 @@ function EventsSidebar({ events }: { events: Event[] }) {
             <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
                 <div className="flex flex-col gap-y-3">
                     {events.map((event, index) => (
-                        <EventCard key={index} {...event} />
+                        <EventCard key={index} event={event} />
                     ))}
                 </div>
             </div>

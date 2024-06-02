@@ -13,6 +13,7 @@ import EventPage from './pages/EventPage';
 import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
 import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
+import { EventsProvider } from './context/EventsProvider.tsx';
 
 
 
@@ -20,7 +21,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element:     <AuthProvider><RootLayout /></AuthProvider>,
+      element: <RootLayout />,
       errorElement: <ErrorPage />,
       id: 'root',
       // loader: tokenLoader,
@@ -55,7 +56,7 @@ function App() {
         },
         {
           path: 'events',
-          element: <MapWithSidebarLayout />,
+          element: <EventsProvider><MapWithSidebarLayout /></EventsProvider>,
           action: profileAction,
           loader: requireAuth,
           // action: searchEventsAction,
@@ -80,7 +81,7 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return <AuthProvider><RouterProvider router={router} /></AuthProvider>;
 }
 
 export default App

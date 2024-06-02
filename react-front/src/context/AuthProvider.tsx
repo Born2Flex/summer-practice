@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { getToken, clearToken } from '../auth'; // Ensure these functions are correctly imported
 
 interface AuthContextType {
@@ -16,16 +16,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children } : AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
 
-    useEffect(() => {
+    /*useEffect(() => {
         const handleStorageChange = () => {
-            setIsAuthenticated(!!getToken());
+            setIsAuthenticated(!!localStorage.getItem('jwt'));
         };
 
         window.addEventListener('storage', handleStorageChange);
+
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
-    }, []);
+    }, []);*/
 
     const login = () => {
         setIsAuthenticated(true);
@@ -50,3 +51,4 @@ export const useAuth = (): AuthContextType => {
     }
     return context;
 };
+

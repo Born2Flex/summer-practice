@@ -47,7 +47,7 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
-export function EventSidebarAccordion() {
+export function EventSidebarAccordion( {description, locationName, currentParticipants, maxParticipants}: {description: string, locationName: string, currentParticipants: number, maxParticipants: number | null}) {
     const [open, setOpen] = React.useState(1);
 
     const handleOpen = (value: number) => setOpen(open === value ? 3 - value : value);
@@ -57,10 +57,13 @@ export function EventSidebarAccordion() {
             <Accordion className={`${open === 1 ? 'flex flex-col flex-1' : undefined}`} open={open === 1} icon={<Icon id={1} open={open} />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <AccordionHeader onClick={() => handleOpen(1)} className="text-lg font-semibold text-gray-800  border-gray-800" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>About this event</AccordionHeader>
                 <AccordionBody className='flex flex-1 flex-col gap-y-6'>
-                    <div>
+                    {/*<div>
                         We&apos;re not always in the position that we want to be at. We&apos;re constantly
                         growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
                         ourselves and actualize our dreams.
+                    </div>*/}
+                    <div>
+                        {description}
                     </div>
                     <div className="flex flex-1 justify-between px-2">
                         <div className="flex flex-col w-[133px] text-center px-6 py-4 rounded-lg bg-white/40">
@@ -68,7 +71,7 @@ export function EventSidebarAccordion() {
                                 Participants:
                             </span>
                             <span className="text-xs">
-                                10/20 people
+                                {currentParticipants}/{maxParticipants} people
                             </span>
 
                             <div className='mt-3 flex items-center justify-center gap-2'>
@@ -110,7 +113,7 @@ export function EventSidebarAccordion() {
                             <div>
                                 <p className="text-sm">
                                     <FontAwesomeIcon icon={faLocationDot} className="text-gray-600 w-4 h-4" />
-                                    <span className="ml-1 text-gray-600">Kyiv, Ukraine</span>
+                                    <span className="ml-1 text-gray-600">{locationName}</span>
                                 </p>
                                 <p className="text-sm">
                                     <FontAwesomeIcon icon={faLightbulb} className="text-gray-600" />
