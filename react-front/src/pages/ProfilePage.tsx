@@ -2,7 +2,7 @@ import { faChevronLeft, faPen, faPlus, faCheck, faXmark } from '@fortawesome/fre
 import RoundButton from "../components/buttons/RoundButton";
 import ButtonWithText from "../components/buttons/ButtonWithText";
 import UserInfo from "../components/UserInfo";
-import UserEvents from "../components/UserEvents";
+// import UserEvents from "../components/UserEvents";
 import { Form, redirect, useLocation, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import EditableField from '../components/inputs/EditableField';
@@ -133,7 +133,7 @@ function ProfilePage() {
                                 </div>
                         </div>
 
-                        <UserEvents />
+                        {/* <UserEvents /> */}
 
                 </div>
         );

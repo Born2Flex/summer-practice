@@ -75,6 +75,9 @@ module.exports = withMT({
           borderRadius: '2px',
           zIndex: 50,
         },
+        '.scrollbar-invisible::-webkit-scrollbar': {
+          display: 'none',
+        },
         '.custom-scrollbar::-webkit-scrollbar-track': {
           background: '#e2e7d4',
           borderRadius: '50px',
@@ -86,15 +89,13 @@ module.exports = withMT({
         '.custom-scrollbar::-webkit-scrollbar-thumb:hover': {
           background: '#818774',
         },
-        '.custom-scrollbar-gray::-webkit-scrollbar-track': {
+        '.scrollbar-gray::-webkit-scrollbar-track': {
           background: theme('colors.gray.800'),
-          borderRadius: '50px',
         },
-        '.custom-scrollbar-gray::-webkit-scrollbar-thumb': {
+        '.scrollbar-gray::-webkit-scrollbar-thumb': {
           background: theme('colors.gray.500'),
-          borderRadius: '50px',
         },
-        '.custom-scrollbar-gray::-webkit-scrollbar-thumb:hover': {
+        '.scrollbar-gray::-webkit-scrollbar-thumb:hover': {
           background: theme('colors.gray.400'),
         },
       })

@@ -3,7 +3,6 @@ import { action as profileAction } from './pages/ProfilePage'
 import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
-import ProfilePage from './pages/ProfilePage';
 import EventsMapPage from './pages/EventsMapPage';
 // import { action as searchEventsAction } from './components/sections/EventsSidebar';
 import NewEventPage, { action as CreateEventAction } from './pages/NewEventPage';
@@ -14,6 +13,7 @@ import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
 import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
 import { EventsProvider } from './context/EventsProvider.tsx';
+import Profile from './pages/Profile.tsx';
 
 
 
@@ -21,7 +21,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <RootLayout />,
+      element: <AuthProvider><RootLayout /></AuthProvider>,
       errorElement: <ErrorPage />,
       id: 'root',
       // loader: tokenLoader,
@@ -43,12 +43,12 @@ function App() {
         // },
         {
           path: 'profile',
-          element: <ProfilePage />,
+          element: <Profile />,
           loader: requireAuth,
           children: [
             {
               path: 'edit',
-              element: <ProfilePage />,
+              element: <Profile />,
               action: profileAction,
               loader: requireAuth,
             },
