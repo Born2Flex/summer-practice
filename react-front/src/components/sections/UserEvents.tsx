@@ -1,6 +1,159 @@
 import useHorizontalScroll from '../../hooks/useHorizontalScroll';
-import { events } from '../../pages/EventsMapPage'
 import EventCard from '../cards/EventCard'
+import { Event } from '../../pages/EventsMapPage'
+
+const events = [
+    {
+        id: '123',
+        title: 'Party',
+        description: 'Party at the beach',
+        locationName: 'Beach',
+        availability: 'PUBLIC',
+        eventType: 'party',
+        currentParticipants: 5,
+        maxParticipants: 10,
+        entranceFee: 10,
+        location: {
+            x: 0,
+            y: 0,
+        }
+    },
+    {
+        id: '456',
+        title: 'Concert',
+        description: 'Live concert at the stadium',
+        locationName: 'Stadium',
+        availability: 'PUBLIC',
+        eventType: 'concert',
+        currentParticipants: 8,
+        maxParticipants: 15,
+        entranceFee: 20,
+        location: {
+            x: 10,
+            y: 20,
+        }
+    },
+    {
+        id: '789',
+        title: 'Conference',
+        description: 'Tech conference at the convention center',
+        locationName: 'Convention Center',
+        availability: 'PUBLIC',
+        eventType: 'conference',
+        currentParticipants: 3,
+        maxParticipants: 50,
+        entranceFee: 0,
+        location: {
+            x: 30,
+            y: 40,
+        }
+    },
+    {
+        id: '101112',
+        title: 'Workshop',
+        description: 'Hands-on workshop for beginners',
+        locationName: 'Community Center',
+        availability: 'PUBLIC',
+        eventType: 'workshop',
+        currentParticipants: 12,
+        maxParticipants: 20,
+        entranceFee: 5,
+        location: {
+            x: 50,
+            y: 60,
+        }
+    },
+    {
+        id: '131415',
+        title: 'Exhibition',
+        description: 'Art exhibition at the gallery',
+        locationName: 'Art Gallery',
+        availability: 'PUBLIC',
+        eventType: 'exhibition',
+        currentParticipants: 6,
+        maxParticipants: 30,
+        entranceFee: 15,
+        location: {
+            x: 70,
+            y: 80,
+        }
+    },
+    {
+        id: '161718',
+        title: 'Sports Tournament',
+        description: 'Annual sports tournament',
+        locationName: 'Sports Complex',
+        availability: 'PUBLIC',
+        eventType: 'tournament',
+        currentParticipants: 20,
+        maxParticipants: 50,
+        entranceFee: 10,
+        location: {
+            x: 90,
+            y: 100,
+        }
+    },
+    {
+        id: '192021',
+        title: 'Movie Night',
+        description: 'Outdoor movie screening',
+        locationName: 'Park',
+        availability: 'PUBLIC',
+        eventType: 'movie',
+        currentParticipants: 15,
+        maxParticipants: 25,
+        entranceFee: 8,
+        location: {
+            x: 110,
+            y: 120,
+        }
+    },
+    {
+        id: '222324',
+        title: 'Food Festival',
+        description: 'International food festival',
+        locationName: 'City Square',
+        availability: 'PUBLIC',
+        eventType: 'festival',
+        currentParticipants: 10,
+        maxParticipants: 40,
+        entranceFee: 12,
+        location: {
+            x: 130,
+            y: 140,
+        }
+    },
+    {
+        id: '252627',
+        title: 'Hackathon',
+        description: '24-hour coding competition',
+        locationName: 'Tech Hub',
+        availability: 'PUBLIC',
+        eventType: 'hackathon',
+        currentParticipants: 25,
+        maxParticipants: 50,
+        entranceFee: 0,
+        location: {
+            x: 150,
+            y: 160,
+        }
+    },
+    {
+        id: '282930',
+        title: 'Networking Event',
+        description: 'Business networking event',
+        locationName: 'Conference Hall',
+        availability: 'PUBLIC',
+        eventType: 'networking',
+        currentParticipants: 18,
+        maxParticipants: 30,
+        entranceFee: 5,
+        location: {
+            x: 170,
+            y: 180,
+        }
+    },
+] as Event[];
 
 function UserEvents() {
     const scrollRef = useHorizontalScroll();

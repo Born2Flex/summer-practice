@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Accordion,
     AccordionHeader,
@@ -12,6 +12,7 @@ import Pic3 from "../../assets/photo_2024-05-30_16-21-05.jpg";
 import Pic4 from "../../assets/photo_2024-05-30_16-21-10.jpg";
 import Pic5 from "../../assets/photo_2024-05-30_16-21-17.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Comment } from "../../pages/EventPage";
 import { faLightbulb, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const comments = [
@@ -47,20 +48,65 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
-export function EventSidebarAccordion() {
+export function EventSidebarAccordion( {id, description, locationName, currentParticipants, maxParticipants, eventComments}: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, eventComments: Comment[]}) {
     const [open, setOpen] = React.useState(1);
 
+    const [stateComments, setComments] = useState(eventComments);
+
     const handleOpen = (value: number) => setOpen(open === value ? 3 - value : value);
+
+    const renderParticipantCount = () => {
+        return maxParticipants !== null
+            ? `${currentParticipants}/${maxParticipants} people`
+            : `${currentParticipants}/∞ people`;
+    };
+
+    const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            throw new Error('No JWT token found');
+        }
+
+        const formData = new FormData(event.currentTarget);
+        const newCommentText = formData.get('comment') as string;
+
+        try {
+            const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: `"${newCommentText}"`
+            });
+
+            if (response.ok) {
+                const newCommentFromServer = await response.json();
+                console.log(newCommentFromServer);
+                setComments([...stateComments, newCommentFromServer]);
+            } else {
+                console.error('Failed to add comment');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
 
     return (
         <div className="flex flex-1 flex-col pb-1.5">
             <Accordion className={`${open === 1 ? 'flex flex-col flex-1' : undefined}`} open={open === 1} icon={<Icon id={1} open={open} />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <AccordionHeader onClick={() => handleOpen(1)} className="text-lg font-semibold text-gray-800  border-gray-800" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>About this event</AccordionHeader>
                 <AccordionBody className='flex flex-1 flex-col gap-y-6'>
-                    <div>
+                    {/*<div>
                         We&apos;re not always in the position that we want to be at. We&apos;re constantly
                         growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
                         ourselves and actualize our dreams.
+                    </div>*/}
+                    <div>
+                        {description}
                     </div>
                     <div className="flex flex-1 justify-between px-2">
                         <div className="flex flex-col w-[133px] text-center px-6 py-4 rounded-lg bg-white/40">
@@ -68,7 +114,7 @@ export function EventSidebarAccordion() {
                                 Participants:
                             </span>
                             <span className="text-xs">
-                                10/20 people
+                                {renderParticipantCount()}
                             </span>
 
                             <div className='mt-3 flex items-center justify-center gap-2'>
@@ -110,7 +156,7 @@ export function EventSidebarAccordion() {
                             <div>
                                 <p className="text-sm">
                                     <FontAwesomeIcon icon={faLocationDot} className="text-gray-600 w-4 h-4" />
-                                    <span className="ml-1 text-gray-600">Kyiv, Ukraine</span>
+                                    <span className="ml-1 text-gray-600">{locationName}</span>
                                 </p>
                                 <p className="text-sm">
                                     <FontAwesomeIcon icon={faLightbulb} className="text-gray-600" />
@@ -135,7 +181,7 @@ export function EventSidebarAccordion() {
                         <ChatBubble />
                         <ChatBubble />
                     </div>
-                    <CommentInputForm />
+                    <CommentInputForm onSubmit={handleCommentSubmit}/>
                 </AccordionBody>
             </Accordion>
         </div>

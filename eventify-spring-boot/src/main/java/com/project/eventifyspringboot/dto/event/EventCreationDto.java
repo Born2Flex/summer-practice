@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,6 +25,7 @@ public class EventCreationDto {
     private Integer maxParticipants;
     private Double entranceFee;
     private EventType eventType;
+    private List<String> tags;
     @NotBlank
     private String locationName;
     @NotNull

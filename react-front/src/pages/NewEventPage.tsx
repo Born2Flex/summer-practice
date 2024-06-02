@@ -115,20 +115,43 @@ export async function action({ request }: { request: Request }) {
         console.log(isoDateString);
     }
 
-    let eventData: any = {
-        title: data.get('title')?.toString(),
-        description: data.get('description')?.toString(),
-        eventType: data.get('event-type'),
-        location: {
-            type: 'Point',
-            coordinates: [
-                parseFloat(data.get('locationX')?.toString() || '0'),
-                parseFloat(data.get('locationY')?.toString() || '0')
-            ]
-        },
-        startDateTime: isoDateString,
-        image: data.get('event-image') || undefined
-    };
+    let eventData: any;
+
+    if(data.get('event-type') === 'paid') {
+        eventData = {
+            title: data.get('title')?.toString(),
+            description: data.get('description')?.toString(),
+            eventType: data.get('event-type'),
+            locationName: data.get('location'),
+            
+            location: {
+                type: 'Point',
+                coordinates: [
+                    parseFloat(data.get('locationX')?.toString() || '0'),
+                    parseFloat(data.get('locationY')?.toString() || '0')
+                ]
+            },
+            startDateTime: isoDateString,
+            image: data.get('event-image') || undefined
+        };
+    }
+    else {
+        eventData = {
+            title: data.get('title')?.toString(),
+            description: data.get('description')?.toString(),
+            eventType: data.get('event-type'),
+            locationName: data.get('location'),
+            location: {
+                type: 'Point',
+                coordinates: [
+                    parseFloat(data.get('locationX')?.toString() || '0'),
+                    parseFloat(data.get('locationY')?.toString() || '0')
+                ]
+            },
+            startDateTime: isoDateString,
+            image: data.get('event-image') || undefined
+        };
+    }
 
     console.log('Gathered event data:', eventData);
 

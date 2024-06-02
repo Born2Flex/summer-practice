@@ -12,6 +12,7 @@ import EventPage from './pages/EventPage';
 import MapWithSidebarLayout from './pages/MapWithSidebarLayout';
 import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
+import { EventsProvider } from './context/EventsProvider.tsx';
 import Profile from './pages/Profile.tsx';
 
 
@@ -55,7 +56,7 @@ function App() {
         },
         {
           path: 'events',
-          element: <MapWithSidebarLayout />,
+          element: <EventsProvider><MapWithSidebarLayout /></EventsProvider>,
           action: profileAction,
           loader: requireAuth,
           // action: searchEventsAction,
@@ -80,7 +81,7 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return <AuthProvider><RouterProvider router={router} /></AuthProvider>;
 }
 
 export default App

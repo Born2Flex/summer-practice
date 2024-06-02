@@ -47,9 +47,13 @@ function EventsMap({ events }: { events: Event[] }) {
     //     }
     // }
 
-    const publicEvents = events.filter(event => event.category === 'public');
-    const paidEvents = events.filter(event => event.category === 'paid');
-    const privateEvents = events.filter(event => event.category === 'private');
+    // const publicEvents = events.filter(event => event.availability === 'public');
+    // const paidEvents = events.filter(event => event.availability === 'paid');
+    // const privateEvents = events.filter(event => event.availability === 'private');
+
+    const publicEvents = events.filter(event => event.availability === 'PUBLIC');
+    const paidEvents = events.filter(event => event.availability === 'PAID');
+    const privateEvents = events.filter(event => event.availability === 'PRIVATE');
 
     return (
         <section className='w-3/4 z-0'>
@@ -70,7 +74,8 @@ function EventsMap({ events }: { events: Event[] }) {
                             {publicEvents.map((event, index) => (
                                 <Marker
                                     key={index}
-                                    position={event.coordinates}
+                                    //position={event.coordinates}
+                                    position={[event.location.x, event.location.y]}
                                     icon={greenIcon}
                                 >
                                     <Popup
@@ -88,7 +93,8 @@ function EventsMap({ events }: { events: Event[] }) {
                             {paidEvents.map((event, index) => (
                                 <Marker
                                     key={index}
-                                    position={event.coordinates}
+                                    //position={event.coordinates}
+                                    position={[event.location.x, event.location.y]}
                                     icon={yellowIcon}
                                 >
                                     <Popup
@@ -106,7 +112,8 @@ function EventsMap({ events }: { events: Event[] }) {
                             {privateEvents.map((event, index) => (
                                 <Marker
                                     key={index}
-                                    position={event.coordinates}
+                                    //position={event.coordinates}
+                                    position={[event.location.x, event.location.y]}
                                     icon={redIcon}
                                 >
                                     <Popup

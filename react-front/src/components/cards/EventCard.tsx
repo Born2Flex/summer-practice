@@ -17,13 +17,22 @@ export const iconVariants = {
     'meeting': faHandshake,
 }
 
-export const ribbonVariants = {
+/*export const ribbonVariants = {
     'public': 'bg-green-500',
     'paid': 'bg-yellow-300',
     'private': 'bg-red-500',
+}*/
+
+export const ribbonVariants = {
+    'PUBLIC': 'bg-green-500',
+    'PAID': 'bg-yellow-300',
+    'PRIVATE': 'bg-red-500',
 }
 
-function EventCard({ name, location, category, people, type, link, limit, price }: Event) {
+
+
+//function EventCard({ name, location, category, people, type, link, limit, price }: Event) {
+function EventCard(event: Event) {
 
     return (
         <div
@@ -31,35 +40,35 @@ function EventCard({ name, location, category, people, type, link, limit, price 
             rounded-lg shadow-md flex card text-gray-700"
             style={{ transition: "background-color 0.3s" }}
         >
-            <div className={`w-2 text-white flex items-center rounded-l-lg shadow-xl ${ribbonVariants[category as keyof typeof ribbonVariants]}`} />
+            <div className={`w-2 text-white flex items-center rounded-l-lg shadow-xl ${ribbonVariants[event.availability as keyof typeof ribbonVariants]}`} />
 
             <div className="w-full flex flex-col">
                 <div className="flex flex-1 p-4">
                     <div className='w-3/4'>
-                        <h3 className="text-xl mb-1 text-gray-700">{name}</h3>
+                        <h3 className="text-xl mb-1 text-gray-700">{event.title}</h3>
                         <div className="text-xs flex items-center mb-4 gap-2">
-                            <FontAwesomeIcon icon={faLocationDot} /> {location}
+                            <FontAwesomeIcon icon={faLocationDot} /> {event.locationName}
                         </div>
-                        {price && <span className="text-xl font-thin text-gray-700">£{price}<span className="text-lg">/PPPN</span></span>}
-                        {!price && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
+                        {event.entranceFee !== null && <span className="text-xl font-thin text-gray-700">£{event.entranceFee}<span className="text-lg">/PPPN</span></span>}
+                        {event.entranceFee === null && <span className="text-xl font-thin text-gray-700"><span className="text-lg">FREE</span></span>}
                         <div className="flex items-center mt-4 gap-x-5">
                             <div className="flex text-xs gap-2">
                                 <FontAwesomeIcon icon={faWifi} /> Free WiFi
                             </div>
                             <div className="flex text-xs gap-2">
-                                <FontAwesomeIcon icon={faUsers} /> {people}{limit && `/${limit}`} people
+                                <FontAwesomeIcon icon={faUsers} /> {event.currentParticipants}{event.maxParticipants !== null && `/${event.maxParticipants}`} people
                             </div>
                         </div>
                     </div>
                     <div className='flex w-1/4 items-center justify-center'>
-                        <div className={`${colorVariants[type as keyof typeof colorVariants]} w-full text-white aspect-square flex items-center justify-center rounded-full shadow-rounded-lg`}>
-                            <FontAwesomeIcon icon={iconVariants[type as keyof typeof iconVariants]} className='text-2xl' />
+                        <div className={`${colorVariants[event.eventType as keyof typeof colorVariants]} w-full text-white aspect-square flex items-center justify-center rounded-full shadow-rounded-lg`}>
+                            <FontAwesomeIcon icon={iconVariants[event.eventType as keyof typeof iconVariants]} className='text-2xl' />
                         </div>
                     </div>
 
                 </div>
                 <NavLink
-                    to={link}
+                    to={event.id}
                     className="bg-gray-100/40 group/link group-hover/item:bg-gray-200/60 p-3 flex items-center justify-between rounded-br-lg transition ease-in-out group-hover:hover:bg-gray-200">
                     See more details
                     <FontAwesomeIcon
