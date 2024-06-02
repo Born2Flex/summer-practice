@@ -1,5 +1,4 @@
 import { LatLngExpression } from "leaflet";
-import EventsMap from "../components/elements/EventsMap";
 import EventsSidebar from "../components/sections/EventsSidebar";
 
 export interface Event {
