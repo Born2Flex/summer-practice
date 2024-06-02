@@ -8,6 +8,7 @@ import com.project.eventifyspringboot.dto.event.EventCreationDto;
 import com.project.eventifyspringboot.dto.event.EventDto;
 import com.project.eventifyspringboot.entity.Comment;
 import com.project.eventifyspringboot.entity.Event;
+import com.project.eventifyspringboot.entity.User;
 import com.project.eventifyspringboot.enumeration.EventAvailability;
 import com.project.eventifyspringboot.enumeration.EventType;
 import com.project.eventifyspringboot.mapper.CommentMapper;
@@ -72,8 +73,12 @@ public class EventService {
     public EventParticipantsDto submitParticipation(AuthDetails authDetails, String eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
-        if (event.getParticipants().contains(authDetails.getUser())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
+        List<User> participants = event.getParticipants();
+        if (participants.contains(authDetails.getUser())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participant already exists");
+        }
+        if (event.getMaxParticipants() != null && event.getMaxParticipants() == participants.size()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reached max num of Participants");
         }
         event.getParticipants().add(authDetails.getUser());
         return eventMapper.toParticipantsDto(eventRepository.save(event));
@@ -81,7 +86,7 @@ public class EventService {
 
     public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
                                             LocalDateTime from, LocalDateTime to,
-                                            List<String> tags, String name, int radius,
+                                            List<String> tags, String searchValue, int eventRadius,
                                             double longitude, double latitude) {
         Query query = new Query();
 
@@ -104,12 +109,12 @@ public class EventService {
         if (tags != null) {
             query.addCriteria(Criteria.where("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags))));
         }
-        if (name != null) {
-            query.addCriteria(Criteria.where("title").regex(name));
+        if (searchValue != null) {
+            query.addCriteria(Criteria.where("title").regex(searchValue));
         }
 
         Point location = new Point(longitude, latitude);
-        Distance distance = new Distance(radius, Metrics.KILOMETERS);
+        Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
         query.addCriteria(Criteria.where("location").nearSphere(location).maxDistance(distance.getNormalizedValue()));
 
         List<Event> events = template.find(query, Event.class);
