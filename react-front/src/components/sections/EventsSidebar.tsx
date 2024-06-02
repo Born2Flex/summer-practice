@@ -36,8 +36,20 @@ function EventsSidebar({ events }: { events: Event[] }) {
 
         formData.forEach((value, key) => {
             if (key !== 'search-value' && value.toString().trim() !== '') {
-                queryParams.append(key, value.toString());
-                console.log(key, value);
+                if (key === 'from' || key === 'to') {
+                    const date = new Date(value.toString());
+                    if (key === 'from') {
+                        date.setHours(0, 0, 0, 0);
+                    } else if (key === 'to') {
+                        date.setHours(23, 59, 59, 999);
+                    }
+                    const isoDateString = date.toISOString().replace('Z', '');
+                    queryParams.append(key, isoDateString);
+                    console.log(isoDateString);
+                } else {
+                    queryParams.append(key, value.toString().toUpperCase());
+                }        
+                console.log(key, value)
             }
         });
 
@@ -45,6 +57,12 @@ function EventsSidebar({ events }: { events: Event[] }) {
             const position = await getCurrentPosition();
             queryParams.append('longitude', position.coords.longitude.toString());
             queryParams.append('latitude', position.coords.latitude.toString());
+
+            /*let longitude = 13;
+            let latitude = 37;
+
+            queryParams.append('longitude', longitude.toString());
+            queryParams.append('latitude', latitude.toString());*/
         } catch (error) {
             console.error('Error getting current position:', error);
             // Handle error (e.g., fallback to default location)
