@@ -1,4 +1,4 @@
-import { redirect, useRouteLoaderData } from "react-router-dom";
+import { redirect, useLoaderData } from "react-router-dom";
 import EventSidebar from "../components/sections/EventSidebar";
 import { getToken } from "../auth";
 
@@ -65,9 +65,9 @@ function EventPage() {
         coordinates: [40.7178, -74.0090],
     } as Event;*/
 
-    const event = useRouteLoaderData(':id') as Event;
+    const event = useLoaderData() as Event;
 
-    console.log(event);
+    console.log("EVENT:", event);
     return (
         <EventSidebar {...event} />
     );
@@ -113,6 +113,7 @@ export async function loader({ request }: { request: Request }) {
             response.json().then((data: Event) => {
                 // Transform the startDateTime and resolve the event
                 data.startDateTime = localDateTimeString(data.startDateTime);
+                console.log("DATA:", data);
                 resolve(data);
             }).catch((error) => {
                 console.error('Error processing event data:', error);
