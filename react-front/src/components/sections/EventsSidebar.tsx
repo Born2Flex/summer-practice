@@ -1,9 +1,11 @@
-import { Form, useNavigate } from "react-router-dom"
+import { Await, Form, useNavigate, useRouteLoaderData } from "react-router-dom"
 import EventCard from "../cards/EventCard"
 import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
-import { Event } from "../../pages/EventsMapPage"
+import ShortEventInterface from "../../interfaces/ShortEventInterface"
+import { useAuth } from "../../context/AuthProvider"
+import { Suspense } from "react"
 
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
@@ -11,7 +13,12 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
     });
 };
 
-function EventsSidebar({ events }: { events: Event[] }) {
+
+function EventsSidebar() {
+    const { login } = useAuth();
+    login();
+
+    const data = useRouteLoaderData('map-layout') as { events: ShortEventInterface[] };
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,14 +63,8 @@ function EventsSidebar({ events }: { events: Event[] }) {
             queryParams.append('longitude', position.coords.longitude.toString());
             queryParams.append('latitude', position.coords.latitude.toString());
 
-            /*let longitude = 13;
-            let latitude = 37;
-
-            queryParams.append('longitude', longitude.toString());
-            queryParams.append('latitude', latitude.toString());*/
         } catch (error) {
             console.error('Error getting current position:', error);
-            // Handle error (e.g., fallback to default location)
         }
 
         const queryString = queryParams.toString();
@@ -82,45 +83,18 @@ function EventsSidebar({ events }: { events: Event[] }) {
 
             <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
                 <div className="flex flex-col gap-y-3">
-                    {events.map((event, index) => (
-                        <EventCard key={index} {...event} />
-                    ))}
+                    <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+                        <Await resolve={data.events}>
+                            {(events: ShortEventInterface[]) => events.map((event: ShortEventInterface, index: number) => (
+                                <EventCard key={index} {...event} />
+                            ))}
+                        </Await>
+                    </Suspense>
                 </div>
             </div>
+
         </section>
     )
 }
 
 export default EventsSidebar
-
-// export async function action({ request }: { request: Request }) {
-//     const data = await request.formData();
-
-//     let eventData: { [key: string]: string } = {};
-
-//     console.log('Creating event with data:', data);
-//     for (const [key, value] of data.entries()) {
-//         eventData[key] = value.toString();
-//     }
-
-//     console.log('Gathered event data:', eventData);
-
-//     // const response = await fetch('http://localhost:8080/rest/auth/authenticate', {
-//     //     method: 'POST',
-//     //     headers: {
-//     //         'Content-Type': 'application/json'
-//     //     },
-//     //     body: JSON.stringify(eventData)
-//     // });
-
-//     // const responseData = await response.text();
-//     // if (!response.ok) {
-//     //     console.error(`Error ${response.status}: ${responseData}`);
-//     //     throw new Error(`Error ${response.status}: ${responseData}`);
-//     // }
-
-//     // console.log('Event created successfully:', responseData);
-
-//     return redirect('/events');
-
-// }

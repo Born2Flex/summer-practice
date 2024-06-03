@@ -1,13 +1,13 @@
 import { faUsers, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
-import { Event } from '../../pages/EventsMapPage'
+import ShortEventInterface from '../../interfaces/ShortEventInterface';
 import { colorVariants, iconVariants, ribbonVariants } from './EventCard'
 
 
-function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: Event) {
+function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: ShortEventInterface) {
 
-    const link: string = `/events/${id}`;
+    // const link: string = `/events/${id}`;
 
     return (
         <div
@@ -42,7 +42,7 @@ function EventPopup({ id, title, availability, currentParticipants, eventType, m
 
                 </div>
                 <NavLink
-                    to={link}
+                    to={`${id}`}
                     className="bg-gray-100/40 group/link group-hover/item:bg-gray-200/60 p-3 flex items-center justify-between rounded-br-lg transition ease-in-out group-hover:hover:bg-gray-200">
                     Go to event
                     <FontAwesomeIcon

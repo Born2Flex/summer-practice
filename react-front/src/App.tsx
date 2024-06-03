@@ -1,9 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { action as profileAction } from './pages/ProfilePage'
 import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
-import EventsMapPage from './pages/EventsMapPage';
 // import { action as searchEventsAction } from './components/sections/EventsSidebar';
 import NewEventPage, { action as createEventAction, loader as createEventLoader } from './pages/NewEventPage';
 import LoginPage, { action as loginAction } from './pages/LoginPage';
@@ -12,8 +10,8 @@ import EventPage, { loader as eventLoader } from './pages/EventPage';
 import MapWithSidebarLayout, { loader as eventsLoader } from './pages/MapWithSidebarLayout';
 import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
-import { EventsProvider } from './context/EventsProvider.tsx';
 import Profile from './pages/Profile.tsx';
+import EventsSidebar from './components/sections/EventsSidebar.tsx';
 
 
 
@@ -44,20 +42,19 @@ function App() {
             {
               path: 'edit',
               element: <Profile />,
-              action: profileAction,
               loader: requireAuth,
             },
           ]
         },
         {
           path: 'events',
-          element: <EventsProvider><MapWithSidebarLayout /></EventsProvider>,
+          element: <MapWithSidebarLayout />,
           id: 'map-layout',
           loader: eventsLoader,
           children: [
             {
               index: true,
-              element: <EventsMapPage />,
+              element: <EventsSidebar />,
             },
             {
               path: ':id',

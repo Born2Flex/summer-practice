@@ -5,8 +5,6 @@ import { useState } from "react";
 import { LatLngExpression } from "leaflet";
 import { redirect, useLoaderData } from "react-router-dom";
 
-// const center: LatLngExpression = [50.46458696057009, 30.519340555820754];
-
 export function NewEventPage() {
     const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
 
@@ -63,7 +61,7 @@ export async function loader() {
 
         const eventTypes = await response.json();
 
-        const currentLocation = await new Promise<LatLngExpression>((resolve, reject) => {
+        const currentLocation = await new Promise<LatLngExpression>((resolve) => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
