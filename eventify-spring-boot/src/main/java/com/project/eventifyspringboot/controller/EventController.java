@@ -86,7 +86,7 @@ public class EventController {
                                             @RequestParam(required = false, name = "search-value") String searchValue,
                                             @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
                                             @RequestParam double longitude, @RequestParam double latitude) {
-        return eventService.searchEvents(type, availability, from, to, tags, searchValue, eventDistance, longitude, latitude);
+        return eventService.searchEvents(type, availability, from, to, tags, searchValue, eventDistance, latitude, longitude);
     }
 
     @PatchMapping("/{eventId}/participate")

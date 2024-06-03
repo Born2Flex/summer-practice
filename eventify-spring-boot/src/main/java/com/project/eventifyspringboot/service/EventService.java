@@ -90,7 +90,7 @@ public class EventService {
     public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
                                             LocalDateTime from, LocalDateTime to,
                                             List<String> tags, String searchValue, int eventRadius,
-                                            double longitude, double latitude) {
+                                            double latitude, double longitude) {
         Query query = new Query();
 
         if (type != null) {
