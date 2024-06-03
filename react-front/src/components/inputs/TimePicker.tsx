@@ -6,7 +6,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout/pickersLayoutClasses';
 
-function TimePicker({ label, error, ...rest }: { label: string, error?: boolean, [key: string]: any }) {
+function TimePicker({ date, label, error, ...rest }: { date: Date | undefined, label: string, error?: boolean, [key: string]: any }) {
     const [time, setTime] = useState<Dayjs | null>();
 
     return (
@@ -32,6 +32,7 @@ function TimePicker({ label, error, ...rest }: { label: string, error?: boolean,
                             crossOrigin={undefined}
                             value={time ? time.format('HH:mm') : ''}
                             readOnly
+                            disabled={date === undefined}
                             {...rest}
                         />
                     </PopoverHandler>
@@ -56,6 +57,7 @@ function TimePicker({ label, error, ...rest }: { label: string, error?: boolean,
                                     },
                                 }}
                                 orientation='landscape'
+                                disablePast={date ? date.getDate() == new Date().getDate() : false}
                             />
                         </LocalizationProvider>
                     </PopoverContent>

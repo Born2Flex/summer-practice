@@ -123,12 +123,12 @@ function EventSidebar({ id, title, host, description, availability, locationName
                     </IconButton>
                 </div>
 
-                <EventSidebarAccordion id={id} description={description} locationName={locationName} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants} eventComments={comments} />
+                <EventSidebarAccordion id={id} description={description} locationName={locationName.substring(0, locationName.lastIndexOf(','))} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants} eventComments={comments} />
 
             </div>
             <div className="flex flex-row justify-between z-10">
                 <div>
-                    <h3 className="font-semibold">{maxParticipants === null ? 'FREE' : `$${entranceFee}`}</h3>
+                    <h3 className="font-semibold">{entranceFee === null ? 'FREE' : `₤${entranceFee}/PPPN`}</h3>
                     <p className="text-sm font-semibold text-gray-500">{maxParticipants === null ? 'Unlimited spots' : `${maxParticipants - stateCurrentParticipants} Spots left`}</p>
                 </div>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function ImageInput() {
+function ImageInput({ id }: { id: string }) {
     const [fileUrl, setFileUrl] = useState<string>('');
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
 
@@ -39,9 +39,10 @@ function ImageInput() {
     return (
 
         <>
-            <input type="text" name="event-image" className='hidden' value={fileUrl} readOnly /><div className="flex items-center justify-center aspect-square">
+            <input type="text" name="event-image" className='hidden' value={fileUrl} readOnly />
+            <div className="flex items-center justify-center aspect-square">
                 <label
-                    htmlFor="dropzone-file"
+                    htmlFor={id}
                     className={`flex flex-col items-center justify-center w-full h-full border-2 ${preview ? 'border-gray-800' : 'border-gray-300 border-dashed'} rounded-lg cursor-pointer bg-transparent hover:bg-blue-gray-50`}
                 >
                     {!preview && (<div className="flex flex-col h-full aspect-square items-center justify-center pt-5 pb-6">
@@ -59,7 +60,7 @@ function ImageInput() {
                         </div>
                     )}
                     <input
-                        id="dropzone-file"
+                        id={id}
                         type="file"
                         className="hidden"
                         accept="image/jpg, image/jpeg, image/png"

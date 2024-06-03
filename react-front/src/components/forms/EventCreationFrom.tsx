@@ -6,9 +6,15 @@ import { LatLngExpression } from 'leaflet'
 import SingleSelectInput from '../inputs/SingleSelectInput'
 import ImageInput from '../inputs/ImageInput'
 import TimePicker from '../inputs/TimePicker'
+import { useState } from 'react'
 
 function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
     const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
+    const [date, setDate] = useState<Date>();
+
+    function onDateChange(date: Date) {
+        setDate(date);
+    }
 
     let lat, lng;
     if (Array.isArray(locationData)) {
@@ -40,11 +46,12 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     label="Event Tags"
                     color="gray"
                     size="lg"
-                    placeholder="#event"
+                    placeholder="#event, #party..."
                     name="tags"
                     containerProps={{
                         className: "min-w-full",
                     }}
+                    required
                 />
             </div>),
         'PAID': (
@@ -130,8 +137,9 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     />
                     <SingleSelectInput eventTypes={data.eventTypes} />
 
-                    <DatePicker />
+                    <DatePicker date={date} setDate={onDateChange} />
                     <TimePicker
+                        date={date}
                         label="Event Time"
                         name="event-time"
                         color="gray"
@@ -143,7 +151,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         required
                     />
                 </div>
-                <ImageInput />
+                <ImageInput id={tabName} />
             </div>
             {changingForm[tabName as keyof typeof changingForm]}
 

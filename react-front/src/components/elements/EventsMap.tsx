@@ -34,6 +34,7 @@ const redIcon = new L.Icon({
 });
 
 function EventsMap({ events }: { events: Event[] }) {
+
     const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null);
 
     useEffect(() => {

@@ -129,7 +129,7 @@ export async function action({ request }: { request: Request }) {
         entranceFee: Number(data.get('event-price')) || null,
         eventType: data.get('event-type'),
         locationName: data.get('location'),
-        tags: data.get('tags')?.toString().split(',').map((tag: string) => tag.trim()),
+        tags: data.get('tags')?.toString().split(',').map((tag: string) => tag.trim()) || [],
 
         location: {
             x: parseFloat(data.get('locationX')?.toString() || '0'),

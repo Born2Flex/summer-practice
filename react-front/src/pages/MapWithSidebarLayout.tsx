@@ -56,6 +56,7 @@ export async function loader({ request, params }: { request: Request, params: an
     else {
         try {
             console.log(url.searchParams.toString());
+            console.log(`http://localhost:8080/rest/events/search?${url.searchParams.toString()}`)
             const response = await fetch(`http://localhost:8080/rest/events/search?${url.searchParams.toString()}`, {
                 method: 'GET',
                 headers: {
