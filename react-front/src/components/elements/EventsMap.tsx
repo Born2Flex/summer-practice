@@ -1,7 +1,7 @@
 import { LayersControl, MapContainer, Marker, Popup, LayerGroup, TileLayer, Circle } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import ShortEventInterface from '../../interfaces/ShortEventInterface';
+import ShortEvent from '../../interfaces/ShortEventInterface';
 import EventPopup from '../cards/EventPopup';
 import { useEffect, useState } from 'react';
 
@@ -33,7 +33,7 @@ const redIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
-function EventsMap({ events, userLocation }: { events: ShortEventInterface[], userLocation: LatLngExpression }) {
+function EventsMap({ events, userLocation }: { events: ShortEvent[], userLocation: LatLngExpression }) {
 
     const publicEvents = events.filter(event => event.availability === 'PUBLIC');
     const paidEvents = events.filter(event => event.availability === 'PAID');

@@ -1,16 +1,39 @@
 import Background from "../elements/Background"
-import { Event } from "../../pages/EventPage"
+import { LongEvent } from "../../interfaces/LongEventInterface"
 import { Button, IconButton } from "@material-tailwind/react"
 import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
-import { NavLink } from "react-router-dom"
+import { NavLink, redirect, useLoaderData } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 import { useEffect, useState } from "react"
+import { getToken } from "../../auth"
 
-function EventSidebar({ id, title, host, description, availability, locationName, eventType, startDateTime, entranceFee, currentParticipants, maxParticipants, participants, comments }: Event) {
-    console.log(id);
+const localDateTimeString = (utcDateTimeString: string): string => {
+    const utcDate = new Date(utcDateTimeString);
+    const localDate = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60000);
+    return localDate.toISOString().split('T')[0] + ' ' + localDate.toTimeString().split(' ')[0];
+};
+
+function EventSidebar() {
+
+    const {
+        id,
+        title,
+        host,
+        description,
+        availability,
+        locationName,
+        eventType,
+        startDateTime,
+        entranceFee,
+        currentParticipants,
+        maxParticipants,
+        participants,
+        imgUrl,
+        comments
+    } = useLoaderData() as LongEvent;
     const date = new Date(startDateTime);
 
     const day = format(date, 'd');
@@ -163,3 +186,45 @@ export async function action({ request }: { request: Request }) {
 
     return null;
 }
+
+export async function loader({ params }: { params: any }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    const id = params.id;
+    console.log(id);
+
+    try {
+        const response = await fetch(`http://localhost:8080/rest/events/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch events');
+        }
+
+        const event = await new Promise<LongEvent>((resolve, reject) => {
+            response.json().then((data: LongEvent) => {
+                // Transform the startDateTime and resolve the event
+                data.startDateTime = localDateTimeString(data.startDateTime);
+                resolve(data);
+            }).catch((error) => {
+                console.error('Error processing event data:', error);
+                reject(error);
+            });
+        });
+        console.log(event);
+        return event;
+
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return null;
+    }
+};
+

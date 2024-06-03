@@ -1,14 +1,14 @@
 import EventsMap from '../components/elements/EventsMap'
 import { Await, Outlet, redirect, useRouteLoaderData, defer } from 'react-router-dom'
 import { getToken } from '../auth';
-import ShortEventInterface from '../interfaces/ShortEventInterface';
+import ShortEvent from '../interfaces/ShortEventInterface';
 import { Suspense } from 'react';
 import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Circle } from 'react-leaflet';
 
 function MapWithSidebarLayout() {
 
-    const { events, currentLocation } = useRouteLoaderData('map-layout') as { events: ShortEventInterface[], currentLocation: LatLngExpression };
+    const { events, currentLocation } = useRouteLoaderData('map-layout') as { events: ShortEvent[], currentLocation: LatLngExpression };
     console.log('useRouteLoaderData:', events, currentLocation);
     return (
         <div className='flex flex-1'>
@@ -38,7 +38,7 @@ function MapWithSidebarLayout() {
                             </section>
                         }>
                             <Await resolve={events}>
-                                {(events: ShortEventInterface[]) => {
+                                {(events: ShortEvent[]) => {
                                     console.log('events passed to map:', events);
                                     return (<EventsMap events={events} userLocation={userLocation} />)
                                 }}

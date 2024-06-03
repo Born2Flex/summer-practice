@@ -1,6 +1,6 @@
 import useHorizontalScroll from '../../hooks/useHorizontalScroll';
 import EventCard from '../cards/EventCard'
-import ShortEventInterface from '../../interfaces/ShortEventInterface';
+import ShortEvent from '../../interfaces/ShortEventInterface';
 
 const events = [
     {
@@ -153,7 +153,7 @@ const events = [
             y: 180,
         }
     },
-] as ShortEventInterface[];
+] as ShortEvent[];
 
 function UserEvents() {
     const scrollRef = useHorizontalScroll();

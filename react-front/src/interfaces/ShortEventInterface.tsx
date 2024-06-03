@@ -1,4 +1,4 @@
-export default interface ShortEventInterface {
+export default interface ShortEvent {
     id: string;
     title: string;
     description: string;

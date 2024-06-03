@@ -1,11 +1,11 @@
 import { faUsers, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
-import ShortEventInterface from '../../interfaces/ShortEventInterface';
+import ShortEvent from '../../interfaces/ShortEventInterface';
 import { colorVariants, iconVariants, ribbonVariants } from './EventCard'
 
 
-function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: ShortEventInterface) {
+function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: ShortEvent) {
 
     // const link: string = `/events/${id}`;
 

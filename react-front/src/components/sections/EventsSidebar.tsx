@@ -3,7 +3,7 @@ import EventCard from "../cards/EventCard"
 import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
-import ShortEventInterface from "../../interfaces/ShortEventInterface"
+import ShortEvent from "../../interfaces/ShortEventInterface"
 import { useAuth } from "../../context/AuthProvider"
 import { Suspense } from "react"
 
@@ -18,7 +18,7 @@ function EventsSidebar() {
     const { login } = useAuth();
     login();
 
-    const data = useRouteLoaderData('map-layout') as { events: ShortEventInterface[] };
+    const data = useRouteLoaderData('map-layout') as { events: ShortEvent[] };
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -85,7 +85,7 @@ function EventsSidebar() {
                 <div className="flex flex-col gap-y-3">
                     <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
                         <Await resolve={data.events}>
-                            {(events: ShortEventInterface[]) => events.map((event: ShortEventInterface, index: number) => (
+                            {(events: ShortEvent[]) => events.map((event: ShortEvent, index: number) => (
                                 <EventCard key={index} {...event} />
                             ))}
                         </Await>

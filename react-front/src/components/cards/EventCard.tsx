@@ -1,7 +1,7 @@
 import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake, faUsersViewfinder, faShop, faGlobe, faMusic, faPalette, faComments, faRobot, faMoneyBill, faHotdog, faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
-import ShortEventInterface from '../../interfaces/ShortEventInterface';
+import ShortEvent from '../../interfaces/ShortEventInterface';
 
 export const colorVariants = {
     'PARTY': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
@@ -57,7 +57,7 @@ export const ribbonVariants = {
     'PRIVATE': 'bg-red-500',
 }
 
-function EventCard(event: ShortEventInterface) {
+function EventCard(event: ShortEvent) {
     return (
         <div
             className="bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
