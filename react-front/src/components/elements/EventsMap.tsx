@@ -3,7 +3,6 @@ import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import ShortEvent from '../../interfaces/ShortEventInterface';
 import EventPopup from '../cards/EventPopup';
-import { useEffect, useState } from 'react';
 
 
 const greenIcon = new L.Icon({

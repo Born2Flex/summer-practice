@@ -36,10 +36,9 @@ function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, o
     }, [])
 
     return (
-        <section className="w-full h-full max-h-[545px] min-h-[400px]">
-            <MapContainer center={position} zoom={13} scrollWheelZoom={true} className="h-full w-full rounded-xl border-2 border-gray-900">
+        <section className="lg:w-2/5 max-h-[715px]">
+            <MapContainer zoom={13} scrollWheelZoom={true} className="h-full w-full rounded-xl border-2 border-gray-900" center={center}>
                 <TileLayer
-
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <Marker

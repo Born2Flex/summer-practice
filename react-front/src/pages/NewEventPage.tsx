@@ -15,21 +15,20 @@ export function NewEventPage() {
         setEventLocation(_old => location);
     }
     return (
-        <div className="z-10 py-2 flex flex-1 justify-center overflow-auto custom-scrollbar bg-gray-50/60">
-            <section className="p-8 h-fit self-center w-10/12 bg-gray-50/80 rounded-lg">
-                <div className="mx-auto text-center">
-                    <div className="grid mx-auto grid-cols-1 gap-x-12 gap-y-6 lg:grid-cols-2 items-start">
+        <div className="z-10 flex flex-1 justify-center overflow-auto custom-scrollbar bg-gray-50/60">
+            <section className="flex flex-col lg:flex-row px-8 py-2 gap-6 w-full self-center bg-gray-50/50">
 
-                        <LocationPicker center={data.currentLocation} onSetLocation={handleLocationChange} />
-                        <div>
-                            <Typography
-                                variant="small"
-                                className="text-left !font-semibold !text-gray-600" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                        >
-                                Select Event Scope
-                            </Typography>
-                            {<TabsButtons locationData={eventLocation} />}
+                <LocationPicker center={eventLocation} onSetLocation={handleLocationChange} />
 
-                        </div>
+                <div className="w-full text-center lg:w-3/5 items-start">
+
+                    <div>
+                        <Typography
+                            variant="small"
+                            className="text-left !font-semibold !text-gray-600" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                        >
+                            Select Event Scope
+                        </Typography>
+                        {<TabsButtons locationData={eventLocation} />}
                     </div>
 
                 </div>
@@ -123,7 +122,7 @@ export async function action({ request }: { request: Request }) {
         title: data.get('title')?.toString(),
         description: data.get('description')?.toString(),
         availability: data.get('availability')?.toString(),
-        maxParticipants: null,
+        maxParticipants: Number(data.get('max-participants')) || null,
         entranceFee: Number(data.get('event-price')) || null,
         eventType: data.get('event-type'),
         locationName: data.get('location'),

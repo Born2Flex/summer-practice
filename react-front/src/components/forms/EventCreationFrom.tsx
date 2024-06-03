@@ -27,93 +27,6 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
         throw new Error("Invalid latLngExpression format");
     }
 
-    const changingForm = {
-        'PUBLIC': (
-            <div className='grid grid-cols-2 gap-x-4'>
-                <InputWithLabel
-                    label="Event Location"
-                    color="gray"
-                    size="lg"
-                    placeholder="Ukraine, Kyiv"
-                    name="location"
-                    value={location}
-                    readOnly
-                    containerProps={{
-                        className: "min-w-full",
-                    }}
-                />
-                <InputWithLabel
-                    label="Event Tags"
-                    color="gray"
-                    size="lg"
-                    placeholder="#event, #party..."
-                    name="tags"
-                    containerProps={{
-                        className: "min-w-full",
-                    }}
-                    required
-                />
-            </div>),
-        'PAID': (
-            <div className="grid grid-cols-3 gap-4">
-                <InputWithLabel
-                    label="Event Location"
-                    color="gray"
-                    size="lg"
-                    placeholder="Ukraine, Kyiv"
-                    name="location"
-                    value={location}
-                    readOnly
-                    containerProps={{
-                        className: "min-w-full",
-                    }}
-                />
-                <InputWithLabel
-                    label="Event Tags"
-                    color="gray"
-                    size="lg"
-                    placeholder="#event"
-                    name="tags"
-                    containerProps={{
-                        className: "min-w-full",
-                    }}
-                />
-                <InputWithLabel
-                    label="Event Price"
-                    color="gray"
-                    size="lg"
-                    type="number"
-                    placeholder="$20-30"
-                    name="event-price"
-                    containerProps={{
-                        className: "!min-w-full",
-                    }}
-                    required
-                />
-            </div>
-        ),
-        'PRIVATE': (
-            <InputWithLabel
-                label="Event Location"
-                color="gray"
-                size="lg"
-                placeholder="Ukraine, Kyiv"
-                name="location"
-                value={location}
-                readOnly
-            >
-                <Button
-                    variant='outlined'
-                    size="md"
-                    placeholder="Last Name"
-                    name="last-name"
-                    className="focus:!border-gray-900 !border-blue-gray-200"
-                    onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                >
-                    Invite
-                </Button>
-            </InputWithLabel>),
-    }
     return (
         <Form method='POST'>
             <input type="text" className='hidden' name="locationX" readOnly value={lat} />
@@ -135,9 +48,11 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         }}
                         required
                     />
+
                     <SingleSelectInput eventTypes={data.eventTypes} />
 
                     <DatePicker date={date} setDate={onDateChange} />
+
                     <TimePicker
                         date={date}
                         label="Event Time"
@@ -150,10 +65,78 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         }}
                         required
                     />
+
+                    {tabName === 'PAID' && (
+                        <InputWithLabel
+                            label="Event Price"
+                            color="gray"
+                            size="lg"
+                            type="number"
+                            placeholder="$20-30"
+                            name="event-price"
+                            containerProps={{
+                                className: "!min-w-full",
+                            }}
+                            required
+                        />
+                    )}
+
+                    <div className={`${["PUBLIC", "PRIVATE"].includes(tabName) ? 'col-span-2' : undefined}`}>
+                        <InputWithLabel
+                            label="Event Tags"
+                            color="gray"
+                            size="lg"
+                            placeholder="#event"
+                            name="tags"
+                            containerProps={{
+                                className: "min-w-full",
+                            }}
+                        />
+                    </div>
+
                 </div>
                 <ImageInput id={tabName} />
             </div>
-            {changingForm[tabName as keyof typeof changingForm]}
+
+            <div className="grid grid-cols-3 gap-4">
+
+                <InputWithLabel
+                    label="Maximal Participants"
+                    color="gray"
+                    size="lg"
+                    type="number"
+                    placeholder="100"
+                    name="max-participants"
+                    containerProps={{
+                        className: "!min-w-full",
+                    }}
+                />
+
+                <div className='col-span-2'>
+                    <InputWithLabel
+                        label="Event Location"
+                        color="gray"
+                        size="lg"
+                        placeholder="Ukraine, Kyiv"
+                        name="location"
+                        value={location}
+                        readOnly
+                    >
+                        {tabName === 'PRIVATE' && (
+                            <Button
+                                variant='outlined'
+                                size="md"
+                                placeholder="Last Name"
+                                name="last-name"
+                                className="focus:!border-gray-900 !border-blue-gray-200"
+                                onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                            >
+                                Invite
+                            </Button>
+                        )}
+                    </InputWithLabel>
+                </div>
+            </div>
 
             <div>
                 <Typography
@@ -162,7 +145,6 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     Event Description
                 </Typography>
                 <Textarea
-                    rows={3}
                     color="gray"
                     placeholder="Description"
                     name="description"

@@ -22,7 +22,7 @@ function TimePicker({ date, label, error, ...rest }: { date: Date | undefined, l
                 <Popover placement="bottom">
                     <PopoverHandler>
                         <Input
-                            className={`!border focus:ring-0 ${error ? '!border-red-600' : 'focus:!border-gray-900 !border-blue-gray-200'}`}
+                            className={`!border focus:ring-0 disabled:opacity-50 ${error ? '!border-red-600' : 'focus:!border-gray-900 !border-blue-gray-200'}`}
                             labelProps={{
                                 className: "hidden",
                             }}
