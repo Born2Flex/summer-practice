@@ -90,7 +90,7 @@ public class EventService {
     public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
                                             LocalDateTime from, LocalDateTime to,
                                             List<String> tags, String searchValue, int eventRadius,
-                                            double longitude, double latitude) {
+                                            double latitude, double longitude) {
         Query query = new Query();
 
         if (type != null) {
@@ -116,7 +116,7 @@ public class EventService {
             query.addCriteria(Criteria.where("title").regex(searchValue));
         }
 
-        Point location = new Point(longitude, latitude);
+        Point location = new Point(latitude, longitude);
         Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
         query.addCriteria(Criteria.where("location").nearSphere(location).maxDistance(distance.getNormalizedValue()));
 
