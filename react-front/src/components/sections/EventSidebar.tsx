@@ -176,16 +176,16 @@ function EventSidebar() {
 
 export default EventSidebar;
 
-export async function action({ request }: { request: Request }) {
-    const data = await request.formData();
+// export async function action({ request }: { request: Request }) {
+//     const data = await request.formData();
 
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-        throw new Error('No JWT token found');
-    }
+//     const token = localStorage.getItem('jwt');
+//     if (!token) {
+//         throw new Error('No JWT token found');
+//     }
 
-    return null;
-}
+//     return null;
+// }
 
 export async function loader({ params }: { params: any }) {
     const token = getToken();
