@@ -44,9 +44,13 @@ public class UserController {
         return userService.getUserInfo(userId);
     }
 
-    @PutMapping
+    @PutMapping("/{userId}")
     @Operation(summary = "Update user info")
-    public UserDto updateUser(@AuthenticationPrincipal AuthDetails authDetails, @RequestBody @Valid UserUpdateDto userDto) {
-        return userService.updateUser(authDetails, userDto);
+    @ApiResponse(responseCode = "200",
+            content = {@Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json")})
+    @ApiResponse(responseCode = "403", content = {@Content})
+    public UserDto updateUser(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String userId,
+                              @RequestBody @Valid UserUpdateDto userDto) {
+        return userService.updateUser(authDetails, userId, userDto);
     }
 }
