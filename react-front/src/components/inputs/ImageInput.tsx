@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-function ImageInput({ id }: { id: string }) {
-    const [fileUrl, setFileUrl] = useState<string>('');
-    const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
+function ImageInput({ id, name, previewImg, round }: { id: string, name: string, previewImg?: string, round?: boolean }) {
+    const [fileUrl, setFileUrl] = useState<string>(previewImg || '');
+    const [preview, setPreview] = useState<string | ArrayBuffer | null>(previewImg || null);
 
     async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
         const target = e.target as HTMLInputElement & {
@@ -39,11 +39,11 @@ function ImageInput({ id }: { id: string }) {
     return (
 
         <>
-            <input type="text" name="event-image" className='hidden' value={fileUrl} readOnly />
+            <input type="text" name={name} className='hidden' value={fileUrl} readOnly />
             <div className="flex items-center justify-center aspect-square">
                 <label
                     htmlFor={id}
-                    className={`flex flex-col items-center justify-center w-full h-full border-2 ${preview ? 'border-gray-800' : 'border-gray-300 border-dashed'} rounded-lg cursor-pointer bg-transparent hover:bg-blue-gray-50`}
+                    className={`flex flex-col items-center justify-center w-full h-full border-2 ${preview ? 'border-gray-800' : 'border-gray-300 border-dashed'} ${round ? 'rounded-full' : 'rounded-lg'} cursor-pointer bg-transparent hover:bg-blue-gray-50`}
                 >
                     {!preview && (<div className="flex flex-col h-full aspect-square items-center justify-center pt-5 pb-6">
                         <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -56,7 +56,7 @@ function ImageInput({ id }: { id: string }) {
                     {preview && (
                         <div className='max-h-full w-full h-full aspect-square'>
 
-                            <img src={preview as string} alt="Upload preview" className='object-cover w-full h-full rounded-md' />
+                            <img src={preview as string} alt="Upload preview" className={`object-cover w-full h-full ${round ? 'rounded-full' : 'rounded-lg'}`} />
                         </div>
                     )}
                     <input

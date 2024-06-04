@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
-import { defer, redirect, useRouteLoaderData } from 'react-router-dom';
+import { Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
 import { getToken } from '../auth';
 
 function Profile() {
@@ -53,16 +53,17 @@ function Profile() {
                                 <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                                     <div className="flex py-6 px-3 mt-32 sm:mt-0 gap-4 justify-end">
                                         {isOwner && (
-                                            <Button
-                                                variant='filled'
-                                                color='gray'
-                                                placeholder={undefined}
-                                                onPointerEnterCapture={undefined}
-                                                onPointerLeaveCapture={undefined}
-                                            >
-                                                Edit Profile
-                                            </Button>
-
+                                            <Link to="edit">
+                                                <Button
+                                                    variant='filled'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Edit Profile
+                                                </Button>
+                                            </Link>
                                         )}
                                         {!isOwner && (
                                             <>

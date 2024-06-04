@@ -95,7 +95,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     </div>
 
                 </div>
-                <ImageInput id={tabName} />
+                <ImageInput id={tabName} name="event-image" round={false} />
             </div>
 
             <div className="grid grid-cols-3 gap-4">

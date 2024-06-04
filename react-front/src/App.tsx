@@ -12,7 +12,7 @@ import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
 import Profile, { loader as profileDataLoader } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
-import EditProfile from './pages/EditProfile.tsx';
+import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
 
 
 
@@ -46,14 +46,13 @@ function App() {
               // action: deleteEventAction,
             },
             {
-              path: 'edit',
-              element: <EditProfile />,
-              loader: requireAuth,
-            },
-            {
               path: ':userId',
               element: <Profile />,
-              // action: deleteEventAction,
+            },
+            {
+              path: 'edit',
+              element: <EditProfile />,
+              action: editProfileAction,
             },
           ]
         },
