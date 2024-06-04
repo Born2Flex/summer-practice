@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/me")
     @Operation(summary = "Get information about authorized user.")
     @ApiResponse(responseCode = "200",
-            content = {@Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json")})
+            content = {@Content(schema = @Schema(implementation = UserFullDto.class), mediaType = "application/json")})
     public UserFullDto getMe(@AuthenticationPrincipal AuthDetails authDetails) {
         return userService.getUserInfo(authDetails.getUser().getId());
     }
@@ -38,9 +38,9 @@ public class UserController {
     @GetMapping("/{userId}")
     @Operation(summary = "Get information about user by id.")
     @ApiResponse(responseCode = "200",
-            content = {@Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json")})
+            content = {@Content(schema = @Schema(implementation = UserFullDto.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "404", content = {@Content})
-    public UserFullDto getUser(@PathVariable String userId) {
+    public UserFullDto getUserById(@PathVariable String userId) {
         return userService.getUserInfo(userId);
     }
 
