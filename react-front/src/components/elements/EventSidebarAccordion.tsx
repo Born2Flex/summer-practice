@@ -11,9 +11,12 @@ import Pic2 from "../../assets/photo_2024-05-30_16-20-59.jpg";
 import Pic3 from "../../assets/photo_2024-05-30_16-21-05.jpg";
 import Pic4 from "../../assets/photo_2024-05-30_16-21-10.jpg";
 import Pic5 from "../../assets/photo_2024-05-30_16-21-17.jpg";
+import EmptyUser from "../../assets/empty-user.webp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Comment } from "../../pages/EventPage";
+import Comment from "../../interfaces/CommentInterface";
 import { faLightbulb, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import Host from "../../interfaces/HostInterface";
+import { Link } from "react-router-dom";
 
 const comments = [
     {
@@ -33,7 +36,19 @@ const comments = [
     },
 ]
 
-function Icon({ id, open }: { id: number; open: number }) {
+interface EventSidebarAccordionProps {
+    id: string;
+    description: string;
+    locationName: string;
+    currentParticipants: number;
+    maxParticipants: number | null;
+    eventComments: Comment[];
+    host: Host;
+    availability: string;
+    eventType: string;
+}
+
+function Icon({ open }: { open: boolean }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -41,19 +56,32 @@ function Icon({ id, open }: { id: number; open: number }) {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className={`${id === open ? "rotate-180" : ""} h-5 w-5 transition-transform`}
+            className={`${open ? "rotate-180" : ""} h-5 w-5 transition-transform`}
         >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
         </svg>
     );
 }
 
-export function EventSidebarAccordion({ id, description, locationName, currentParticipants, maxParticipants, eventComments }: { id: string, description: string, locationName: string, currentParticipants: number, maxParticipants: number | null, eventComments: Comment[] }) {
-    const [open, setOpen] = React.useState(1);
+export function EventSidebarAccordion({
+    id,
+    description,
+    locationName,
+    currentParticipants,
+    maxParticipants,
+    eventComments,
+    host,
+    availability,
+    eventType,
+}: EventSidebarAccordionProps) {
 
     const [stateComments, setComments] = useState(eventComments);
 
-    const handleOpen = (value: number) => setOpen(open === value ? 3 - value : value);
+    const [openAcc1, setOpenAcc1] = useState(true);
+    const [openAcc2, setOpenAcc2] = useState(false);
+
+    const handleOpenAcc1 = () => setOpenAcc1((cur) => !cur);
+    const handleOpenAcc2 = () => setOpenAcc2((cur) => !cur);
 
     const renderParticipantCount = () => {
         return maxParticipants !== null
@@ -96,20 +124,53 @@ export function EventSidebarAccordion({ id, description, locationName, currentPa
 
 
     return (
-        <div className="flex flex-1 flex-col pb-1.5">
-            <Accordion className={`${open === 1 ? 'flex flex-col flex-1' : undefined}`} open={open === 1} icon={<Icon id={1} open={open} />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                <AccordionHeader onClick={() => handleOpen(1)} className="text-lg font-semibold text-gray-800  border-gray-800" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>About this event</AccordionHeader>
-                <AccordionBody className='flex flex-1 flex-col gap-y-6'>
-                    {/*<div>
-                        We&apos;re not always in the position that we want to be at. We&apos;re constantly
-                        growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-                        ourselves and actualize our dreams.
-                    </div>*/}
-                    <div className="max-h-[80px] overflow-y-auto custom-scrollbar">
+        <div>
+            <Accordion
+                className="overflow-clip"
+                open={openAcc1}
+                icon={<Icon open={openAcc1} />}
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+            >
+                <AccordionHeader
+                    onClick={handleOpenAcc1}
+                    className="text-lg font-semibold text-gray-800  border-gray-800"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                >
+                    About this event
+                </AccordionHeader>
+                <AccordionBody className='flex flex-col gap-y-6'>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-row gap-3 font-semibold items-center">
+                            <span className="text-gray-800 font-semibold">Event by:</span>
+                            <Link className="flex flex-row gap-2 items-center" to={`/profile/${host.id}`}>
+                                <div
+                                    className={`relative overflow-hidden rounded-full border border-black`}
+                                    style={{ width: '24px', height: '24px' }}
+                                >
+                                    <img
+                                        src={host.imgUrl || EmptyUser}
+                                        alt='host-img'
+                                        className='rounded-full object-cover'
+                                    />
+                                </div>
+                                <span className="font-semibold text-gray-900">{host.firstName.toUpperCase()} {host.lastName.toUpperCase()}</span>
+                            </Link>
+                        </div>
+                        <div className="flex flex-row gap-3 font-semibold">
+                            <span className="text-gray-800">Event Gategory:</span>
+                            <span className="text-gray-900">{availability} {eventType}</span>
+                        </div>
+                    </div>
+
+                    <div>
                         {description}
                     </div>
                     <div className="flex flex-1 justify-between px-2">
-                        <div className="flex flex-col w-[133px] text-center px-6 py-4 rounded-lg bg-white/40">
+                        <div className="flex flex-col w-5/12 min-w-32 text-center px-6 py-4 rounded-lg bg-white/40">
                             <span className="font-bold text-gray-900">
                                 Participants:
                             </span>
@@ -127,8 +188,7 @@ export function EventSidebarAccordion({ id, description, locationName, currentPa
                                         <img
                                             src={comment.image}
                                             alt={`user_${index}`}
-                                            className='rounded-full object-cover'
-                                        />
+                                            className='rounded-full object-cover' />
                                     </div>
 
                                 ))}
@@ -149,7 +209,7 @@ export function EventSidebarAccordion({ id, description, locationName, currentPa
                             </a>
                         </div>
 
-                        <div className="flex flex-col justify-between text-center w-[160px] px-6 py-4 rounded-lg bg-white/40">
+                        <div className="flex flex-col justify-between text-center w-1/2 min-w-32 px-4 py-4 rounded-lg bg-white/40">
                             <span className="font-bold text-gray-900">
                                 Details:
                             </span>
@@ -171,9 +231,23 @@ export function EventSidebarAccordion({ id, description, locationName, currentPa
 
                 </AccordionBody>
             </Accordion>
-            <Accordion className={`${open === 2 ? 'flex flex-col flex-1' : undefined}`} open={open === 2} icon={<Icon id={2} open={open} />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                {open === 2 && <nav className="w-0 h-0"></nav>}
-                <AccordionHeader onClick={() => handleOpen(2)} className="text-lg font-semibold text-gray-800 border-gray-800" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+
+            <Accordion
+                className="overflow-clip"
+                open={openAcc2}
+                icon={<Icon open={openAcc2} />}
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+            >
+                {openAcc2 && <nav className="w-0 h-0"></nav>}
+                <AccordionHeader
+                    onClick={handleOpenAcc2}
+                    className="text-lg font-semibold text-gray-800 border-gray-800"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                >
                     Comment section
                 </AccordionHeader>
                 <AccordionBody className="flex flex-1 flex-col gap-y-1">
@@ -183,7 +257,6 @@ export function EventSidebarAccordion({ id, description, locationName, currentPa
                     </div>
                     <CommentInputForm onSubmit={handleCommentSubmit} />
                 </AccordionBody>
-            </Accordion>
-        </div>
+            </Accordion></div>
     );
 }

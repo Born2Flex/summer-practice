@@ -1,4 +1,5 @@
 import Background from "../elements/Background"
+import EventPlaceholderImage from "../../assets/evnt-placeholder-image.webp"
 import { LongEvent } from "../../interfaces/LongEventInterface"
 import { Button, IconButton } from "@material-tailwind/react"
 import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons"
@@ -7,7 +8,6 @@ import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
 import { Form, NavLink, redirect, useLoaderData } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
-import { useEffect, useState } from "react"
 import { getToken } from "../../auth"
 
 const localDateTimeString = (utcDateTimeString: string): string => {
@@ -44,11 +44,11 @@ function EventSidebar() {
     const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants) || participants.some(participant => participant.id === host.id);
 
     return (
-        <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
+        <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 pl-7 pr-3 bg-white/70 overflow-hidden'>
             <Background />
             <div className="absolute z-0 pointer-events-none top-0 left-0 w-full h-full bg-white/65" />
 
-            <div className="flex flex-1 max-h-full flex-col z-10">
+            <div className="flex flex-col pr-4 mb-5 z-10 overflow-y-auto custom-scrollbar">
 
                 <div className="flex flex-row justify-between">
                     <NavLink to='..'>
@@ -60,7 +60,7 @@ function EventSidebar() {
                         </IconButton>
                     </NavLink>
 
-                    <p className="flex items-center text-sm font-semibold">{availability.toUpperCase()} {eventType.toUpperCase()}</p>
+                    <p className="flex items-center text-sm font-semibold">{title}</p>
 
                     <div className="flex gap-x-4">
                         <IconButton
@@ -78,12 +78,8 @@ function EventSidebar() {
                     </div>
                 </div>
 
-                {/* <div className="w-full mt-4 mx-auto rounded-2xl shadow-rounded">
-                    <img src={BirthdayCard} alt="Event" className="w-full h-24 border-2 border-gray-800 object-cover rounded-2xl" />
-                </div> */}
-
-                <div className="mt-4">
-                    <h1 className="text-lg font-bold text-center">{title}</h1>
+                <div className="w-full mt-4 mx-auto rounded-2xl shadow-rounded">
+                    <img src={imgUrl || EventPlaceholderImage} alt="Event" className="w-full h-48 border-2 border-gray-800 object-cover rounded-2xl" />
                 </div>
 
                 <div className="my-5 flex flex-row justify-between">
@@ -106,7 +102,17 @@ function EventSidebar() {
                     </IconButton>
                 </div>
 
-                <EventSidebarAccordion id={id} description={description} locationName={locationName.substring(0, locationName.lastIndexOf(','))} currentParticipants={currentParticipants} maxParticipants={maxParticipants} eventComments={comments} />
+                <EventSidebarAccordion
+                    id={id}
+                    description={description}
+                    locationName={locationName.length > 10 ? locationName.substring(0, locationName.lastIndexOf(',')) : locationName}
+                    currentParticipants={currentParticipants}
+                    maxParticipants={maxParticipants}
+                    eventComments={comments}
+                    host={host}
+                    availability={availability}
+                    eventType={eventType}
+                />
 
             </div>
             <div className="flex flex-row justify-between z-10">
@@ -123,7 +129,6 @@ function EventSidebar() {
                         size="lg"
                         color="green"
                         placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                        // onClick={handleJoin}
                         disabled={isJoinDisabled}
                     >
                         Join
