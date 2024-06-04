@@ -16,9 +16,10 @@ import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
 import { Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
 import { getToken } from '../auth';
+import User from '../interfaces/UserInterface';
 
 function Profile() {
-    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: any, isOwner: boolean };
+    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
     console.log('profile data inside component:', profile);
     console.log('isOwner:', isOwner);
 

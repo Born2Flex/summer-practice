@@ -4,7 +4,7 @@ import { Button, IconButton } from "@material-tailwind/react"
 import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
-import { NavLink, redirect, useLoaderData } from "react-router-dom"
+import { Form, NavLink, redirect, useLoaderData } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 import { useEffect, useState } from "react"
@@ -41,47 +41,7 @@ function EventSidebar() {
     const weekday = format(date, 'EEEE');
     const time = format(date, 'h:mm a');
 
-    const [stateCurrentParticipants, setCurrentParticipants] = useState(currentParticipants);
-    const [stateParticipants, setParticipants] = useState(participants);
-    const [isJoinDisabled, setIsJoinDisabled] = useState((maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
-        stateParticipants.some(participant => participant.id === host.id));
-
-    useEffect(() => {
-        setIsJoinDisabled(
-            (maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
-            stateParticipants.some(participant => participant.id == host.id)
-        );
-    }, [stateCurrentParticipants, stateParticipants, maxParticipants]);
-
-    const handleJoin = async () => {
-        const token = localStorage.getItem('jwt');
-        if (!token) {
-            throw new Error('No JWT token found');
-        }
-
-        try {
-            const response = await fetch(`http://localhost:8080/rest/events/${id}/participate`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-                setCurrentParticipants(data.currentParticipants);
-                setParticipants(data.participants);
-            } else {
-                console.error('Failed to join the event');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-    //const isJoinDisabled = (maxParticipants !== null && stateCurrentParticipants >= maxParticipants) || stateParticipants.some(participant => participant.id === id);
+    const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants) || participants.some(participant => participant.id === host.id);
 
     return (
         <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 px-7 bg-white/70 overflow-hidden'>
@@ -146,28 +106,29 @@ function EventSidebar() {
                     </IconButton>
                 </div>
 
-                <EventSidebarAccordion id={id} description={description} locationName={locationName.substring(0, locationName.lastIndexOf(','))} currentParticipants={stateCurrentParticipants} maxParticipants={maxParticipants} eventComments={comments} />
+                <EventSidebarAccordion id={id} description={description} locationName={locationName.substring(0, locationName.lastIndexOf(','))} currentParticipants={currentParticipants} maxParticipants={maxParticipants} eventComments={comments} />
 
             </div>
             <div className="flex flex-row justify-between z-10">
                 <div>
                     <h3 className="font-semibold">{entranceFee === null ? 'FREE' : `₤${entranceFee}/PPPN`}</h3>
-                    <p className="text-sm font-semibold text-gray-500">{maxParticipants === null ? 'Unlimited spots' : `${maxParticipants - stateCurrentParticipants} Spots left`}</p>
+                    <p className="text-sm font-semibold text-gray-500">{maxParticipants === null ? 'Unlimited spots' : `${maxParticipants - currentParticipants} Spots left`}</p>
                 </div>
 
-                <div className="w-1/2">
+                <Form method='PATCH' className="w-1/2">
                     <Button
+                        type="submit"
                         variant="filled"
                         fullWidth
                         size="lg"
                         color="green"
                         placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                        onClick={handleJoin}
+                        // onClick={handleJoin}
                         disabled={isJoinDisabled}
                     >
                         Join
                     </Button>
-                </div>
+                </Form>
             </div>
 
         </section>
@@ -176,21 +137,40 @@ function EventSidebar() {
 
 export default EventSidebar;
 
-// export async function action({ request }: { request: Request }) {
-//     const data = await request.formData();
+export async function action({ params }: { params: any }) {
+    const eventId = params.id;
 
-//     const token = localStorage.getItem('jwt');
-//     if (!token) {
-//         throw new Error('No JWT token found');
-//     }
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        throw new Error('No JWT token found');
+    }
 
-//     return null;
-// }
+    try {
+        const response = await fetch(`http://localhost:8080/rest/events/${eventId}/participate`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.error('Failed to join the event');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+    return redirect(`/events/${eventId}`);
+}
 
 export async function loader({ params }: { params: any }) {
     const token = getToken();
     if (!token) {
-        return redirect('/login');
+        return redirect('/login/');
     }
 
     const id = params.id;

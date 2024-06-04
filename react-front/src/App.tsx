@@ -7,8 +7,7 @@ import NewEventPage, { action as createEventAction, loader as createEventLoader 
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
 import MapWithSidebarLayout, { loader as eventsLoader } from './pages/MapWithSidebarLayout';
-import EventSidebar, { loader as eventLoader } from './components/sections/EventSidebar.tsx';
-import { requireAuth } from './loaders/authLoader.tsx';
+import EventSidebar, { action as participateInEventAction, loader as eventLoader } from './components/sections/EventSidebar.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
 import Profile, { loader as profileDataLoader } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
@@ -69,6 +68,7 @@ function App() {
             {
               path: ':id',
               element: <EventSidebar />,
+              action: participateInEventAction,
               loader: eventLoader,
             }
           ]

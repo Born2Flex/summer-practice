@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Input,
     Popover,
@@ -7,7 +6,7 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import { format } from "date-fns";
-import { DayPicker, SelectSingleEventHandler } from "react-day-picker";
+import { DayPicker } from "react-day-picker";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 function DatePicker({ date, setDate }: { date: Date | undefined, setDate: any }) {
