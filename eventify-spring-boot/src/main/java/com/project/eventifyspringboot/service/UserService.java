@@ -44,7 +44,7 @@ public class UserService {
 
     public UserDto updateUser(AuthDetails authDetails, String userId, UserUpdateDto userDto) {
         User user = authDetails.getUser();
-        if (userId.equals(user.getId())) {
+        if (!userId.equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User id mismatch");
         }
         userMapper.updateUserEntity(userDto, user);
