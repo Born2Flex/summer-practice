@@ -14,20 +14,26 @@ import {
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
+import { Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
+import { getToken } from '../auth';
 
 function Profile() {
+    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: any, isOwner: boolean };
+    console.log('profile data inside component:', profile);
+    console.log('isOwner:', isOwner);
+
     const data = [
-        {
-            label: "Events",
-            value: "events",
-            icon: Square3Stack3DIcon,
-            desc: <UserEvents />,
-        },
         {
             label: "Profile",
             value: "profile",
             icon: UserCircleIcon,
             desc: <UserInformation />,
+        },
+        {
+            label: "Events",
+            value: "events",
+            icon: Square3Stack3DIcon,
+            desc: <UserEvents />,
         },
     ];
 
@@ -46,24 +52,41 @@ function Profile() {
                                 </div>
                                 <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                                     <div className="flex py-6 px-3 mt-32 sm:mt-0 gap-4 justify-end">
-                                        <Button
-                                            variant='outlined'
-                                            color='gray'
-                                            placeholder={undefined}
-                                            onPointerEnterCapture={undefined}
-                                            onPointerLeaveCapture={undefined}
-                                        >
-                                            Message
-                                        </Button>
-                                        <Button
-                                            variant='filled'
-                                            color='gray'
-                                            placeholder={undefined}
-                                            onPointerEnterCapture={undefined}
-                                            onPointerLeaveCapture={undefined}
-                                        >
-                                            Friend
-                                        </Button>
+                                        {isOwner && (
+                                            <Link to="edit">
+                                                <Button
+                                                    variant='filled'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Edit Profile
+                                                </Button>
+                                            </Link>
+                                        )}
+                                        {!isOwner && (
+                                            <>
+                                                <Button
+                                                    variant='outlined'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Message
+                                                </Button>
+                                                <Button
+                                                    variant='filled'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Friend
+                                                </Button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-4/12 px-4 lg:order-1">
@@ -80,7 +103,7 @@ function Profile() {
                                     </div>
                                 </div>
                             </div>
-                            <Tabs value="events" id="custom-animation" className='py-8'>
+                            <Tabs value="profile" id="custom-animation" className='py-8'>
                                 <div className='w-2/3 mx-auto'>
                                     <TabsHeader
                                         placeholder={undefined}
@@ -121,3 +144,38 @@ function Profile() {
 }
 
 export default Profile
+
+export async function loader({ params }: { params: any }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    const fetchUrl = params.userId
+        ? `http://localhost:8080/rest/users/${params.userId}`
+        : `http://localhost:8080/rest/users/me`;
+
+    try {
+        const response = await fetch(fetchUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch events');
+        }
+
+        return defer({
+            profile: await response.json(),
+            isOwner: params.userId === undefined,
+        })
+
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return null;
+    }
+
+}

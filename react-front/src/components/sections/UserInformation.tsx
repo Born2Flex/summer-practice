@@ -1,12 +1,18 @@
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 function UserInformation() {
     return (
         <>
             <div className="text-center mt-12">
-                <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-900">
+                <h3 className="text-4xl font-semibold leading-normal mb-1 text-gray-900">
                     Volodymyr Booblick
                 </h3>
+                <div className="text-sm leading-normal mt-0 mb-4 text-blueGray-400 font-semibold">
+                    booblick@gmail.com
+                </div>
                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="w-4 h-4 mr-2" />
                     Darnytskyi district - Kyiv, Ukraine
                 </div>
                 <div className="mb-2 text-blueGray-600 mt-10">

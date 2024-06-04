@@ -10,8 +10,9 @@ import MapWithSidebarLayout, { loader as eventsLoader } from './pages/MapWithSid
 import EventSidebar, { loader as eventLoader } from './components/sections/EventSidebar.tsx';
 import { requireAuth } from './loaders/authLoader.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
-import Profile from './pages/Profile.tsx';
+import Profile, { loader as profileDataLoader } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
+import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
 
 
 
@@ -36,13 +37,22 @@ function App() {
         },
         {
           path: 'profile',
-          element: <Profile />,
-          loader: requireAuth,
+          id: 'profile-layout',
+          loader: profileDataLoader,
           children: [
             {
-              path: 'edit',
+              index: true,
               element: <Profile />,
-              loader: requireAuth,
+              // action: deleteEventAction,
+            },
+            {
+              path: ':userId',
+              element: <Profile />,
+            },
+            {
+              path: 'edit',
+              element: <EditProfile />,
+              action: editProfileAction,
             },
           ]
         },
