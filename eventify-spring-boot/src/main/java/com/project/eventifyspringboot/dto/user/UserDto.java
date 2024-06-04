@@ -10,4 +10,5 @@ public class UserDto {
     private String lastName;
     private String imgUrl;
     private String location;
+    private String description;
 }

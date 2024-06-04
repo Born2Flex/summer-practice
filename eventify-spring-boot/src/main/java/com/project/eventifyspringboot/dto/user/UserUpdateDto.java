@@ -17,10 +17,8 @@ public class UserUpdateDto {
     private String firstName;
     @NotBlank
     private String lastName;
-    @NotBlank
     @Length(max = 1024)
     private String description;
-    @NotBlank
     private String imgUrl;
     private String location;
 }
