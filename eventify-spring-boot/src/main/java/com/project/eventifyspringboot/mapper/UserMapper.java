@@ -1,6 +1,7 @@
 package com.project.eventifyspringboot.mapper;
 
 import com.project.eventifyspringboot.dto.auth.RegisterRequest;
+import com.project.eventifyspringboot.dto.user.UserFullDto;
 import com.project.eventifyspringboot.dto.user.UserShortDto;
 import com.project.eventifyspringboot.dto.user.UserDto;
 import com.project.eventifyspringboot.dto.user.UserUpdateDto;
@@ -24,6 +25,8 @@ public abstract class UserMapper {
     public abstract UserDto toUserDto(User user);
 
     public abstract UserShortDto toShortUserDto(User user);
+
+    public abstract UserFullDto toUserFullDto(User user);
 
     public abstract void updateUserEntity(UserUpdateDto userDto, @MappingTarget User user);
 

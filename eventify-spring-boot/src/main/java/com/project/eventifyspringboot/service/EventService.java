@@ -68,6 +68,15 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
+    public List<EventShortDto> getUserEvents(String userId) {
+        List<Event> events = eventRepository.findEventsByHost_Id(userId);
+        return eventMapper.toListDto(events);
+    }
+
+    public Integer getNumOfUserComments(String userId) {
+        return commentRepository.countCommentsByUserId(userId);
+    }
+
     public List<EventShortDto> getAllEvents() {
         List<Event> eventEntities = eventRepository.findAll();
         return eventMapper.toListDto(eventEntities);

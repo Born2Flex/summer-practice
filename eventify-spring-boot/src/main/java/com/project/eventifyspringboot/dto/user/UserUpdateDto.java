@@ -18,4 +18,5 @@ public class UserUpdateDto {
     private String lastName;
     @NotBlank
     private String imgUrl;
+    private String location;
 }
