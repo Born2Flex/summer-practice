@@ -40,11 +40,6 @@ function App() {
           loader: profileDataLoader,
           children: [
             {
-              index: true,
-              element: <Profile />,
-              // action: deleteEventAction,
-            },
-            {
               path: ':userId',
               element: <Profile />,
             },

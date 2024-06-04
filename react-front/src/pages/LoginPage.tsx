@@ -4,7 +4,7 @@ import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, redirect } from "react-router-dom";
-import { setToken } from "../auth";
+import { setToken, setUserId } from "../auth";
 
 function LoginPage() {
     const [passwordShown, setPasswordShown] = useState(false);
@@ -117,10 +117,12 @@ export async function action({ request }: { request: Request }) {
     }
 
     const token = responseData.token;
+    const userId = responseData.userId;
 
     console.log('Logged in successfully:', responseData);
 
     setToken(token);
+    setUserId(userId);
 
     return redirect('/events');
 }

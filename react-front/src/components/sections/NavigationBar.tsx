@@ -10,12 +10,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faHouse, faUser, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthProvider";
+import { getUserId } from "../../auth";
 
 function NewNavigation() {
     const [openNav, setOpenNav] = React.useState(false);
     //const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
     const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
+    const userId = getUserId();
 
     React.useEffect(() => {
         window.addEventListener(
@@ -69,7 +71,7 @@ function NewNavigation() {
                 color="blue-gray"
                 className="flex items-center gap-x-2 p-1 font-medium text-gray-600" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}            >
                 <FontAwesomeIcon icon={faUser} className="text-gray-500" />
-                <NavLink to="/profile" className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
+                <NavLink to={`profile/${userId ?? '12345'}`} className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
                     Account
                 </NavLink>
             </Typography>

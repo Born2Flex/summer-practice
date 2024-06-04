@@ -4,10 +4,14 @@ import { Form, Link, redirect, useRouteLoaderData } from 'react-router-dom';
 import ImageInput from '../components/inputs/ImageInput';
 import InputWithLabel from '../components/inputs/InputWithLabel';
 import User from '../interfaces/UserInterface'
+import { getUserId } from '../auth';
 
 function EditProfile() {
-    const { profile } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    const userId = getUserId();
     console.log('profile data inside edit-profile:', profile);
+
+    if (!isOwner) return <div>you can't edit other people profiles</div>;
 
     return (
 
@@ -19,10 +23,9 @@ function EditProfile() {
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                     <div className="relative">
-                                        {/* <img alt="..." src={UserPic} className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]" /> */}
                                         <div className='shadow-xl h-auto rounded-full align-middle bg-gray-50/90 border-none -m-16 -ml-20 lg:-ml-16 max-w-[150px]'>
 
-                                            <ImageInput id='profile-image' name='profile-image' previewImg={UserPic} round />
+                                            <ImageInput id='profile-image' name='profile-image' previewImg={profile.imgUrl || UserPic} round />
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +45,7 @@ function EditProfile() {
                                 </div>
                                 <div className="w-full lg:w-4/12 px-4 lg:order-1 lg:text-right lg:self-center">
                                     <div className="flex py-6 px-3 mt-32 sm:mt-0 gap-4 justify-center">
-                                        <Link to="..">
+                                        <Link to={`/profile/${userId}`}>
                                             <Button
                                                 variant='outlined'
                                                 color='gray'
@@ -105,6 +108,7 @@ function EditProfile() {
                                     containerProps={{
                                         className: "min-w-full",
                                     }}
+                                    defaultValue={profile ? profile.location : ''}
                                     required
                                 />
                                 <div className="mt-6 pt-2 border-t border-blueGray-200 text-center">
@@ -124,7 +128,9 @@ function EditProfile() {
                                             }}
                                             labelProps={{
                                                 className: "hidden",
-                                            }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                                            }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                                            defaultValue={profile ? profile.description : ''}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +145,7 @@ export default EditProfile
 
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
+    const userId = getUserId();
 
     const token = localStorage.getItem('jwt');
     if (!token) {
@@ -153,27 +160,27 @@ export async function action({ request }: { request: Request }) {
         lastName: data.get('surname')?.toString(),
         imgUrl: data.get('profile-image')?.toString(),
         location: data.get('location')?.toString(),
+        description: data.get('description')?.toString(),
     };
 
     console.log('Gathered profile data:', eventData);
 
-    // const response = await fetch('http://localhost:8080/rest/events', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `Bearer ${token}`
-    //     },
-    //     body: JSON.stringify(eventData)
-    // });
+    const response = await fetch(`http://localhost:8080/rest/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(eventData)
+    });
 
-    // const responseData = await response.json();
-    // if (!response.ok) {
-    //     console.error(`Error ${response.status}: ${responseData}`);
-    //     throw new Error(`Error ${response.status}: ${responseData}`);
-    // }
+    if (!response.ok) {
+        console.error(`Error ${response.status} ${response.json()}`);
+        throw new Error(`Error ${response.status} ${response.json()}`);
+    }
 
-    // console.log('Event created successfully:', responseData);
+    console.log('Event created successfully:', response);
 
-    return redirect('/profile');
+    return redirect(`/profile/${userId}`);
 
 }
