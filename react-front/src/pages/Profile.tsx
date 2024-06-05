@@ -154,6 +154,7 @@ export async function loader({ params }: { params: any }) {
     const userId = getUserId();
 
     try {
+        const startTime1 = new Date();
         const response = await fetch(`http://localhost:8080/rest/users/${params.userId}`, {
             method: 'GET',
             headers: {
@@ -161,6 +162,10 @@ export async function loader({ params }: { params: any }) {
                 'Authorization': `Bearer ${token}`
             },
         });
+
+        const endTime1 = new Date();
+        const timeTaken1 = Number(endTime1) - Number(startTime1);
+        console.log(`Time taken for the first request: ${timeTaken1}ms`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch events');

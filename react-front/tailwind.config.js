@@ -80,6 +80,9 @@ module.exports = withMT({
         '.scrollbar-invisible::-webkit-scrollbar': {
           display: 'none',
         },
+        '.scrollbar-thin::-webkit-scrollbar': {
+          width: '2px',
+        },
         '.custom-scrollbar::-webkit-scrollbar-track': {
           background: '#e2e7d4',
           borderRadius: '50px',
