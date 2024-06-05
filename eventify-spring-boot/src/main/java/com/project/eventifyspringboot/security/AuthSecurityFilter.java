@@ -32,6 +32,12 @@ public class AuthSecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("Request to uri - {}", request.getRequestURI());
         String authHeader = request.getHeader(AUTH_HEADER);
+
+        if (!request.getRequestURI().startsWith("/rest")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             log.info("No bearer header");
             filterChain.doFilter(request, response);
