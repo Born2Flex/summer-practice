@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +27,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final SimpMessagingTemplate template;
 
     @GetMapping("/me")
     @Operation(summary = "Get information about authorized user.")
     @ApiResponse(responseCode = "200",
             content = {@Content(schema = @Schema(implementation = UserFullDto.class), mediaType = "application/json")})
     public UserFullDto getMe(@AuthenticationPrincipal AuthDetails authDetails) {
+        template.convertAndSendToUser(authDetails.getUser().getId(), "", "{БАЗА, ТОБТО БАЗА}");
         return userService.getUserInfo(authDetails.getUser().getId());
     }
 
