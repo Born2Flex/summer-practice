@@ -8,7 +8,7 @@ import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
 import { Form, NavLink, redirect, useLoaderData } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
-import { getToken } from "../../auth"
+import { getToken, getUserId } from "../../auth"
 
 const localDateTimeString = (utcDateTimeString: string): string => {
     const utcDate = new Date(utcDateTimeString);
@@ -34,6 +34,7 @@ function EventSidebar() {
         imgUrl,
         comments
     } = useLoaderData() as LongEvent;
+    const userId = getUserId();
     const date = new Date(startDateTime);
 
     const day = format(date, 'd');
@@ -41,7 +42,7 @@ function EventSidebar() {
     const weekday = format(date, 'EEEE');
     const time = format(date, 'h:mm a');
 
-    const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants) || participants.some(participant => participant.id === host.id);
+    const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants) || participants.some(participant => participant.id === userId);
 
     return (
         <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 pl-7 pr-3 bg-white/70 overflow-hidden'>

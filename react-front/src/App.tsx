@@ -2,7 +2,6 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
-// import { action as searchEventsAction } from './components/sections/EventsSidebar';
 import NewEventPage, { action as createEventAction, loader as createEventLoader } from './pages/NewEventPage';
 import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
@@ -12,7 +11,8 @@ import { AuthProvider } from './context/AuthProvider.tsx';
 import Profile, { loader as profileDataLoader } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
 import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
-
+import ChatSection from './components/sections/ChatSection.tsx';
+import ChatLayout from './pages/ChatLayout.tsx';
 
 
 function App() {
@@ -73,6 +73,16 @@ function App() {
           element: <NewEventPage />,
           action: createEventAction,
           loader: createEventLoader,
+        },
+        {
+          path: 'chat',
+          element: <ChatLayout />,
+          children: [
+            {
+              path: ':chatId',
+              element: <ChatSection />,
+            }
+          ]
         }
       ],
     },
