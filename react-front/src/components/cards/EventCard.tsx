@@ -92,7 +92,7 @@ function EventCard(event: ShortEvent) {
 
                 </div>
                 <NavLink
-                    to={event.id}
+                    to={`/events/${event.id}`}
                     className="bg-gray-100/40 group/link group-hover/item:bg-gray-200/60 p-3 flex items-center justify-between rounded-br-lg transition ease-in-out group-hover:hover:bg-gray-200">
                     See more details
                     <FontAwesomeIcon

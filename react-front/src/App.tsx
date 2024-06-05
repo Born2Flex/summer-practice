@@ -11,7 +11,7 @@ import { AuthProvider } from './context/AuthProvider.tsx';
 import Profile, { loader as profileDataLoader } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
 import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
-import ChatSection from './components/sections/ChatSection.tsx';
+import ChatSection, { loader as chatUserLoader } from './components/sections/ChatSection.tsx';
 import ChatLayout from './pages/ChatLayout.tsx';
 
 
@@ -79,8 +79,14 @@ function App() {
           element: <ChatLayout />,
           children: [
             {
+              index: true,
+              element: <ChatSection />,
+              loader: chatUserLoader,
+            },
+            {
               path: ':chatId',
               element: <ChatSection />,
+              loader: chatUserLoader,
             }
           ]
         }

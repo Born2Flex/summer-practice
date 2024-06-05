@@ -52,6 +52,7 @@ module.exports = withMT({
         "rounded-lg": "0 0 20px rgba(0, 0, 0, 0.1)",
         "left": "-20px 0 20px -5px rgba(0, 0, 0, 0.15)",
         "right": "20px 0 20px -5px rgba(0, 0, 0, 0.15)",
+        "bottom": "0 20px 20px -5px rgba(0, 0, 0, 0.15)",
         "inner-lg": "inset 0 10px 30px rgba(0, 0, 0, 0.25)",
       },
       animation: {

@@ -252,8 +252,8 @@ export function EventSidebarAccordion({
                 </AccordionHeader>
                 <AccordionBody className="flex flex-1 flex-col gap-y-1">
                     <div className="flex h-[180px] flex-col gap-y-2 overflow-auto custom-scrollbar">
-                        <ChatBubble />
-                        <ChatBubble />
+                        {/* <ChatBubble />
+                        <ChatBubble /> */}
                     </div>
                     <CommentInputForm onSubmit={handleCommentSubmit} />
                 </AccordionBody>
