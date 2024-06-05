@@ -42,7 +42,7 @@ public class ChatService {
 
     public List<ChatShortDto> findChatsByUserId(String userId) {
         List<Chat> chats = chatRepository.findChatsByParticipantId(userId);
-        return chatMapper.toShortDtoList(chats);
+        return chatMapper.toShortDtoList(chats, userId);
     }
 
     public ChatDto findChatById(AuthDetails authDetails, String chatId) {

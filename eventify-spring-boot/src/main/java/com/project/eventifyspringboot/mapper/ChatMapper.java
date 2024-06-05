@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class ChatMapper {
     @Mapping(target = "participant", source = "participants", qualifiedByName = "getParticipant")
     public abstract ChatShortDto toShortDto(Chat chat, @Context String participantId);
-    public abstract List<ChatShortDto> toShortDtoList(List<Chat> chats);
+    public abstract List<ChatShortDto> toShortDtoList(List<Chat> chats, @Context String participantId);
 
     public abstract ChatDto toChatDto(Chat chat);
 
