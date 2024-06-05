@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
-import User from '../../interfaces/UserInterface'
 import { IconButton } from '@material-tailwind/react'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EmptyUser from "../../assets/empty-user.webp"
+import ShortUser from '../../interfaces/ShortUserInterface'
 
-function ChatHeader({ user }: { user: User }) {
+function ChatHeader({ user }: { user: ShortUser }) {
     return (
         <section className='w-full px-8 py-4 bg-white/50 shadow-bottom'>
             <div className="flex items-center justify-between">

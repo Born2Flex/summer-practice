@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
-import { Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
+import { Form, Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
 import { getToken, getUserId } from '../auth';
 import User from '../interfaces/UserInterface';
 
@@ -68,15 +68,18 @@ function Profile() {
                                         )}
                                         {!isOwner && (
                                             <>
-                                                <Button
-                                                    variant='outlined'
-                                                    color='gray'
-                                                    placeholder={undefined}
-                                                    onPointerEnterCapture={undefined}
-                                                    onPointerLeaveCapture={undefined}
-                                                >
-                                                    Message
-                                                </Button>
+                                                <Form method='POST'>
+                                                    <Button
+                                                        type='submit'
+                                                        variant='outlined'
+                                                        color='gray'
+                                                        placeholder={undefined}
+                                                        onPointerEnterCapture={undefined}
+                                                        onPointerLeaveCapture={undefined}
+                                                    >
+                                                        Message
+                                                    </Button>
+                                                </Form>
                                                 <Button
                                                     variant='filled'
                                                     color='gray'
@@ -145,6 +148,34 @@ function Profile() {
 }
 
 export default Profile
+
+export async function action({ params }: { params: any }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/rest/chats/new/${params.userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create chat');
+        }
+
+        const responseJson = await response.json();
+        console.log('response to creating a chat:', responseJson);
+
+        return redirect(`/chat/${responseJson.id}`);
+    } catch (error) {
+        console.error('Error fetching chats:', error);
+    }
+}
 
 export async function loader({ params }: { params: any }) {
     const token = getToken();

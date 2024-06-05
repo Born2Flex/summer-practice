@@ -1,74 +1,79 @@
 import { redirect, useLoaderData } from "react-router-dom"
 import ChatHeader from "./ChatHeader"
-import User from "../../interfaces/UserInterface"
 import { getToken, getUserId } from "../../auth"
 import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
-import { Message } from "../../interfaces/MessageInterface"
+// import { Message } from "../../interfaces/MessageInterface"
+import Chat from "../../interfaces/ChatInterface"
+import ShortUser from "../../interfaces/ShortUserInterface"
 
 function ChatSection() {
-    const { user, interlocutor } = useLoaderData() as { user: User, interlocutor: User }
+    const chat = useLoaderData() as Chat;
+    console.log(chat);
+    const userId = getUserId();
+    //const user = chat.participants.find(participant => participant.id === userId) as ShortUser;
+    const interlocutor = chat.participants.find(participant => participant.id !== userId) as ShortUser;
 
-    const messages = [
-        {
-            id: "1",
-            senderId: interlocutor.id,
-            message: 'Hello, how are you?',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "2",
-            senderId: user.id,
-            message: 'I am good, thank you!',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "3",
-            senderId: interlocutor.id,
-            message: 'What are you doing?',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "4",
-            senderId: user.id,
-            message: 'I am working on a project',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "1",
-            senderId: interlocutor.id,
-            message: 'Hello, how are you?',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "2",
-            senderId: user.id,
-            message: 'I am good, thank you!',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "3",
-            senderId: interlocutor.id,
-            message: 'What are you doing?',
-            createdAt: new Date().toLocaleTimeString(),
-        },
-        {
-            id: "4",
-            senderId: user.id,
-            message: 'I am working on a project',
-            createdAt: new Date().toLocaleTimeString(),
-        }
-    ] as Message[]
+    // const messages = [
+    //     {
+    //         senderId: interlocutor.id,
+    //         content: 'Hello, how are you?',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: user.id,
+    //         content: 'I am good, thank you!',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: interlocutor.id,
+    //         content: 'What are you doing?',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: user.id,
+    //         content: 'I am working on a project',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: interlocutor.id,
+    //         content: 'Hello, how are you?',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: user.id,
+    //         content: 'I am good, thank you!',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: interlocutor.id,
+    //         content: 'What are you doing?',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     },
+    //     {
+    //         senderId: user.id,
+    //         content: 'I am working on a project',
+    //         sendTime: new Date().toLocaleTimeString(),
+    //     }
+    // ] as Message[]
 
 
     return (
         <div className="z-0 w-3/4 bg-white/50 flex flex-col">
             <ChatHeader user={interlocutor} />
             <div className="flex flex-1 flex-col overflow-y-auto px-24">
-                <ChatBubble sender={interlocutor} message={messages[0]} />
+                {/* <ChatBubble sender={interlocutor} message={messages[0]} />
                 <ChatBubble sender={user} message={messages[1]} />
                 <ChatBubble sender={interlocutor} message={messages[2]} />
-                <ChatBubble sender={user} message={messages[3]} />
+                <ChatBubble sender={user} message={messages[3]} /> */}
+
+                {chat.messages.map((message, index) => (
+                    <ChatBubble
+                        key={index}
+                        sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
+                        message={message}
+                    />
+                ))}
 
             </div>
             <div className="p-3 pt-0">
@@ -80,19 +85,18 @@ function ChatSection() {
 
 export default ChatSection
 
-export async function loader() {
-    console.log('started loader');
+export async function loader({ params }: { params: any }) {
     const token = getToken();
     if (!token) {
         return redirect('/login');
     }
-    const interlocutorId = "6653b74349a1dd4c4484c86c"
-    const userId = getUserId();
+
+    const chatId = params.chatId;
 
     try {
         const startTime1 = new Date();
 
-        const response = await fetch(`http://localhost:8080/rest/users/short/${userId}`, {
+        const response = await fetch(`http://localhost:8080/rest/chats/${chatId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -102,38 +106,16 @@ export async function loader() {
 
         const endTime1 = new Date();
         const timeTaken1 = Number(endTime1) - Number(startTime1);
-        console.log(`Time taken for the first request: ${timeTaken1}ms`);
+        console.log(`Time taken for getting the chat data: ${timeTaken1}ms`);
 
         if (!response.ok) {
-            throw new Error('Failed to fetch events');
+            throw new Error('Failed to fetch chat data');
         }
 
-        const startTime2 = new Date();
-
-        const response2 = await fetch(`http://localhost:8080/rest/users/short/${interlocutorId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        const endTime2 = new Date();
-        const timeTaken2 = Number(endTime2) - Number(startTime2);
-        console.log(`Time taken for the second request: ${timeTaken2}ms`);
-
-        if (!response2.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-
-        return {
-            user: await response.json(),
-            interlocutor: await response2.json()
-        }
+        return await response.json();
 
     } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error fetching chat data:', error);
         return null;
     }
 

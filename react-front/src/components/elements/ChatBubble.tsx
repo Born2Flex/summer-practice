@@ -1,11 +1,11 @@
 import { getUserId } from '../../auth'
 import { Message } from '../../interfaces/MessageInterface'
 import EmptyUser from "../../assets/empty-user.webp"
-import User from '../../interfaces/UserInterface'
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import ShortUser from '../../interfaces/ShortUserInterface';
 
-function ChatBubble({ sender, message }: { sender: User, message: Message }) {
+function ChatBubble({ sender, message }: { sender: ShortUser, message: Message }) {
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -32,9 +32,9 @@ function ChatBubble({ sender, message }: { sender: User, message: Message }) {
                     <Link to={`/profile/${sender.id}`}>
                         <span className="text-sm font-semibold text-gray-900 dark:text-white">{sender.firstName} {sender.lastName}</span>
                     </Link>
-                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{message.createdAt}</span>
+                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{message.sendTime}</span>
                 </div>
-                <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.message}</p>
+                <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.content}</p>
                 {/* {isSender && <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{message.status}</span>} */}
             </div>
             {isSender && (

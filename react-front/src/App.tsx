@@ -8,11 +8,11 @@ import SignupPage, { action as signupAction } from './pages/SignupPage';
 import MapWithSidebarLayout, { loader as eventsLoader } from './pages/MapWithSidebarLayout';
 import EventSidebar, { action as participateInEventAction, loader as eventLoader } from './components/sections/EventSidebar.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
-import Profile, { loader as profileDataLoader } from './pages/Profile.tsx';
+import Profile, { loader as profileDataLoader, action as startChatAction } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
 import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
 import ChatSection, { loader as chatUserLoader } from './components/sections/ChatSection.tsx';
-import ChatLayout from './pages/ChatLayout.tsx';
+import ChatLayout, { loader as userChatsLoader } from './pages/ChatLayout.tsx';
 
 
 function App() {
@@ -42,6 +42,7 @@ function App() {
             {
               path: ':userId',
               element: <Profile />,
+              action: startChatAction,
             },
             {
               path: 'edit',
@@ -77,6 +78,7 @@ function App() {
         {
           path: 'chat',
           element: <ChatLayout />,
+          loader: userChatsLoader,
           children: [
             {
               index: true,
