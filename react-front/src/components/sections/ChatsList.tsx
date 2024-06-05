@@ -9,7 +9,7 @@ function ChatsList({ chats }: { chats: ShortChat[] }) {
     return (
         <section className='w-1/4 flex flex-col bg-white/70 justify-between min-w-[384px] z-10 relative shadow-right overflow-hidden'>
             <div className="flex flex-row justify-between px-6 pt-4">
-                <NavLink to='..'>
+                <NavLink to='..' relative='route'>
                     <IconButton
                         variant="text"
                         placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}

@@ -3,15 +3,20 @@ import ChatHeader from "./ChatHeader"
 import { getToken, getUserId } from "../../auth"
 import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
-// import { Message } from "../../interfaces/MessageInterface"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
 
 function ChatSection() {
     const chat = useLoaderData() as Chat;
     console.log(chat);
+    if (!chat.participants) {
+        return (
+            <div className="z-0 w-3/4 bg-white/50 flex flex-col items-center justify-center">
+                <p className="text-3xl text-gray-600 font-bold">Select a chat</p>
+            </div>
+        )
+    }
     const userId = getUserId();
-    //const user = chat.participants.find(participant => participant.id === userId) as ShortUser;
     const interlocutor = chat.participants.find(participant => participant.id !== userId) as ShortUser;
 
     // const messages = [
@@ -67,13 +72,20 @@ function ChatSection() {
                 <ChatBubble sender={interlocutor} message={messages[2]} />
                 <ChatBubble sender={user} message={messages[3]} /> */}
 
-                {chat.messages.map((message, index) => (
-                    <ChatBubble
-                        key={index}
-                        sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
-                        message={message}
-                    />
-                ))}
+                {chat.messages.length === 0 && (
+                    <div className="flex flex-1 justify-center items-center">
+                        <p className="text-3xl text-gray-600 font-bold">No messages yet</p>
+                    </div>
+                )}
+                {chat.messages.length > 0 && (
+                    chat.messages.map((message, index) => (
+                        <ChatBubble
+                            key={index}
+                            sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
+                            message={message}
+                        />
+                    ))
+                )}
 
             </div>
             <div className="p-3 pt-0">
@@ -96,7 +108,7 @@ export async function loader({ params }: { params: any }) {
     try {
         const startTime1 = new Date();
 
-        const response = await fetch(`http://localhost:8080/rest/chats/${chatId}`, {
+        const response = await fetch(`http://localhost:8080/rest/chats${chatId ? '/' + chatId : ''}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
