@@ -92,7 +92,7 @@ export async function loader() {
     try {
         const startTime1 = new Date();
 
-        const response = await fetch(`http://localhost:8080/rest/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/rest/users/short/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export async function loader() {
 
         const startTime2 = new Date();
 
-        const response2 = await fetch(`http://localhost:8080/rest/users/${interlocutorId}`, {
+        const response2 = await fetch(`http://localhost:8080/rest/users/short/${interlocutorId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

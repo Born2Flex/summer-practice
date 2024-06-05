@@ -3,6 +3,7 @@ package com.project.eventifyspringboot.service;
 import com.project.eventifyspringboot.dto.event.EventShortDto;
 import com.project.eventifyspringboot.dto.user.UserDto;
 import com.project.eventifyspringboot.dto.user.UserFullDto;
+import com.project.eventifyspringboot.dto.user.UserShortDto;
 import com.project.eventifyspringboot.dto.user.UserUpdateDto;
 import com.project.eventifyspringboot.entity.User;
 import com.project.eventifyspringboot.mapper.UserMapper;
@@ -40,6 +41,12 @@ public class UserService {
         // temporary decision
         userFullDto.setNumOfFriends(Math.abs(user.hashCode() % 100));
         return userFullDto;
+    }
+
+    public UserShortDto getShortUserInfo(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return userMapper.toShortUserDto(user);
     }
 
     public UserDto updateUser(AuthDetails authDetails, String userId, UserUpdateDto userDto) {

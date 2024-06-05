@@ -2,6 +2,7 @@ package com.project.eventifyspringboot.controller;
 
 import com.project.eventifyspringboot.dto.user.UserDto;
 import com.project.eventifyspringboot.dto.user.UserFullDto;
+import com.project.eventifyspringboot.dto.user.UserShortDto;
 import com.project.eventifyspringboot.dto.user.UserUpdateDto;
 import com.project.eventifyspringboot.security.AuthDetails;
 import com.project.eventifyspringboot.service.UserService;
@@ -45,6 +46,15 @@ public class UserController {
     @ApiResponse(responseCode = "404", content = {@Content})
     public UserFullDto getUserById(@PathVariable String userId) {
         return userService.getUserInfo(userId);
+    }
+
+    @GetMapping("/short/{userId}")
+    @Operation(summary = "Get short info about user by id.")
+    @ApiResponse(responseCode = "200",
+            content = {@Content(schema = @Schema(implementation = UserShortDto.class), mediaType = "application/json")})
+    @ApiResponse(responseCode = "404", content = {@Content})
+    public UserShortDto getShortUserById(@PathVariable String userId) {
+        return userService.getShortUserInfo(userId);
     }
 
     @PutMapping("/{userId}")

@@ -14,6 +14,7 @@ import com.project.eventifyspringboot.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,6 +29,7 @@ public class ChatService {
     private final UserRepository userRepository;
     private final ChatMapper chatMapper;
     private final MessageMapper messageMapper;
+    private final SimpMessagingTemplate template;
 
     public ChatDto createChat(String participantOne, String participantTwo) {
         Chat chat = new Chat();
@@ -53,12 +55,30 @@ public class ChatService {
         return chatMapper.toChatDto(chat);
     }
 
-    public Message addChatMessage(String chatId, MessageDto message) {
+    public void addChatMessage(String chatId, MessageDto message) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + chatId + " not found"));
+
         Message dbMessage = messageMapper.toMessage(message);
         chat.getMessages().add(dbMessage);
         chatRepository.save(chat);
-        return dbMessage;
+
+        String receiver = getReceiver(chat, message.getSenderId());
+        template.convertAndSendToUser(receiver, "/notifications", dbMessage);
+        template.convertAndSendToUser(chatId, "/messages", dbMessage);
+    }
+
+    private String getReceiver(Chat chat, String senderId) {
+        String receiver = null;
+        for (User user : chat.getParticipants()) {
+            if (!user.getId().equals(senderId)) {
+                receiver = user.getId();
+                break;
+            }
+        }
+        if (receiver == null) {
+            throw new IllegalStateException("No receiver found");
+        }
+        return receiver;
     }
 }

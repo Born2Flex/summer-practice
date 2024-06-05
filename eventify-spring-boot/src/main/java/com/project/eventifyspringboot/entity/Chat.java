@@ -21,6 +21,5 @@ public class Chat {
     private Message lastMessage;
     @DocumentReference(collection = "users", lazy = true)
     private List<User> participants;
-    @DocumentReference(collection = "messages", lazy = true)
     private List<Message> messages;
 }
