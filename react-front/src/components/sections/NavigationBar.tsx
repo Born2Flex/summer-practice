@@ -6,18 +6,13 @@ import {
     Button,
     IconButton,
 } from "@material-tailwind/react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Form, Link, NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faCommentDots, faHouse, faUser, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../../context/AuthProvider";
 import { getUserId } from "../../auth";
 
-function NewNavigation() {
+function NewNavigation({ registered }: { registered: boolean }) {
     const [openNav, setOpenNav] = React.useState(false);
-    //const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getToken());
-    const { isAuthenticated, logout } = useAuth();
-    const navigate = useNavigate();
-    const userId = getUserId();
 
     React.useEffect(() => {
         window.addEventListener(
@@ -25,13 +20,6 @@ function NewNavigation() {
             () => window.innerWidth >= 960 && setOpenNav(false),
         );
     }, []);
-
-    const handleLogout = () => {
-        //clearToken();
-        //setIsAuthenticated(false);
-        logout();
-        navigate('/');
-    };
 
     const navList = (
         <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -81,7 +69,7 @@ function NewNavigation() {
                 color="blue-gray"
                 className="flex items-center gap-x-2 p-1 font-medium text-gray-600" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <FontAwesomeIcon icon={faUser} className="text-gray-500" />
-                <NavLink to={`/profile/${userId ?? '12345'}`} className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
+                <NavLink to={`/profile/${registered ? getUserId() : '12345'}`} className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
                     Account
                 </NavLink>
             </Typography>
@@ -114,10 +102,12 @@ function NewNavigation() {
                         </Button>
                     </NavLink>*/}
 
-                    {isAuthenticated ? (
-                        <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                            <span>Log Out</span>
-                        </Button>
+                    {registered ? (
+                        <Form method="PUT" action="/">
+                            <Button type="submit" fullWidth variant="gradient" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                <span>Log Out</span>
+                            </Button>
+                        </Form>
 
                     ) : (
                         <>
@@ -179,21 +169,24 @@ function NewNavigation() {
                 <div className="container mx-auto">
                     {navList}
                     <div className="flex items-center gap-x-1">
-                        {isAuthenticated ? (
-                            <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                                <span>Log Out</span>
-                            </Button>
+                        {registered ? (
+                            <Form method="PUT" action="/" className="flex w-full">
+                                <Button type="submit" fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                    <span>Log Out</span>
+                                </Button>
+                            </Form>
                         ) : (
                             <>
-                                <NavLink to='/login'>
+                                <Link to='/login' className="flex w-1/2">
                                     <Button fullWidth variant="text" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                                         <span>Log In</span>
                                     </Button>
-                                </NavLink><NavLink to='/signup'>
+                                </Link>
+                                <Link to='/signup' className="flex w-1/2">
                                     <Button fullWidth variant="gradient" size="sm" className="" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                                         <span>Sign up</span>
                                     </Button>
-                                </NavLink>
+                                </Link>
                             </>
                         )}
                     </div>

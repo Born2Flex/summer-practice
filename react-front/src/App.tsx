@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import RootLayout from './pages/RootLayout';
+import RootLayout, { loader as rootLayoutLoader, action as logoutAction } from './pages/RootLayout';
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/HomePage';
 import NewEventPage, { action as createEventAction, loader as createEventLoader } from './pages/NewEventPage';
@@ -7,7 +7,6 @@ import LoginPage, { action as loginAction } from './pages/LoginPage';
 import SignupPage, { action as signupAction } from './pages/SignupPage';
 import MapWithSidebarLayout, { loader as eventsLoader } from './pages/MapWithSidebarLayout';
 import EventSidebar, { action as participateInEventAction, loader as eventLoader } from './components/sections/EventSidebar.tsx';
-import { AuthProvider } from './context/AuthProvider.tsx';
 import Profile, { loader as profileDataLoader, action as startChatAction } from './pages/Profile.tsx';
 import EventsSidebar from './components/sections/EventsSidebar.tsx';
 import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
@@ -19,9 +18,11 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <AuthProvider><RootLayout /></AuthProvider>,
+      element: <RootLayout />,
       errorElement: <ErrorPage />,
       id: 'root',
+      loader: rootLayoutLoader,
+      action: logoutAction,
       children: [
         { index: true, element: <HomePage /> },
         {
@@ -96,7 +97,7 @@ function App() {
     },
   ]);
 
-  return <AuthProvider><RouterProvider router={router} /></AuthProvider>;
+  return <RouterProvider router={router} />;
 }
 
 export default App

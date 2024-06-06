@@ -4,7 +4,6 @@ import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 import ShortEvent from "../../interfaces/ShortEventInterface"
-import { useAuth } from "../../context/AuthProvider"
 import { Suspense } from "react"
 
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
@@ -15,8 +14,6 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
 
 
 function EventsSidebar() {
-    const { login } = useAuth();
-    login();
 
     const data = useRouteLoaderData('map-layout') as { events: ShortEvent[] };
     const navigate = useNavigate();
