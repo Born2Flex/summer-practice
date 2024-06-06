@@ -60,6 +60,7 @@ public class ChatService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + chatId + " not found"));
 
         chat.getMessages().add(message);
+        chat.setLastMessage(message);
         chatRepository.save(chat);
 
         String receiver = getReceiver(chat, message.getSenderId());
