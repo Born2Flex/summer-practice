@@ -80,6 +80,7 @@ function App() {
         {
           path: 'chat',
           element: <ChatLayout />,
+          id: 'chat-layout',
           loader: userChatsLoader,
           children: [
             {
@@ -90,6 +91,7 @@ function App() {
             {
               path: ':chatId',
               element: <ChatSection />,
+              id: 'chat-section',
               loader: chatUserLoader,
             }
           ]

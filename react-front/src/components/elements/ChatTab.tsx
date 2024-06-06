@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import EmptyUser from "../../assets/empty-user.webp"
 import ShortChat from "../../interfaces/ShortChatInterface"
 
 function ChatTab({ chat }: { chat: ShortChat }) {
-    console.log("chat in chat tab: ", chat)
+    // console.log("chat in chat tab: ", chat)
     return (
-        <Link to={`/chat/${chat.id}`} >
+        <NavLink to={`/chat/${chat.id}`} >
             <div className="w-full flex flex-col border-gray-500 hover:bg-white/30 cursor-pointer">
                 <div className="flex items-center justify-between p-4">
                     <div className="flex items-center gap-4">
@@ -18,7 +18,7 @@ function ChatTab({ chat }: { chat: ShortChat }) {
                     </div>
                 </div>
             </div>
-        </Link>
+        </NavLink>
     )
 }
 

@@ -15,9 +15,10 @@ interface WebSocketContextType {
 export const WebSocketProvider = ({ children, userId }: { children: ReactNode, userId: string | null }) => {
     const [client, setClient] = useState<Client | null>(null);
     const [hasMessages, setHasMessages] = useState<boolean>(false);
-    const [subscribedChat, setSubscribedChat] = useState<string | null>(null);
+    let subscribedChat = null as string | null;
 
     useEffect(() => {
+        console.log("CONTEXT EFFECT TRIGGERED")
         if (!userId) {
             if (client) {
                 client.disconnect(() => {
@@ -59,8 +60,11 @@ export const WebSocketProvider = ({ children, userId }: { children: ReactNode, u
 
     const subscribeToChat = (chatId: string, onIncomingMessage: (message: any) => void) => {
         if (client && client.connected) {
+            if (subscribedChat === chatId) {
+                return;
+            }
             if (subscribedChat == null) {
-                setSubscribedChat(chatId);
+                subscribedChat = chatId;
                 client.subscribe(`/chat/${chatId}/messages`, (message: any) => {
                     console.log(message);
                     const parsedMessage = JSON.parse(message.body);
@@ -68,7 +72,7 @@ export const WebSocketProvider = ({ children, userId }: { children: ReactNode, u
                 });
             } else {
                 client.unsubscribe(`/chat/${subscribedChat}/messages`);
-                setSubscribedChat(chatId);
+                subscribedChat = chatId;
                 client.subscribe(`/chat/${chatId}/messages`, (message: any) => {
                     console.log(message);
                     const parsedMessage = JSON.parse(message.body);
