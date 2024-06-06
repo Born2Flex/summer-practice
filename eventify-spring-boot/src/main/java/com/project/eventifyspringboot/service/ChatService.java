@@ -55,17 +55,17 @@ public class ChatService {
         return chatMapper.toChatDto(chat);
     }
 
-    public void addChatMessage(String chatId, MessageDto message) {
+    public void addChatMessage(String chatId, Message message) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + chatId + " not found"));
 
-        Message dbMessage = messageMapper.toMessage(message);
-        chat.getMessages().add(dbMessage);
+        chat.getMessages().add(message);
+        chat.setLastMessage(message);
         chatRepository.save(chat);
 
         String receiver = getReceiver(chat, message.getSenderId());
-        template.convertAndSendToUser(receiver, "/notifications", dbMessage);
-        template.convertAndSendToUser(chatId, "/messages", dbMessage);
+        template.convertAndSendToUser(receiver, "/notifications", message);
+        template.convertAndSendToUser(chatId, "/messages", message);
     }
 
     private String getReceiver(Chat chat, String senderId) {
