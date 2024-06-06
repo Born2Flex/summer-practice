@@ -10,7 +10,7 @@ import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
 import { useEffect, useState } from "react"
 
 function EventSidebar({ id, title, host, description, availability, locationName, eventType, startDateTime, entranceFee, currentParticipants, maxParticipants, participants, comments }: Event) {
-    console.log(id);
+    console.log("PARTICIPANTS", participants);
     const date = new Date(startDateTime);
 
     const day = format(date, 'd');
@@ -24,11 +24,16 @@ function EventSidebar({ id, title, host, description, availability, locationName
         stateParticipants.some(participant => participant.id === host.id));
 
     useEffect(() => {
+        console.log("PARTICIPANTS", stateParticipants);
+        console.log("HOST_ID", host.id);
+        console.log((maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
+        stateParticipants.some(participant => participant.id == host.id));
+
         setIsJoinDisabled(
             (maxParticipants !== null && stateCurrentParticipants >= maxParticipants) ||
             stateParticipants.some(participant => participant.id == host.id)
         );
-    }, [stateCurrentParticipants, stateParticipants, maxParticipants]);
+    }, [stateCurrentParticipants, stateParticipants, host.id]);
 
     const handleJoin = async () => {
         const token = localStorage.getItem('jwt');
@@ -52,6 +57,8 @@ function EventSidebar({ id, title, host, description, availability, locationName
                 setParticipants(data.participants);
             } else {
                 console.error('Failed to join the event');
+                setCurrentParticipants(stateCurrentParticipants);
+                setParticipants(stateParticipants);
             }
         } catch (error) {
             console.error('Error:', error);
