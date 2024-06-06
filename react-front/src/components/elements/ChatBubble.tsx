@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ShortUser from '../../interfaces/ShortUserInterface';
 
 function ChatBubble({ sender, message }: { sender: ShortUser, message: Message }) {
+    // console.log('ChatBubble:', "SENDER:", sender, "MESSAGE:", message);
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

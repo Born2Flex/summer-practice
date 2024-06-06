@@ -5,19 +5,31 @@ import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
+import { useWebSocket } from "../../context/WebSocketContext"
+import { useEffect, useState } from "react"
+import { Message } from "../../interfaces/MessageInterface"
 
 function ChatSection() {
+    console.log('ChatSection created');
+
     const chat = useLoaderData() as Chat;
-    console.log(chat);
-    if (!chat.participants) {
-        return (
-            <div className="z-0 w-3/4 bg-white/50 flex flex-col items-center justify-center">
-                <p className="text-3xl text-gray-600 font-bold">Select a chat</p>
-            </div>
-        )
+
+    const [messages, setMessages] = useState<Message[]>(chat.messages as Message[] || []);
+
+    const { sendMessage, subscribeToChat } = useWebSocket();
+
+    function addMessage(message: Message) {
+        setMessages([...messages, message]);
     }
+
+    useEffect(() => {
+        // console.log('ChatSection useEffect');
+        subscribeToChat(chat.id, addMessage);
+    }, [chat.id]);
+
     const userId = getUserId();
     const interlocutor = chat.participants.find(participant => participant.id !== userId) as ShortUser;
+
 
     // const messages = [
     //     {
@@ -62,7 +74,6 @@ function ChatSection() {
     //     }
     // ] as Message[]
 
-
     return (
         <div className="z-0 w-3/4 bg-white/50 flex flex-col">
             <ChatHeader user={interlocutor} />
@@ -78,18 +89,20 @@ function ChatSection() {
                     </div>
                 )}
                 {chat.messages.length > 0 && (
-                    chat.messages.map((message, index) => (
-                        <ChatBubble
-                            key={index}
-                            sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
-                            message={message}
-                        />
-                    ))
-                )}
+                    messages.map((message, index) => {
+                        return (
+                            <ChatBubble
+                                key={index}
+                                sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
+                                message={message}
+                            />
+                        )
+                    }
+                    ))}
 
             </div>
             <div className="p-3 pt-0">
-                <CommentInputForm onSubmit={() => { }} />
+                <CommentInputForm chatId={chat.id} onSubmit={sendMessage} />
             </div>
         </div>
     )
@@ -108,7 +121,7 @@ export async function loader({ params }: { params: any }) {
     try {
         const startTime1 = new Date();
 
-        const response = await fetch(`http://localhost:8080/rest/chats${chatId ? '/' + chatId : ''}`, {
+        const response = await fetch(`http://localhost:8080/rest/chats/${chatId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

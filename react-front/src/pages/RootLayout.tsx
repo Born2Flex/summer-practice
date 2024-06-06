@@ -2,14 +2,15 @@ import { Outlet, redirect, useLoaderData } from 'react-router-dom';
 import NewNavigation from '../components/sections/NavigationBar';
 import '../background.scss';
 import Background from '../components/elements/Background';
-import { clearToken, clearUserId, getToken } from '../auth';
+import { clearToken, clearUserId, getToken, getUserId } from '../auth';
+import { WebSocketProvider } from '../context/WebSocketContext';
 
 function RootLayout() {
     const data = useLoaderData() as { isRegistered: boolean };
-    console.log('isRegistered:', data.isRegistered);
+    const userId = getUserId();
 
     return (
-        <>
+        <WebSocketProvider userId={userId}>
             <Background />
             <div className='flex flex-col min-h-screen max-h-screen'>
                 <div className={`bg-auth absolute w-full h-full -z-50 inset-0 bg-cover bg-bottom`} />
@@ -20,7 +21,7 @@ function RootLayout() {
                     </div>
                 </main>
             </div>
-        </>
+        </WebSocketProvider>
     );
 }
 
@@ -33,16 +34,30 @@ export async function action() {
 }
 
 export async function loader() {
+    console.log('GENERAL LOADER');
     const token = getToken();
     if (!token) {
         return {
             isRegistered: false,
         }
     }
-    console.log('token:', token);
+
+    // const socket = new SockJS('http://localhost:8080/socket');
+    // const stompClient = over(socket);
+    // const userId = getUserId();
+
+    // stompClient.connect({}, () => {
+    //     console.log('connected');
+    //     stompClient?.subscribe(`/chat/${userId}/notifications`, (message: any) => {
+    //         console.log(message);
+    //     });
+    // }, (error: any) => {
+    //     console.error(error);
+    // });
 
     return {
         isRegistered: true,
+        // stompClient: stompClient,
     }
 
 }

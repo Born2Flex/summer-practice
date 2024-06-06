@@ -35,7 +35,7 @@ public class UserController {
     @ApiResponse(responseCode = "200",
             content = {@Content(schema = @Schema(implementation = UserFullDto.class), mediaType = "application/json")})
     public UserFullDto getMe(@AuthenticationPrincipal AuthDetails authDetails) {
-        template.convertAndSendToUser(authDetails.getUser().getId(), "", "{БАЗА, ТОБТО БАЗА}");
+        template.convertAndSendToUser(authDetails.getUser().getId(), "/notifications", "{БАЗА, ТОБТО БАЗА}");
         return userService.getUserInfo(authDetails.getUser().getId());
     }
 
