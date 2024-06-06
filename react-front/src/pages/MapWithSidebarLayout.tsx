@@ -7,14 +7,8 @@ import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Circle } from 'react-leaflet';
 
 function MapWithSidebarLayout() {
-
-<<<<<<< HEAD
-    const events = useRouteLoaderData('map-layout') as Event[];
-
-=======
     const { events, currentLocation } = useRouteLoaderData('map-layout') as { events: ShortEvent[], currentLocation: LatLngExpression };
     console.log('useRouteLoaderData:', events, currentLocation);
->>>>>>> 12884c776726ccb7f8ced1c49a5ea811b8a3744e
     return (
         <div className='flex flex-1'>
             <Suspense >
