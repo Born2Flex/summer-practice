@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Input,
     Popover,
@@ -10,8 +9,8 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
-function DatePicker() {
-    const [date, setDate] = useState<Date>();
+function DatePicker({ date, setDate }: { date: Date | undefined, setDate: any }) {
+    const today = new Date();
 
     return (
         <div className="mb-4">
@@ -53,6 +52,7 @@ function DatePicker() {
                             selected={date}
                             onSelect={setDate}
                             showOutsideDays
+                            disabled={{ before: today }}
                             className="border-0 z-50"
                             classNames={{
                                 caption: "flex justify-center py-2 mb-4 relative items-center",

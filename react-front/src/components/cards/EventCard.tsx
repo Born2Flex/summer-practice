@@ -1,7 +1,7 @@
 import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake, faUsersViewfinder, faShop, faGlobe, faMusic, faPalette, faComments, faRobot, faMoneyBill, faHotdog, faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
-import { Event } from '../../pages/EventsMapPage'
+import ShortEvent from '../../interfaces/ShortEventInterface';
 
 export const colorVariants = {
     'PARTY': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
@@ -57,7 +57,7 @@ export const ribbonVariants = {
     'PRIVATE': 'bg-red-500',
 }
 
-function EventCard(event: Event) {
+function EventCard(event: ShortEvent) {
     return (
         <div
             className="bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
@@ -92,7 +92,7 @@ function EventCard(event: Event) {
 
                 </div>
                 <NavLink
-                    to={event.id}
+                    to={`/events/${event.id}`}
                     className="bg-gray-100/40 group/link group-hover/item:bg-gray-200/60 p-3 flex items-center justify-between rounded-br-lg transition ease-in-out group-hover:hover:bg-gray-200">
                     See more details
                     <FontAwesomeIcon

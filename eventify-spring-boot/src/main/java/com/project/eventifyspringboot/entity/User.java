@@ -19,6 +19,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String description;
+    private String location;
     private String imgUrl;
 //  Attended Events ...
 }

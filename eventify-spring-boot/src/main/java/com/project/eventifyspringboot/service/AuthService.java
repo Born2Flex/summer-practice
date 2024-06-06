@@ -28,7 +28,7 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use");
         }
         User user = userRepository.save(userMapper.toEntity(registerRequest));
-        return new JwtResponseDto(jwtService.generateToken(user.getId()));
+        return new JwtResponseDto(user.getId(), jwtService.generateToken(user.getId()));
     }
 
     public JwtResponseDto authenticateUser(LoginRequest request) {
@@ -37,6 +37,6 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
-        return new JwtResponseDto(jwtService.generateToken(user.getId()));
+        return new JwtResponseDto(user.getId(), jwtService.generateToken(user.getId()));
     }
 }

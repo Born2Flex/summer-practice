@@ -14,20 +14,27 @@ import {
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
+import { Form, Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
+import { getToken, getUserId } from '../auth';
+import User from '../interfaces/UserInterface';
 
 function Profile() {
+    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    console.log('profile data inside component:', profile);
+    console.log('isOwner:', isOwner);
+
     const data = [
-        {
-            label: "Events",
-            value: "events",
-            icon: Square3Stack3DIcon,
-            desc: <UserEvents />,
-        },
         {
             label: "Profile",
             value: "profile",
             icon: UserCircleIcon,
             desc: <UserInformation />,
+        },
+        {
+            label: "Events",
+            value: "events",
+            icon: Square3Stack3DIcon,
+            desc: <UserEvents />,
         },
     ];
 
@@ -41,46 +48,66 @@ function Profile() {
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                     <div className="relative">
-                                        <img alt="..." src={UserPic} className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]" />
+                                        <img alt="..." src={profile.imgUrl || UserPic} className="shadow-xl rounded-full h-auto aspect-square align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]" />
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                                     <div className="flex py-6 px-3 mt-32 sm:mt-0 gap-4 justify-end">
-                                        <Button
-                                            variant='outlined'
-                                            color='gray'
-                                            placeholder={undefined}
-                                            onPointerEnterCapture={undefined}
-                                            onPointerLeaveCapture={undefined}
-                                        >
-                                            Message
-                                        </Button>
-                                        <Button
-                                            variant='filled'
-                                            color='gray'
-                                            placeholder={undefined}
-                                            onPointerEnterCapture={undefined}
-                                            onPointerLeaveCapture={undefined}
-                                        >
-                                            Friend
-                                        </Button>
+                                        {isOwner && (
+                                            <Link to="/profile/edit">
+                                                <Button
+                                                    variant='filled'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Edit Profile
+                                                </Button>
+                                            </Link>
+                                        )}
+                                        {!isOwner && (
+                                            <>
+                                                <Form method='POST'>
+                                                    <Button
+                                                        type='submit'
+                                                        variant='outlined'
+                                                        color='gray'
+                                                        placeholder={undefined}
+                                                        onPointerEnterCapture={undefined}
+                                                        onPointerLeaveCapture={undefined}
+                                                    >
+                                                        Message
+                                                    </Button>
+                                                </Form>
+                                                <Button
+                                                    variant='filled'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Friend
+                                                </Button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-4/12 px-4 lg:order-1">
                                     <div className="flex justify-center py-4 lg:pt-4 pt-8">
                                         <div className="mr-4 p-3 text-center">
-                                            <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">22</span><span className="text-sm text-blueGray-400">Friends</span>
+                                            <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{profile.numOfFriends}</span><span className="text-sm text-blueGray-400">Friends</span>
                                         </div>
                                         <div className="mr-4 p-3 text-center">
-                                            <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">10</span><span className="text-sm text-blueGray-400">Events</span>
+                                            <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{profile.numOfEvents}</span><span className="text-sm text-blueGray-400">Events</span>
                                         </div>
                                         <div className="lg:mr-4 p-3 text-center">
-                                            <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">89</span><span className="text-sm text-blueGray-400">Comments</span>
+                                            <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{profile.numOfComments}</span><span className="text-sm text-blueGray-400">Comments</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <Tabs value="events" id="custom-animation" className='py-8'>
+                            <Tabs value="profile" id="custom-animation" className='py-8'>
                                 <div className='w-2/3 mx-auto'>
                                     <TabsHeader
                                         placeholder={undefined}
@@ -121,3 +148,68 @@ function Profile() {
 }
 
 export default Profile
+
+export async function action({ params }: { params: any }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/rest/chats/new/${params.userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create chat');
+        }
+
+        const responseJson = await response.json();
+        console.log('response to creating a chat:', responseJson);
+
+        return redirect(`/chat/${responseJson.id}`);
+    } catch (error) {
+        console.error('Error fetching chats:', error);
+    }
+}
+
+export async function loader({ params }: { params: any }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+    const userId = getUserId();
+
+    try {
+        const startTime1 = new Date();
+        const response = await fetch(`http://localhost:8080/rest/users/${params.userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        const endTime1 = new Date();
+        const timeTaken1 = Number(endTime1) - Number(startTime1);
+        console.log(`Time taken for the first request: ${timeTaken1}ms`);
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch events');
+        }
+
+        return defer({
+            profile: await response.json(),
+            isOwner: params.userId === userId,
+        })
+
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return null;
+    }
+
+}

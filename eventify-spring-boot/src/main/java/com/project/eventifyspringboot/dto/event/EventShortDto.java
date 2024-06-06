@@ -7,7 +7,6 @@ import lombok.Data;
 import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class EventShortDto {
@@ -19,9 +18,7 @@ public class EventShortDto {
     private Integer maxParticipants;
     private Double entranceFee;
     private EventType eventType;
-    private String description;
     private String locationName;
     private Point location;
     private LocalDateTime startDateTime;
-    private List<UserShortDto> participants;
 }

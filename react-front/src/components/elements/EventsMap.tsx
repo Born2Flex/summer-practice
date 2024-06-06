@@ -1,9 +1,8 @@
 import { LayersControl, MapContainer, Marker, Popup, LayerGroup, TileLayer, Circle } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Event } from '../../pages/EventsMapPage';
+import ShortEvent from '../../interfaces/ShortEventInterface';
 import EventPopup from '../cards/EventPopup';
-import { useEffect, useState } from 'react';
 
 
 const greenIcon = new L.Icon({
@@ -33,22 +32,7 @@ const redIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
-function EventsMap({ events }: { events: Event[] }) {
-    const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null);
-
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                setUserLocation([latitude, longitude]);
-            },
-        );
-    }, []);
-
-
-    if (!userLocation) {
-        return <div>Loading map...</div>;
-    }
+function EventsMap({ events, userLocation }: { events: ShortEvent[], userLocation: LatLngExpression }) {
 
     const publicEvents = events.filter(event => event.availability === 'PUBLIC');
     const paidEvents = events.filter(event => event.availability === 'PAID');
