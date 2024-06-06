@@ -3,6 +3,7 @@ package com.project.eventifyspringboot.controller;
 import com.project.eventifyspringboot.dto.chat.ChatDto;
 import com.project.eventifyspringboot.dto.chat.ChatShortDto;
 import com.project.eventifyspringboot.dto.chat.MessageDto;
+import com.project.eventifyspringboot.entity.Message;
 import com.project.eventifyspringboot.security.AuthDetails;
 import com.project.eventifyspringboot.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +35,7 @@ public class ChatController {
     private final SimpMessagingTemplate template;
     // /app/chat/{chatId}
     @MessageMapping("/chat/{chatId}")
-    public void addChatMessage(@DestinationVariable String chatId, @Payload MessageDto message) {
+    public void addChatMessage(@DestinationVariable String chatId, @Payload Message message) {
         // /chat/{chatId}/messages
         chatService.addChatMessage(chatId, message);
         log.info("Sending message to chat {}", chatId);
