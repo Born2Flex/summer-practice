@@ -5,13 +5,13 @@ import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 import ShortEvent from "../../interfaces/ShortEventInterface"
 import { Suspense } from "react"
+import EventCardSkeleton from "../cards/EventCardSkeleton"
 
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
     });
 };
-
 
 function EventsSidebar() {
 
@@ -80,7 +80,15 @@ function EventsSidebar() {
 
             <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
                 <div className="flex flex-col gap-y-3">
-                    <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+                    {/*<Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>*/}
+                    <Suspense fallback={
+                        <div className="flex flex-col gap-y-3">
+                            {[...Array(5)].map((_, index) => (
+                                <EventCardSkeleton key={index} />
+                            ))}
+                        </div>
+                    }>
+
                         <Await resolve={data.events}>
                             {(events: ShortEvent[]) => events.map((event: ShortEvent, index: number) => (
                                 <EventCard key={index} {...event} />
