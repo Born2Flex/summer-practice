@@ -31,9 +31,9 @@ function EventCardSkeleton() {
                             </div>
                         </div>
                     </div>
-                    <div className='flex w-1/4 items-center justify-center'>
-                        <div className='w-full h-full aspect-square flex items-center justify-center rounded-full'>
-                            <Skeleton  style={{ width: '100%', height: '100%' }}/>
+                    <div className='flex w-1/4 max-h-full items-center justify-center'>
+                        <div className='w-full h-full aspect-square flex align-middle items-center justify-center rounded-full'>
+                            <Skeleton  className='w-full aspect-square flex items-center justify-center rounded-full' containerClassName='w-full aspect-square'/>
                         </div>
                     </div>
                 </div>
