@@ -19,10 +19,15 @@ function ChatLayout() {
         <div className='flex flex-1'>
             <Suspense >
                 <Await resolve={chats}>
-                    {(chats: ShortChat[]) => <ChatsList chats={chats} />}
+                    {(chats: ShortChat[]) => (
+                        <>
+                            <ChatsList chats={chats} />
+                            <Outlet />
+                        </>
+                    )}
+
                 </Await>
             </Suspense>
-            <Outlet />
         </div>
     );
 }
