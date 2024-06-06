@@ -5,10 +5,19 @@ import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
+import { useEffect, useState } from "react"
 
 function ChatSection() {
-    const chat = useLoaderData() as Chat;
-    console.log(chat);
+    const chatfetch = useLoaderData() as Chat;
+    console.log("user's chat:", chatfetch, new Date());
+    const [chat, setChat] = useState(chatfetch);
+
+    useEffect(() => {
+        setChat(chatfetch);
+    }, [chatfetch]);
+
+    console.log("user's state chat: ", chat, new Date());
+
     if (!chat.participants) {
         return (
             <div className="z-0 w-3/4 bg-white/50 flex flex-col items-center justify-center">
