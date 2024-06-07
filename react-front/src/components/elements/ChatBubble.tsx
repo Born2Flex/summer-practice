@@ -56,9 +56,9 @@ const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message
                     <span className="text-sm font-semibold text-gray-900 dark:text-white">{sender.firstName} {sender.lastName}</span>
                 </Link>
                 <div className="flex items-center space-x-2 justify-between">
-                    {isSender && <span className="flex self-end text-sm font-normal text-gray-500 dark:text-gray-400">{sendTime}</span>}
+                    {isSender && <div className="inline-flex text-start w-20 self-end text-xs font-normal text-gray-500 dark:text-gray-400">{sendTime}</div>}
                     <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.content}</p>
-                    {!isSender && <span className="flex self-end text-sm font-normal text-gray-500 dark:text-gray-400">{sendTime}</span>}
+                    {!isSender && <span className="flex w-max self-end text-xs font-normal text-gray-500 dark:text-gray-400">{sendTime}</span>}
 
                 </div>
             </div>
