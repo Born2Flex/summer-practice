@@ -5,11 +5,38 @@ import { Link } from 'react-router-dom';
 import { LegacyRef, forwardRef, useState } from 'react';
 import ShortUser from '../../interfaces/ShortUserInterface';
 
+function formatDateBasedOnToday(dateInput: string | Date) {
+    const date = new Date(dateInput);
+    const now = new Date();
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const inputDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    const options: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'Europe/Kyiv'
+    };
+
+    if (inputDate.getTime() !== today.getTime()) {
+        options.month = '2-digit';
+        options.day = '2-digit';
+    }
+
+    return new Intl.DateTimeFormat(navigator.language, options).format(date);
+}
+
+
+
+
+
 const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message: Message }, ref: LegacyRef<HTMLDivElement> | undefined) => {
     // console.log('ChatBubble:', "SENDER:", sender, "MESSAGE:", message);
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+    const sendTime = formatDateBasedOnToday(message.sendTime);
     function handleDropdown() {
         setIsDropdownOpen(!isDropdownOpen);
     }
@@ -28,15 +55,16 @@ const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message
             <Link to={`/profile/${sender.id}`}>
                 <img className="w-8 h-8 rounded-full border border-black" src={sender.imgUrl || EmptyUser} alt="sender image" />
             </Link>
-            <div className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 ${bubbleColorClasses}`} >
-                <div dir={isSender ? 'rtl' : undefined} className="flex items-center space-x-2 rtl:space-x-reverse justify-between">
-                    <Link to={`/profile/${sender.id}`}>
-                        <span className="text-sm font-semibold text-gray-900 dark:text-white">{sender.firstName} {sender.lastName}</span>
-                    </Link>
-                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{message.sendTime}</span>
+            <div className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 pb-2 border-gray-200 ${bubbleColorClasses}`} >
+                <Link to={`/profile/${sender.id}`}>
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{sender.firstName} {sender.lastName}</span>
+                </Link>
+                <div className="flex items-center space-x-2 justify-between">
+                    {isSender && <span className="flex self-end text-sm font-normal text-gray-500 dark:text-gray-400">{sendTime}</span>}
+                    <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.content}</p>
+                    {!isSender && <span className="flex self-end text-sm font-normal text-gray-500 dark:text-gray-400">{sendTime}</span>}
+
                 </div>
-                <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.content}</p>
-                {/* {isSender && <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{message.status}</span>} */}
             </div>
             {isSender && (
                 <div className='relative h-full flex align-middle'>
