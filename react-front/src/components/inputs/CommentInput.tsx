@@ -1,10 +1,47 @@
-import { Form } from "react-router-dom";
+import { useState } from "react";
+import { Form, useNavigate } from "react-router-dom";
+import { getToken } from "../../auth";
 
-function CommentInput() {
+function CommentInput({ id }: { id: string }) {
+    const [comment, setComment] = useState('');
+    const navigate = useNavigate();
+
+    async function handleSubmit(e: any) {
+        e.preventDefault();
+        const token = getToken();
+
+        const value = comment.trim();
+        if (!value) {
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(value)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                setComment('');
+                navigate(`/events/${id}`);
+
+            } else {
+                console.error('Failed to comment the event');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    }
 
     return (
 
-        <Form method="POST">
+        <Form method="POST" onSubmit={handleSubmit}>
             <label htmlFor="chat" className="sr-only">Your message</label>
             <div className="flex items-center px-3 py-2 rounded-lg bg-gray-50/40 dark:bg-gray-700">
                 <button type="button" className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
@@ -16,6 +53,8 @@ function CommentInput() {
                 <input
                     id="chat"
                     name="comment"
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}
                     className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
                     placeholder="Your comment..."
                 ></input>

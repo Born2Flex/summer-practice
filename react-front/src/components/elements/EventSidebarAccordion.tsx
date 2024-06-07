@@ -17,6 +17,7 @@ import Host from "../../interfaces/HostInterface";
 import { Link } from "react-router-dom";
 import CommentInput from "../inputs/CommentInput";
 import CommentBubble from "./CommentBubble";
+import ShortUser from "../../interfaces/ShortUserInterface";
 
 const comments = [
     {
@@ -40,6 +41,7 @@ interface EventSidebarAccordionProps {
     id: string;
     description: string;
     locationName: string;
+    participants: ShortUser[];
     currentParticipants: number;
     maxParticipants: number | null;
     eventComments: Comment[];
@@ -67,6 +69,7 @@ export function EventSidebarAccordion({
     id,
     description,
     locationName,
+    participants,
     currentParticipants,
     maxParticipants,
     eventComments,
@@ -74,8 +77,6 @@ export function EventSidebarAccordion({
     availability,
     eventType,
 }: EventSidebarAccordionProps) {
-
-    // const [stateComments, setComments] = useState(eventComments);
 
     const [openAcc1, setOpenAcc1] = useState(true);
     const [openAcc2, setOpenAcc2] = useState(false);
@@ -95,40 +96,6 @@ export function EventSidebarAccordion({
             ? `${currentParticipants}/${maxParticipants} people`
             : `${currentParticipants} people`;
     };
-
-    // const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-
-    //     const token = localStorage.getItem('jwt');
-    //     if (!token) {
-    //         throw new Error('No JWT token found');
-    //     }
-
-    //     const formData = new FormData(event.currentTarget);
-    //     const newCommentText = formData.get('comment') as string;
-
-    //     try {
-    //         const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`
-    //             },
-    //             body: `"${newCommentText.trim()}"`
-    //         });
-
-    //         if (response.ok) {
-    //             const newCommentFromServer = await response.json();
-    //             console.log(newCommentFromServer);
-    //             setComments([...stateComments, newCommentFromServer]);
-    //         } else {
-    //             console.error('Failed to add comment');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-
 
     return (
         <div>
@@ -186,20 +153,20 @@ export function EventSidebarAccordion({
                             </span>
 
                             <div className='mt-3 flex items-center justify-center gap-2'>
-                                {comments.slice(0, 4).map((comment, index) => (
+                                {participants.slice(0, 4).map((comment, index) => (
                                     <div
                                         key={index}
                                         className={`relative overflow-hidden rounded-full ${index !== 0 ? "-ml-5" : ""}`}
                                         style={{ width: '24px', height: '24px' }}
                                     >
                                         <img
-                                            src={comment.image}
+                                            src={comment.imgUrl || EmptyUser}
                                             alt={`user_${index}`}
-                                            className='rounded-full object-cover' />
+                                            className='rounded-full object-cover aspect-square' />
                                     </div>
 
                                 ))}
-                                {comments.length > 4 && (
+                                {participants.length > 4 && (
                                     <div
                                         className='relative flex justify-center items-center overflow-hidden rounded-full -ml-5 bg-gray-500 border border-gray-900'
                                         style={{ width: '24px', height: '24px' }}
@@ -207,6 +174,11 @@ export function EventSidebarAccordion({
                                         <span className="text-gray-200 text-xs font-thin">
                                             +{comments.length - 4}
                                         </span>
+                                    </div>
+                                )}
+                                {participants.length === 0 && (
+                                    <div className='flex justify-center items-center w-6 h-6 bg-gray-500 rounded-full'>
+                                        <span className='text-gray-200 text-xs font-thin'>0</span>
                                     </div>
                                 )}
                             </div>
@@ -274,7 +246,8 @@ export function EventSidebarAccordion({
                             </div>
                         )}
                     </div>
-                    <CommentInput />
+
+                    <CommentInput id={id} />
                 </AccordionBody>
             </Accordion></div>
     );
