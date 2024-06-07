@@ -12,6 +12,7 @@ import EventsSidebar from './components/sections/EventsSidebar.tsx';
 import EditProfile, { action as editProfileAction } from './pages/EditProfile.tsx';
 import ChatSection, { loader as chatUserLoader } from './components/sections/ChatSection.tsx';
 import ChatLayout, { loader as userChatsLoader } from './pages/ChatLayout.tsx';
+import NoChatSelectedSection from './components/sections/NoChatSelectedSection.tsx';
 
 
 function App() {
@@ -79,16 +80,18 @@ function App() {
         {
           path: 'chat',
           element: <ChatLayout />,
+          id: 'chat-layout',
           loader: userChatsLoader,
           children: [
             {
               index: true,
-              element: <ChatSection />,
-              loader: chatUserLoader,
+              element: <NoChatSelectedSection />,
+              // loader: chatUserLoader,
             },
             {
               path: ':chatId',
               element: <ChatSection />,
+              id: 'chat-section',
               loader: chatUserLoader,
             }
           ]

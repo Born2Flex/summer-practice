@@ -1,59 +1,71 @@
-import { Outlet, redirect, useLoaderData } from "react-router-dom";
+import { Await, Outlet, defer, redirect, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import ChatsList from "../components/sections/ChatsList";
-import { getToken, getUserId } from "../auth";
-import SockJS from 'sockjs-client';
-import { over } from 'stompjs';
+import { getToken } from "../auth";
 import ShortChat from "../interfaces/ShortChatInterface";
+import { useWebSocket } from "../context/WebSocketContext";
+import { Suspense } from "react";
 
 function ChatLayout() {
-    const chats = useLoaderData() as ShortChat[];
+    console.log("ChatLayout MOUNTED");
+    const { chats } = useLoaderData() as { chats: ShortChat[] };
     console.log("user's chats: ", chats);
 
-    const socket = new SockJS('http://localhost:8080/socket');
-    const stompClient = over(socket);
-    const userId = getUserId();
-
-    stompClient.connect({}, () => {
-        console.log('connected');
-        stompClient?.subscribe(`/chat/${userId}/test`, (message: any) => {
-            console.log(message);
-        });
-    }, (error: any) => {
-        console.error(error);
-    });
+    const { hasMessages, setHasMessages } = useWebSocket();
+    if (hasMessages) {
+        setHasMessages(false);
+    }
 
     return (
         <div className='flex flex-1'>
-            <ChatsList chats={chats} />
-            <Outlet />
+            <Suspense >
+                <Await resolve={chats}>
+                    {(chats: ShortChat[]) => (
+                        <>
+                            <ChatsList chats={chats} />
+                            <Outlet />
+                        </>
+                    )}
+
+                </Await>
+            </Suspense>
         </div>
     );
 }
 
 export default ChatLayout;
 
-export async function loader() {
-    const token = getToken();
-    if (!token) {
-        return redirect('/login');
-    }
+async function loadChats(token: string) {
 
     try {
         const response = await fetch(`http://localhost:8080/rest/chats`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch chats');
+            throw new Error('Failed to fetch events');
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log('data:', data);
+
+        return data;
     } catch (error) {
-        console.error('Error fetching chats:', error);
+        console.error('Error fetching events:', error);
+    }
+}
+
+export async function loader() {
+    console.log('ChatLayout loader started');
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
     }
 
+    return defer({
+        chats: loadChats(token)
+    })
 }

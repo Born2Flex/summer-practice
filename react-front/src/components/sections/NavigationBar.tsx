@@ -10,8 +10,11 @@ import { Form, Link, NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faCommentDots, faHouse, faUser, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { getUserId } from "../../auth";
+import { useWebSocket } from "../../context/WebSocketContext";
 
 function NewNavigation({ registered }: { registered: boolean }) {
+
+    const { hasMessages } = useWebSocket()
     const [openNav, setOpenNav] = React.useState(false);
 
     React.useEffect(() => {
@@ -57,9 +60,12 @@ function NewNavigation({ registered }: { registered: boolean }) {
                 as="li"
                 variant="h6"
                 color="blue-gray"
-                className="flex items-center gap-x-2 p-1 font-medium text-gray-600" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                className={`flex items-center gap-x-2 p-1 font-medium ${hasMessages ? 'text-red-500' : 'text-gray-600'}`}
+                placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <FontAwesomeIcon icon={faCommentDots} className="text-gray-500" />
-                <NavLink to="/chat" className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
+                <NavLink
+                    to="/chat"
+                    className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
                     Chat
                 </NavLink>
             </Typography>

@@ -5,81 +5,50 @@ import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useWebSocket } from "../../context/WebSocketContext"
 
 function ChatSection() {
     const chatfetch = useLoaderData() as Chat;
     console.log("user's chat:", chatfetch, new Date());
     const [chat, setChat] = useState(chatfetch);
+    const lastMessageRef = useRef<HTMLDivElement>(null)
+    const { subscribeToChat, sendMessage } = useWebSocket();
 
     useEffect(() => {
         setChat(chatfetch);
+        console.log("INNER EFFECT: ");
+        subscribeToChat(chatfetch.id, (message: any) => {
+            console.log("MESSAGE RECEIVED AND PASSED TO STATE: ", message);
+            setChat((prevChat) => {
+                return {
+                    ...prevChat,
+                    messages: [...prevChat.messages, message]
+                }
+            });
+        });
     }, [chatfetch]);
+
+    useEffect(() => {
+        // Scroll into view when messages change
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [chat.messages]);
+    // useEffect(() => {
+
+    // }, [chat.id]);
 
     console.log("user's state chat: ", chat, new Date());
 
-    if (!chat.participants) {
-        return (
-            <div className="z-0 w-3/4 bg-white/50 flex flex-col items-center justify-center">
-                <p className="text-3xl text-gray-600 font-bold">Select a chat</p>
-            </div>
-        )
-    }
     const userId = getUserId();
     const interlocutor = chat.participants.find(participant => participant.id !== userId) as ShortUser;
-
-    // const messages = [
-    //     {
-    //         senderId: interlocutor.id,
-    //         content: 'Hello, how are you?',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: user.id,
-    //         content: 'I am good, thank you!',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: interlocutor.id,
-    //         content: 'What are you doing?',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: user.id,
-    //         content: 'I am working on a project',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: interlocutor.id,
-    //         content: 'Hello, how are you?',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: user.id,
-    //         content: 'I am good, thank you!',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: interlocutor.id,
-    //         content: 'What are you doing?',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     },
-    //     {
-    //         senderId: user.id,
-    //         content: 'I am working on a project',
-    //         sendTime: new Date().toLocaleTimeString(),
-    //     }
-    // ] as Message[]
 
 
     return (
         <div className="z-0 w-3/4 bg-white/50 flex flex-col">
             <ChatHeader user={interlocutor} />
-            <div className="flex flex-1 flex-col overflow-y-auto px-24">
-                {/* <ChatBubble sender={interlocutor} message={messages[0]} />
-                <ChatBubble sender={user} message={messages[1]} />
-                <ChatBubble sender={interlocutor} message={messages[2]} />
-                <ChatBubble sender={user} message={messages[3]} /> */}
+            <div className="flex flex-1 flex-col overflow-y-auto px-24 custom-scrollbar">
 
                 {chat.messages.length === 0 && (
                     <div className="flex flex-1 justify-center items-center">
@@ -92,13 +61,14 @@ function ChatSection() {
                             key={index}
                             sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
                             message={message}
+                            ref={index === chat.messages.length - 1 ? lastMessageRef : undefined}
                         />
                     ))
                 )}
 
             </div>
             <div className="p-3 pt-0">
-                <CommentInputForm onSubmit={() => { }} />
+                <CommentInputForm chatId={chat.id} onSubmit={sendMessage} />
             </div>
         </div>
     )
@@ -115,19 +85,14 @@ export async function loader({ params }: { params: any }) {
     const chatId = params.chatId;
 
     try {
-        const startTime1 = new Date();
 
-        const response = await fetch(`http://localhost:8080/rest/chats${chatId ? '/' + chatId : ''}`, {
+        const response = await fetch(`http://localhost:8080/rest/chats/${chatId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
         });
-
-        const endTime1 = new Date();
-        const timeTaken1 = Number(endTime1) - Number(startTime1);
-        console.log(`Time taken for getting the chat data: ${timeTaken1}ms`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch chat data');

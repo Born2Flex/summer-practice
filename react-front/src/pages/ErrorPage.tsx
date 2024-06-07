@@ -1,6 +1,7 @@
-import { useRouteError } from 'react-router-dom';
+import { redirect, useRouteError } from 'react-router-dom';
 
 import PageContent from '../components/elements/PageContent';
+import HomePage from './HomePage';
 
 function ErrorPage() {
     const error = useRouteError() as any;
@@ -12,6 +13,10 @@ function ErrorPage() {
 
     if (error.status === 500) {
         message = error.data.message;
+    }
+
+    if (error.message === 'useWebSocket must be used within a WebSocketProvider') {
+        return
     }
 
     if (error.status === 404) {

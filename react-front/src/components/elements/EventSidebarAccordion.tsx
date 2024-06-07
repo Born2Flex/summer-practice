@@ -154,7 +154,7 @@ export function EventSidebarAccordion({
                                     <img
                                         src={host.imgUrl || EmptyUser}
                                         alt='host-img'
-                                        className='rounded-full object-cover'
+                                        className='rounded-full object-cover aspect-square'
                                     />
                                 </div>
                                 <span className="font-semibold text-gray-900">{host.firstName.toUpperCase()} {host.lastName.toUpperCase()}</span>
