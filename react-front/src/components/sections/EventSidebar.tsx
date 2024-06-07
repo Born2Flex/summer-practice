@@ -143,14 +143,7 @@ function EventSidebar() {
 
 export default EventSidebar;
 
-export async function action({ params }: { params: any }) {
-    const eventId = params.id;
-
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-        throw new Error('No JWT token found');
-    }
-
+async function joinEvent(eventId: string, token: string) {
     try {
         const response = await fetch(`http://localhost:8080/rest/events/${eventId}/participate`, {
             method: 'PATCH',
@@ -171,6 +164,57 @@ export async function action({ params }: { params: any }) {
     }
 
     return redirect(`/events/${eventId}`);
+}
+
+async function commentEvent(eventId: string, token: string, data: FormData) {
+    const value = {
+        text: data.get('comment')?.toString()
+    }
+    console.log(value);
+
+    try {
+        const response = await fetch(`http://localhost:8080/rest/events/${eventId}/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(value)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.error('Failed to comment the event');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    return redirect(`/events/${eventId}`);
+
+}
+
+export async function action({ request, params }: { request: any, params: any }) {
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        throw new Error('No JWT token found');
+    }
+
+    const eventId = params.id;
+    const method = request.method;
+
+    if (method === 'PATCH') {
+        return joinEvent(eventId, token);
+    }
+    // if (method === 'DELETE') {
+    //     return leaveEvent(eventId, token);
+    // }
+    if (method === 'POST') {
+        const data = await request.formData();
+        return commentEvent(eventId, token, data);
+    }
 }
 
 export async function loader({ params }: { params: any }) {

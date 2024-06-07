@@ -3,12 +3,12 @@ import { getUserId } from "../../auth";
 import { Message } from "../../interfaces/MessageInterface";
 import { Form } from "react-router-dom";
 
-interface CommentInputFormProps {
+interface ChatInputProps {
     chatId: string;
     onSubmit: (chatId: string, message: any) => void;
 }
 
-function CommentInputForm({ chatId, onSubmit }: CommentInputFormProps) {
+function ChatInput({ chatId, onSubmit }: ChatInputProps) {
     const [messageContent, setMessageContent] = useState("");
     const userId = getUserId();
 
@@ -60,4 +60,4 @@ function CommentInputForm({ chatId, onSubmit }: CommentInputFormProps) {
     )
 }
 
-export default CommentInputForm
+export default ChatInput

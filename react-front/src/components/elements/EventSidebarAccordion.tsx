@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     Accordion,
     AccordionHeader,
     AccordionBody,
 } from "@material-tailwind/react";
-import CommentInputForm from "../forms/CommentInputForm";
-import ChatBubble from "./ChatBubble";
 import Pic1 from "../../assets/photo_2024-05-30_16-20-27.jpg";
 import Pic2 from "../../assets/photo_2024-05-30_16-20-59.jpg";
 import Pic3 from "../../assets/photo_2024-05-30_16-21-05.jpg";
@@ -17,6 +15,8 @@ import Comment from "../../interfaces/CommentInterface";
 import { faLightbulb, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Host from "../../interfaces/HostInterface";
 import { Link } from "react-router-dom";
+import CommentInput from "../inputs/CommentInput";
+import CommentBubble from "./CommentBubble";
 
 const comments = [
     {
@@ -75,10 +75,17 @@ export function EventSidebarAccordion({
     eventType,
 }: EventSidebarAccordionProps) {
 
-    const [stateComments, setComments] = useState(eventComments);
+    // const [stateComments, setComments] = useState(eventComments);
 
     const [openAcc1, setOpenAcc1] = useState(true);
     const [openAcc2, setOpenAcc2] = useState(false);
+    const lastMessageRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [eventComments]);
 
     const handleOpenAcc1 = () => setOpenAcc1((cur) => !cur);
     const handleOpenAcc2 = () => setOpenAcc2((cur) => !cur);
@@ -89,38 +96,38 @@ export function EventSidebarAccordion({
             : `${currentParticipants} people`;
     };
 
-    const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    // const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
 
-        const token = localStorage.getItem('jwt');
-        if (!token) {
-            throw new Error('No JWT token found');
-        }
+    //     const token = localStorage.getItem('jwt');
+    //     if (!token) {
+    //         throw new Error('No JWT token found');
+    //     }
 
-        const formData = new FormData(event.currentTarget);
-        const newCommentText = formData.get('comment') as string;
+    //     const formData = new FormData(event.currentTarget);
+    //     const newCommentText = formData.get('comment') as string;
 
-        try {
-            const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: `"${newCommentText.trim()}"`
-            });
+    //     try {
+    //         const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: `"${newCommentText.trim()}"`
+    //         });
 
-            if (response.ok) {
-                const newCommentFromServer = await response.json();
-                console.log(newCommentFromServer);
-                setComments([...stateComments, newCommentFromServer]);
-            } else {
-                console.error('Failed to add comment');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
+    //         if (response.ok) {
+    //             const newCommentFromServer = await response.json();
+    //             console.log(newCommentFromServer);
+    //             setComments([...stateComments, newCommentFromServer]);
+    //         } else {
+    //             console.error('Failed to add comment');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
 
 
     return (
@@ -252,10 +259,22 @@ export function EventSidebarAccordion({
                 </AccordionHeader>
                 <AccordionBody className="flex flex-1 flex-col gap-y-1">
                     <div className="flex h-[180px] flex-col gap-y-2 overflow-auto custom-scrollbar">
-                        {/* <ChatBubble />
-                        <ChatBubble /> */}
+                        {eventComments.map((comment, index) => (
+                            <CommentBubble
+                                key={index}
+                                sender={comment.user}
+                                commentText={comment.text}
+                                ref={index === eventComments.length - 1 ? lastMessageRef : undefined}
+                            />
+                        ))}
+
+                        {eventComments.length === 0 && (
+                            <div className="flex flex-1 justify-center items-center">
+                                <p className="text-3xl text-gray-600 font-bold">No comments yet</p>
+                            </div>
+                        )}
                     </div>
-                    <CommentInputForm onSubmit={handleCommentSubmit} />
+                    <CommentInput />
                 </AccordionBody>
             </Accordion></div>
     );
