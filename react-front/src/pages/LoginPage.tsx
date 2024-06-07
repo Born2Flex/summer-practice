@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
-import { Form, NavLink, redirect } from "react-router-dom";
+import { Form, NavLink, redirect, useActionData } from "react-router-dom";
 import { setToken, setUserId } from "../auth";
 
 function LoginPage() {
     const [passwordShown, setPasswordShown] = useState(false);
     const togglePasswordVisiblity = () => setPasswordShown((cur) => !cur);
+    const data = useActionData() as { error: boolean, message: string } | undefined;
 
     return (
         <div className="z-10 py-2 flex flex-1 justify-center overflow-auto custom-scrollbar bg-radial-blur">
@@ -22,6 +23,7 @@ function LoginPage() {
                         Enter your email and password to log in
                     </Typography>
                     <Form method="post" className="mx-auto max-w-[24rem] text-left">
+
                         <InputWithLabel
                             label="Your Email"
                             id="email"
@@ -31,6 +33,7 @@ function LoginPage() {
                             name="email"
                             placeholder="name@mail.com"
                             required
+                            error={data && data.error}
                         />
                         <InputWithLabel
                             label="Password"
@@ -41,6 +44,7 @@ function LoginPage() {
                             name="password"
                             placeholder="********"
                             required
+                            error={data && data.error}
                             icon={<i onClick={togglePasswordVisiblity}>
                                 {passwordShown ? (
                                     <EyeIcon className="h-5 w-5" />
@@ -101,28 +105,39 @@ export async function action({ request }: { request: Request }) {
 
     console.log(authData)
 
-    const response = await fetch('http://localhost:8080/rest/auth/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(authData)
-    });
+    try {
+        const response = await fetch('http://localhost:8080/rest/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(authData)
+        });
 
-    //const responseData = await response.text();
-    const responseData = await response.json();
-    if (!response.ok) {
-        console.error(`Error ${response.status}: ${responseData}`);
-        throw new Error(`Error ${response.status}: ${responseData}`);
+        const responseData = await response.json();
+        if (response.status === 401) {
+            return { error: true, message: responseData.message };
+        }
+        if (!response.ok) {
+            console.error(`Error ${response.status}: ${responseData}`);
+            throw new Error(`Error ${response.status}: ${responseData}`);
+        }
+
+
+        const token = responseData.token;
+        const userId = responseData.userId;
+
+        console.log('Logged in successfully:', responseData);
+
+        setToken(token);
+        setUserId(userId);
+    } catch (error) {
+        console.error('Error logging in:', error);
     }
 
-    const token = responseData.token;
-    const userId = responseData.userId;
 
-    console.log('Logged in successfully:', responseData);
 
-    setToken(token);
-    setUserId(userId);
+
 
     return redirect('/events');
 }
