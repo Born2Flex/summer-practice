@@ -6,9 +6,21 @@ import { LegacyRef, forwardRef, useState } from 'react';
 import ShortUser from '../../interfaces/ShortUserInterface';
 
 function formatDateBasedOnToday(dateInput: string | Date) {
+    console.log('formatDateBasedOnToday:', "DATE INPUT:", dateInput);
+
+    // Parse the date considering it's in London time
+    // If your input is in UTC and you need to treat it as London time, adjust for London's typical offset
+    // Note: This may not handle daylight saving time changes perfectly.
+    // "Europe/London" timezone will handle daylight saving automatically if using `toLocaleString` or similar.
+    const LONDON_OFFSET = 0; // London is UTC+0 in standard time, but you might need to adjust this if considering daylight saving
+    const KYIV_OFFSET = 3;  // Kyiv is UTC+3
     const date = new Date(dateInput);
+    date.setHours(date.getHours() + KYIV_OFFSET - LONDON_OFFSET);
+
     const now = new Date();
 
+    // Make 'today' based on Kyiv timezone
+    now.setHours(now.getHours() + KYIV_OFFSET);
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const inputDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
@@ -16,7 +28,7 @@ function formatDateBasedOnToday(dateInput: string | Date) {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,
-        timeZone: 'Europe/Kyiv'
+        timeZone: 'Europe/Kyiv'  // Formatting the output in Kyiv time
     };
 
     if (inputDate.getTime() !== today.getTime()) {
@@ -24,8 +36,9 @@ function formatDateBasedOnToday(dateInput: string | Date) {
         options.day = '2-digit';
     }
 
-    return new Intl.DateTimeFormat(navigator.language, options).format(date);
+    return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
 
 const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message: Message }, ref: LegacyRef<HTMLDivElement> | undefined) => {
     // console.log('ChatBubble:', "SENDER:", sender, "MESSAGE:", message);
