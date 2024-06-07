@@ -5,23 +5,21 @@ import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useWebSocket } from "../../context/WebSocketContext"
 
 function ChatSection() {
     const chatfetch = useLoaderData() as Chat;
     console.log("user's chat:", chatfetch, new Date());
     const [chat, setChat] = useState(chatfetch);
-
+    const lastMessageRef = useRef<HTMLDivElement>(null)
     const { subscribeToChat, sendMessage } = useWebSocket();
 
     useEffect(() => {
         setChat(chatfetch);
-    }, [chatfetch]);
-
-    useEffect(() => {
         console.log("INNER EFFECT: ");
-        subscribeToChat(chat.id, (message: any) => {
+        subscribeToChat(chatfetch.id, (message: any) => {
+            console.log("MESSAGE RECEIVED AND PASSED TO STATE: ", message);
             setChat((prevChat) => {
                 return {
                     ...prevChat,
@@ -29,7 +27,17 @@ function ChatSection() {
                 }
             });
         });
-    }, [chat.id]);
+    }, [chatfetch]);
+
+    useEffect(() => {
+        // Scroll into view when messages change
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [chat.messages]);
+    // useEffect(() => {
+
+    // }, [chat.id]);
 
     console.log("user's state chat: ", chat, new Date());
 
@@ -40,11 +48,7 @@ function ChatSection() {
     return (
         <div className="z-0 w-3/4 bg-white/50 flex flex-col">
             <ChatHeader user={interlocutor} />
-            <div className="flex flex-1 flex-col overflow-y-auto px-24">
-                {/* <ChatBubble sender={interlocutor} message={messages[0]} />
-                <ChatBubble sender={user} message={messages[1]} />
-                <ChatBubble sender={interlocutor} message={messages[2]} />
-                <ChatBubble sender={user} message={messages[3]} /> */}
+            <div className="flex flex-1 flex-col overflow-y-auto px-24 custom-scrollbar">
 
                 {chat.messages.length === 0 && (
                     <div className="flex flex-1 justify-center items-center">
@@ -57,6 +61,7 @@ function ChatSection() {
                             key={index}
                             sender={chat.participants.find(participant => participant.id === message.senderId) as ShortUser}
                             message={message}
+                            ref={index === chat.messages.length - 1 ? lastMessageRef : undefined}
                         />
                     ))
                 )}

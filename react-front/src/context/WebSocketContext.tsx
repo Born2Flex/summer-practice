@@ -1,54 +1,46 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import SockJS from 'sockjs-client';
-import { Client, over as StompOver } from 'stompjs';
-
-const WebSocketContext = createContext<WebSocketContextType | null>(null);
+import { Client, over as StompOver, Subscription } from 'stompjs';
 
 interface WebSocketContextType {
     hasMessages: boolean;
     setHasMessages: (hasMessages: boolean) => void;
-    client: Client | null;
-    subscribeToChat: (chatId: string, onIncomingMessage: (message: any) => void) => void;
     sendMessage: (chatId: string, message: any) => void;
+    subscribeToChat: (chatId: string, onIncomingMessage: (message: any) => void) => void;
+    client: Client | null;
 }
+
+const subscriptions = new Map<string, Subscription>();
+const WebSocketContext = createContext<WebSocketContextType | null>(null);
 
 export const WebSocketProvider = ({ children, userId }: { children: ReactNode, userId: string | null }) => {
     const [client, setClient] = useState<Client | null>(null);
     const [hasMessages, setHasMessages] = useState<boolean>(false);
-    let subscribedChat = null as string | null;
 
     useEffect(() => {
-        console.log("CONTEXT EFFECT TRIGGERED")
-        if (!userId) {
-            if (client) {
-                client.disconnect(() => {
-                    console.log('Disconnected');
-                });
-            }
-            return;
-        }
-        console.log('socket started')
         const socket = new SockJS('http://localhost:8080/socket');
         const stompClient = StompOver(socket);
 
         stompClient.connect({}, () => {
-            console.log('connected');
-            stompClient?.subscribe(`/chat/${userId}/notifications`, (message: any) => {
-                console.log(message);
-                setHasMessages(true);
-            });
+            console.log('Connected');
+            if (userId) {
+                stompClient.subscribe(`/chat/${userId}/notifications`, (message: any) => {
+                    console.log("Notification received:", message);
+                    setHasMessages(true);
+                });
+            }
         }, (error: any) => {
-            console.error(error);
+            console.error('Connection error:', error);
         });
 
         setClient(stompClient);
 
         return () => {
-            if (client) {
-                client.disconnect(() => {
-                    console.log('Disconnected');
-                });
-            }
+            stompClient.disconnect(() => {
+                console.log('Disconnected');
+            });
+            subscriptions.forEach(sub => sub.unsubscribe());
+            subscriptions.clear();
         };
     }, [userId]);
 
@@ -60,30 +52,24 @@ export const WebSocketProvider = ({ children, userId }: { children: ReactNode, u
 
     const subscribeToChat = (chatId: string, onIncomingMessage: (message: any) => void) => {
         if (client && client.connected) {
-            if (subscribedChat === chatId) {
+            const existingSubscription = subscriptions.get(chatId);
+            if (existingSubscription) {
+                console.log("Already subscribed to this chat:", chatId);
                 return;
             }
-            if (subscribedChat == null) {
-                subscribedChat = chatId;
-                client.subscribe(`/chat/${chatId}/messages`, (message: any) => {
-                    console.log(message);
-                    const parsedMessage = JSON.parse(message.body);
-                    onIncomingMessage(parsedMessage);
-                });
-            } else {
-                client.unsubscribe(`/chat/${subscribedChat}/messages`);
-                subscribedChat = chatId;
-                client.subscribe(`/chat/${chatId}/messages`, (message: any) => {
-                    console.log(message);
-                    const parsedMessage = JSON.parse(message.body);
-                    onIncomingMessage(parsedMessage);
-                });
-            }
+
+            console.log("Subscribing to chat:", chatId);
+            const subscription = client.subscribe(`/chat/${chatId}/messages`, (message) => {
+                const parsedMessage = JSON.parse(message.body);
+                onIncomingMessage(parsedMessage);
+            });
+
+            subscriptions.set(chatId, subscription);
         }
-    }
+    };
 
     return (
-        <WebSocketContext.Provider value={{ client, hasMessages, setHasMessages, sendMessage, subscribeToChat }}>
+        <WebSocketContext.Provider value={{ hasMessages, setHasMessages, sendMessage, subscribeToChat, client }}>
             {children}
         </WebSocketContext.Provider>
     );

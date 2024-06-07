@@ -2,10 +2,10 @@ import { getUserId } from '../../auth'
 import { Message } from '../../interfaces/MessageInterface'
 import EmptyUser from "../../assets/empty-user.webp"
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { LegacyRef, forwardRef, useState } from 'react';
 import ShortUser from '../../interfaces/ShortUserInterface';
 
-function ChatBubble({ sender, message }: { sender: ShortUser, message: Message }) {
+const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message: Message }, ref: LegacyRef<HTMLDivElement> | undefined) => {
     // console.log('ChatBubble:', "SENDER:", sender, "MESSAGE:", message);
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -24,7 +24,7 @@ function ChatBubble({ sender, message }: { sender: ShortUser, message: Message }
 
     return (
 
-        <div className={`flex items-start gap-2.5 pt-3 ${chatBubbleClasses}`}>
+        <div ref={ref} className={`flex items-start gap-2.5 pt-3 ${chatBubbleClasses}`}>
             <Link to={`/profile/${sender.id}`}>
                 <img className="w-8 h-8 rounded-full border border-black" src={sender.imgUrl || EmptyUser} alt="sender image" />
             </Link>
@@ -71,6 +71,6 @@ function ChatBubble({ sender, message }: { sender: ShortUser, message: Message }
             )}
         </div>
     )
-}
+});
 
 export default ChatBubble
