@@ -61,6 +61,6 @@ public class ChatController {
     @ApiResponse(responseCode = "200",
             content = {@Content(schema = @Schema(implementation = ChatDto.class), mediaType = "application/json")})
     public ResponseEntity<ChatDto> createChat(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String participantId) {
-        return ResponseEntity.ok(chatService.createChat(authDetails.getUser().getId(), participantId));
+        return ResponseEntity.ok(chatService.createChat(authDetails, authDetails.getUser().getId(), participantId));
     }
 }
