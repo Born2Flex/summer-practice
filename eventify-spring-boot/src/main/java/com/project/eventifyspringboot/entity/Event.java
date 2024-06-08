@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,7 +40,6 @@ public class Event {
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
     private LocalDateTime startDateTime;
-//    @DocumentReference(collection = "comments", lazy = true)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
     private String imgUrl;
 }
