@@ -17,11 +17,7 @@ function UserInformation() {
                 </div>
                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="w-4 h-4 mr-2" />
-                    {profile.location}
-                </div>
-                <div className="mb-2 text-blueGray-600 mt-10">
-                    <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>associate professor of the Department of Informatics in NaUKMA
-
+                    {profile.location ?? 'No location provided'}
                 </div>
             </div>
             <div className="mt-10 py-10 border-t border-blueGray-200 text-center">

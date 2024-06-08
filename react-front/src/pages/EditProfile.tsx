@@ -116,7 +116,7 @@ function EditProfile() {
                                         <Typography
                                             variant="small"
                                             className="mb-2 text-left font-medium !text-gray-900" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                            >
-                                            Event Description
+                                            Profile Description
                                         </Typography>
                                         <Textarea
                                             color="gray"

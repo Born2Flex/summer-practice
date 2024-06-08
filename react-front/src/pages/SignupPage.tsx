@@ -4,6 +4,8 @@ import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, json, redirect, useActionData } from "react-router-dom";
+import { set } from "date-fns";
+import { setToken, setUserId } from "../auth";
 
 function SignupPage() {
     const data: { error: string } = useActionData() as { error: string };
@@ -32,6 +34,7 @@ function SignupPage() {
                             type="text"
                             name="first-name"
                             placeholder="First Name"
+                            minLength={3}
                             required
                         />
                         <InputWithLabel
@@ -43,6 +46,7 @@ function SignupPage() {
                             name="last-name"
                             placeholder="Last Name"
                             required
+                            minLength={3}
                         />
                         <div className="col-span-2">
 
@@ -67,6 +71,7 @@ function SignupPage() {
                             placeholder="********"
                             error={data?.error ? true : false}
                             required
+                            minLength={8}
                             icon={<i onClick={togglePasswordVisiblity}>
                                 {passwordShown ? (
                                     <EyeIcon className="h-5 w-5" />
@@ -83,6 +88,7 @@ function SignupPage() {
                             type={secondaryPasswordShown ? "text" : "password"}
                             name="repeat-password"
                             placeholder="********"
+                            minLength={8}
                             error={data?.error ? true : false}
                             required
                             icon={<i onClick={toggleSecondaryPasswordVisiblity}>
@@ -143,32 +149,34 @@ export async function action({ request }: { request: Request }) {
         return json({ error: 'Passwords do not match.' }, { status: 422 });
     }
 
-    // try {
-    //     const response = await fetch('http://localhost:8080/rest/auth/register', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(authData)
-    //     });
+    try {
+        const response = await fetch('http://localhost:8080/rest/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(authData)
+        });
 
-    //     const responseData = await response.json();
+        const responseData = await response.json();
 
-    //     if (!response.ok) {
-    //         console.error(`Error ${response.status}: ${responseData}`);
-    //         throw new Error(`Error ${response.status}: ${responseData}`);
-    //     }
+        if (!response.ok) {
+            console.error(`Error ${response.status}: ${responseData}`);
+            throw new Error(`Error ${response.status}: ${responseData}`);
+        }
 
-    //     console.log('Created successfully:', responseData);
+        console.log('Created successfully:', responseData);
+        setToken(responseData.token);
+        setUserId(responseData.userId);
 
-    // } catch (error) {
-    //     if (error instanceof Error) {
-    //         console.error('Error sending registration data:', error.message);
-    //     }
-    //     else {
-    //         console.error('Unexpected error:', error);
-    //     }
-    // }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error sending registration data:', error.message);
+        }
+        else {
+            console.error('Unexpected error:', error);
+        }
+    }
 
     return redirect('/events');
 

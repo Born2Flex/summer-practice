@@ -15,7 +15,7 @@ function UserEvents() {
                 </h3>
                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                    Evplore amazing events by {profile.firstName}
+                    Explore amazing events by {profile.firstName}
                 </div>
             </div>
             <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
