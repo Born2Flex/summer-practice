@@ -95,13 +95,6 @@ public class EventController {
         eventService.submitParticipation(authDetails, eventId);
     }
 
-    @PatchMapping("/{eventId}/relinquish")
-    @Operation(summary = "Relinquish participation in event", description = "Relinquish participation in event")
-    @ApiResponse(responseCode = "200", description = "Participation relinquished successfully")
-    public void relinquishParticipation(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId) {
-        eventService.relinquishParticipation(authDetails, eventId);
-    }
-
     @DeleteMapping("/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "204", description = "Event deleted successfully")
