@@ -53,8 +53,7 @@ public class ChatService {
     }
 
     public ChatDto findChatById(AuthDetails authDetails, String chatId) {
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Chat with id " + chatId + " not found"));
+        Chat chat = getChatOrThrow(chatId);
         if (!chat.getParticipants().contains(authDetails.getUser())) {
             log.info("User with id {} trying to access chat with id {}", authDetails.getUser(), chatId);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
@@ -63,8 +62,7 @@ public class ChatService {
     }
 
     public void addChatMessage(String chatId, Message message) {
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + chatId + " not found"));
+        Chat chat = getChatOrThrow(chatId);
         message.setSendTime(LocalDateTime.now(ZoneOffset.UTC));
         chat.getMessages().add(message);
         chat.setLastMessage(message);
@@ -87,5 +85,10 @@ public class ChatService {
             throw new IllegalStateException("No receiver found");
         }
         return receiver;
+    }
+
+    private Chat getChatOrThrow(String chatId) {
+        return chatRepository.findById(chatId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + chatId + " not found"));
     }
 }

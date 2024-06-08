@@ -1,6 +1,5 @@
 package com.project.eventifyspringboot.service;
 
-import com.project.eventifyspringboot.dto.event.EventParticipantsDto;
 import com.project.eventifyspringboot.dto.event.EventShortDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentCreationDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentDto;
@@ -53,8 +52,7 @@ public class EventService {
     }
 
     public CommentDto createComment(AuthDetails authDetails, String eventId, CommentCreationDto comment) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No event with such id"));
+        Event event = getEventOrThrow(eventId);
         Comment commentEntity = commentMapper.toEntity(comment, authDetails.getUser());
         Comment savedComment = commentRepository.save(commentEntity);
         event.getComments().add(savedComment);
@@ -63,8 +61,7 @@ public class EventService {
     }
 
     public EventDto getEventById(String eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
+        Event event = getEventOrThrow(eventId);
         return eventMapper.toDto(event);
     }
 
@@ -82,9 +79,8 @@ public class EventService {
         return eventMapper.toListDto(eventEntities);
     }
 
-    public EventParticipantsDto submitParticipation(AuthDetails authDetails, String eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
+    public void submitParticipation(AuthDetails authDetails, String eventId) {
+        Event event = getEventOrThrow(eventId);
         List<User> participants = event.getParticipants();
         if (participants.contains(authDetails.getUser())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participant already exists");
@@ -93,7 +89,26 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reached max num of Participants");
         }
         event.getParticipants().add(authDetails.getUser());
-        return eventMapper.toParticipantsDto(eventRepository.save(event));
+        eventRepository.save(event);
+    }
+
+    public void relinquishParticipation(AuthDetails authDetails, String eventId) {
+        Event event = getEventOrThrow(eventId);
+        List<User> participants = event.getParticipants();
+        if (!participants.contains(authDetails.getUser())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participant not exists");
+        }
+        event.getParticipants().remove(authDetails.getUser());
+        eventRepository.save(event);
+    }
+
+
+    public void deleteEvent(AuthDetails authDetails, String eventId) {
+        Event event = getEventOrThrow(eventId);
+        if (!event.getHost().equals(authDetails.getUser())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not event host");
+        }
+        eventRepository.delete(event);
     }
 
     public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
@@ -135,5 +150,10 @@ public class EventService {
 
     private List<String> normalizeTags(List<String> tags) {
         return tags.stream().map(String::toLowerCase).toList();
+    }
+
+    private Event getEventOrThrow(String eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
     }
 }

@@ -1,6 +1,5 @@
 package com.project.eventifyspringboot.controller;
 
-import com.project.eventifyspringboot.dto.event.EventParticipantsDto;
 import com.project.eventifyspringboot.dto.event.EventShortDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentCreationDto;
 import com.project.eventifyspringboot.dto.event.comment.CommentDto;
@@ -91,10 +90,23 @@ public class EventController {
 
     @PatchMapping("/{eventId}/participate")
     @Operation(summary = "Submit participation in event", description = "Submit participation in event")
-    @ApiResponse(responseCode = "200", description = "Participation submitted successfully",
-            content = {@Content(schema = @Schema(implementation = EventParticipantsDto.class), mediaType = "application/json")})
-    public EventParticipantsDto submitParticipation(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId) {
-        return eventService.submitParticipation(authDetails, eventId);
+    @ApiResponse(responseCode = "200", description = "Participation submitted successfully")
+    public void submitParticipation(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId) {
+        eventService.submitParticipation(authDetails, eventId);
+    }
+
+    @PatchMapping("/{eventId}/relinquish")
+    @Operation(summary = "Relinquish participation in event", description = "Relinquish participation in event")
+    @ApiResponse(responseCode = "200", description = "Participation relinquished successfully")
+    public void relinquishParticipation(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId) {
+        eventService.relinquishParticipation(authDetails, eventId);
+    }
+
+    @DeleteMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "Event deleted successfully")
+    public void deleteEvent(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId) {
+        eventService.deleteEvent(authDetails, eventId);
     }
 
     @GetMapping("/types")

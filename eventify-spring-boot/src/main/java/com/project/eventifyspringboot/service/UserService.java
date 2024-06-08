@@ -31,8 +31,7 @@ public class UserService {
     }
 
     public UserFullDto getUserInfo(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        User user = getUserOrThrow(userId);
         UserFullDto userFullDto = userMapper.toUserFullDto(user);
         List<EventShortDto> hostedEvents = eventService.getUserEvents(user.getId());
         userFullDto.setNumOfEvents(hostedEvents.size());
@@ -44,8 +43,7 @@ public class UserService {
     }
 
     public UserShortDto getShortUserInfo(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        User user = getUserOrThrow(userId);
         return userMapper.toShortUserDto(user);
     }
 
@@ -56,5 +54,10 @@ public class UserService {
         }
         userMapper.updateUserEntity(userDto, user);
         return userMapper.toUserDto(userRepository.save(user));
+    }
+
+    private User getUserOrThrow(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 }
