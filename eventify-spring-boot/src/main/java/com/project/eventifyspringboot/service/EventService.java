@@ -81,27 +81,21 @@ public class EventService {
 
     public void submitParticipation(AuthDetails authDetails, String eventId) {
         Event event = getEventOrThrow(eventId);
+        User user = authDetails.getUser();
         List<User> participants = event.getParticipants();
-        if (participants.contains(authDetails.getUser())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participant already exists");
+
+        if (participants.contains(user)) {
+            log.info("User id = {} relinquish participation in Event id = {}", user.getId(), eventId);
+            participants.remove(user);
+        } else {
+            if (event.getMaxParticipants() != null && event.getMaxParticipants().equals(participants.size())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reached max number of Participants");
+            }
+            participants.add(user);
+            log.info("User id = {} submitted participation in Event id = {}", user.getId(), eventId);
         }
-        if (event.getMaxParticipants() != null && event.getMaxParticipants() == participants.size()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reached max num of Participants");
-        }
-        event.getParticipants().add(authDetails.getUser());
         eventRepository.save(event);
     }
-
-    public void relinquishParticipation(AuthDetails authDetails, String eventId) {
-        Event event = getEventOrThrow(eventId);
-        List<User> participants = event.getParticipants();
-        if (!participants.contains(authDetails.getUser())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participant not exists");
-        }
-        event.getParticipants().remove(authDetails.getUser());
-        eventRepository.save(event);
-    }
-
 
     public void deleteEvent(AuthDetails authDetails, String eventId) {
         Event event = getEventOrThrow(eventId);
