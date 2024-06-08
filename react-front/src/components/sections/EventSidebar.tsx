@@ -170,10 +170,7 @@ async function joinEvent(eventId: string, token: string) {
             },
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-        } else {
+        if (!response.ok) {
             console.error('Failed to join the event');
         }
     } catch (error) {
@@ -183,30 +180,7 @@ async function joinEvent(eventId: string, token: string) {
     return redirect(`/events/${eventId}`);
 }
 
-async function leaveEvent(eventId: string, token: string) {
-    try {
-        const response = await fetch(`http://localhost:8080/rest/events/${eventId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-        } else {
-            console.error('Failed to leave the event');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-
-    return redirect(`/events/${eventId}`);
-}
-
-export async function action({ request, params }: { request: any, params: any }) {
+export async function action({ params }: { request: any, params: any }) {
 
     const token = getToken();
     if (!token) {
@@ -214,14 +188,7 @@ export async function action({ request, params }: { request: any, params: any })
     }
 
     const eventId = params.id;
-    const method = request.method;
-
-    if (method === 'PATCH') {
-        return joinEvent(eventId, token);
-    }
-    if (method === 'DELETE') {
-        return leaveEvent(eventId, token);
-    }
+    return joinEvent(eventId, token);
 }
 
 export async function loader({ params }: { params: any }) {

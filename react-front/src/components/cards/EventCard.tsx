@@ -53,6 +53,7 @@ export const ribbonVariants = {
 }
 
 function EventCard({ event, deletable }: { event: ShortEvent, deletable?: boolean }) {
+    // console.log(event)
     return (
         <div
             className="relative bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
@@ -67,7 +68,7 @@ function EventCard({ event, deletable }: { event: ShortEvent, deletable?: boolea
                         className='text-red-500'
                         variant='text'
                         size='sm'
-                        onClick={() => console.log('delete event')}
+                        type='submit'
                         placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
                     >
                         <FontAwesomeIcon icon={faTrashCan} />

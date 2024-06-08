@@ -91,7 +91,7 @@ function EventsSidebar() {
 
                         <Await resolve={data.events}>
                             {(events: ShortEvent[]) => events.map((event: ShortEvent, index: number) => (
-                                <EventCard key={index} {...event} />
+                                <EventCard key={index} event={event} />
                             ))}
                         </Await>
                     </Suspense>

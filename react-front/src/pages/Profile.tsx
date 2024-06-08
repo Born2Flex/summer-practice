@@ -172,9 +172,9 @@ async function editProfile({ token, userId }: { token: string, userId: string })
     }
 }
 
-async function deleteEvent({ token, eventId }: { token: string, eventId: string }) {
+async function deleteEvent({ token, eventId, userId }: { token: string, eventId: string, userId: string }) {
     try {
-        const response = await fetch(`http://localhost:8080/rest/event/${eventId}`, {
+        const response = await fetch(`http://localhost:8080/rest/events/${eventId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ async function deleteEvent({ token, eventId }: { token: string, eventId: string 
             throw new Error('Failed to delete chat');
         }
 
-        return redirect('/profile');
+        return redirect(`/profile/${userId}`);
     } catch (error) {
         console.error('Error fetching chats:', error);
     }
@@ -205,8 +205,9 @@ export async function action({ request, params }: { request: any, params: any })
     }
 
     if (method === 'DELETE') {
-        const eventId = request.formData().get('eventId');
-        return deleteEvent({ token, eventId });
+        const data = await request.formData();
+        const eventId = data.get('eventId');
+        return deleteEvent({ token, eventId, userId: params.userId });
     }
 }
 
