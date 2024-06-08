@@ -107,6 +107,7 @@ function EventSidebar() {
                     id={id}
                     description={description}
                     locationName={locationName.length > 10 ? locationName.substring(0, locationName.lastIndexOf(',')) : locationName}
+                    participants={participants}
                     currentParticipants={currentParticipants}
                     maxParticipants={maxParticipants}
                     eventComments={comments}
@@ -143,14 +144,7 @@ function EventSidebar() {
 
 export default EventSidebar;
 
-export async function action({ params }: { params: any }) {
-    const eventId = params.id;
-
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-        throw new Error('No JWT token found');
-    }
-
+async function joinEvent(eventId: string, token: string) {
     try {
         const response = await fetch(`http://localhost:8080/rest/events/${eventId}/participate`, {
             method: 'PATCH',
@@ -171,6 +165,28 @@ export async function action({ params }: { params: any }) {
     }
 
     return redirect(`/events/${eventId}`);
+}
+
+export async function action({ request, params }: { request: any, params: any }) {
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        throw new Error('No JWT token found');
+    }
+
+    const eventId = params.id;
+    const method = request.method;
+
+    if (method === 'PATCH') {
+        return joinEvent(eventId, token);
+    }
+    // if (method === 'DELETE') {
+    //     return leaveEvent(eventId, token);
+    // }
+    // if (method === 'POST') {
+    //     const data = await request.formData();
+    //     return commentEvent(eventId, token, data);
+    // }
 }
 
 export async function loader({ params }: { params: any }) {

@@ -2,12 +2,10 @@ package com.project.eventifyspringboot.service;
 
 import com.project.eventifyspringboot.dto.chat.ChatDto;
 import com.project.eventifyspringboot.dto.chat.ChatShortDto;
-import com.project.eventifyspringboot.dto.chat.MessageDto;
 import com.project.eventifyspringboot.entity.Chat;
 import com.project.eventifyspringboot.entity.Message;
 import com.project.eventifyspringboot.entity.User;
 import com.project.eventifyspringboot.mapper.ChatMapper;
-import com.project.eventifyspringboot.mapper.MessageMapper;
 import com.project.eventifyspringboot.repository.ChatRepository;
 import com.project.eventifyspringboot.repository.UserRepository;
 import com.project.eventifyspringboot.security.AuthDetails;
@@ -18,6 +16,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +28,14 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
     private final ChatMapper chatMapper;
-    private final MessageMapper messageMapper;
     private final SimpMessagingTemplate template;
 
     public ChatDto createChat(String participantOne, String participantTwo) {
+        List<ChatShortDto> participantOneChats = findChatsByUserId(participantOne);
+        boolean chatExists = participantOneChats.stream().anyMatch(x -> x.getParticipant().getId().equals(participantTwo));
+        if (chatExists) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Chat already exists");
+        }
         Chat chat = new Chat();
 
         List<User> participants = userRepository.findAllById(List.of(participantOne, participantTwo));
@@ -58,7 +62,7 @@ public class ChatService {
     public void addChatMessage(String chatId, Message message) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat with id " + chatId + " not found"));
-
+        message.setSendTime(LocalDateTime.now(ZoneOffset.UTC));
         chat.getMessages().add(message);
         chat.setLastMessage(message);
         chatRepository.save(chat);

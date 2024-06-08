@@ -1,51 +1,13 @@
 import { getUserId } from '../../auth'
-import { Message } from '../../interfaces/MessageInterface'
 import EmptyUser from "../../assets/empty-user.webp"
 import { Link } from 'react-router-dom';
 import { LegacyRef, forwardRef, useState } from 'react';
 import ShortUser from '../../interfaces/ShortUserInterface';
 
-function formatDateBasedOnToday(dateInput: string | Date) {
-    console.log('formatDateBasedOnToday:', "DATE INPUT:", dateInput);
-
-    // Parse the date considering it's in London time
-    // If your input is in UTC and you need to treat it as London time, adjust for London's typical offset
-    // Note: This may not handle daylight saving time changes perfectly.
-    // "Europe/London" timezone will handle daylight saving automatically if using `toLocaleString` or similar.
-    const LONDON_OFFSET = 0; // London is UTC+0 in standard time, but you might need to adjust this if considering daylight saving
-    const KYIV_OFFSET = 3;  // Kyiv is UTC+3
-    const date = new Date(dateInput);
-    date.setHours(date.getHours() + KYIV_OFFSET - LONDON_OFFSET);
-
-    const now = new Date();
-
-    // Make 'today' based on Kyiv timezone
-    now.setHours(now.getHours() + KYIV_OFFSET);
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const inputDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    const options: Intl.DateTimeFormatOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-        timeZone: 'Europe/Kyiv'  // Formatting the output in Kyiv time
-    };
-
-    if (inputDate.getTime() !== today.getTime()) {
-        options.month = '2-digit';
-        options.day = '2-digit';
-    }
-
-    return new Intl.DateTimeFormat('en-US', options).format(date);
-}
-
-
-const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message: Message }, ref: LegacyRef<HTMLDivElement> | undefined) => {
-    // console.log('ChatBubble:', "SENDER:", sender, "MESSAGE:", message);
+const CommentBubble = forwardRef(({ sender, commentText }: { sender: ShortUser, commentText: string }, ref: LegacyRef<HTMLDivElement> | undefined) => {
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const sendTime = formatDateBasedOnToday(message.sendTime);
     function handleDropdown() {
         setIsDropdownOpen(!isDropdownOpen);
     }
@@ -69,9 +31,7 @@ const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message
                     <span className="text-sm font-semibold text-gray-900 dark:text-white">{sender.firstName} {sender.lastName}</span>
                 </Link>
                 <div className="flex items-center space-x-2 justify-between">
-                    {isSender && <div className="inline-flex text-start w-20 self-end text-xs font-normal text-gray-500 dark:text-gray-400">{sendTime}</div>}
-                    <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.content}</p>
-                    {!isSender && <span className="flex w-max self-end text-xs font-normal text-gray-500 dark:text-gray-400">{sendTime}</span>}
+                    <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{commentText}</p>
 
                 </div>
             </div>
@@ -110,4 +70,4 @@ const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message
     )
 });
 
-export default ChatBubble
+export default CommentBubble

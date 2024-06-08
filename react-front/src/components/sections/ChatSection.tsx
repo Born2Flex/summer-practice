@@ -1,12 +1,12 @@
 import { redirect, useLoaderData } from "react-router-dom"
 import ChatHeader from "./ChatHeader"
 import { getToken, getUserId } from "../../auth"
-import CommentInputForm from "../forms/CommentInputForm"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
 import { useEffect, useRef, useState } from "react"
 import { useWebSocket } from "../../context/WebSocketContext"
+import ChatInput from "../inputs/ChatInput"
 
 function ChatSection() {
     const chatfetch = useLoaderData() as Chat;
@@ -30,14 +30,10 @@ function ChatSection() {
     }, [chatfetch]);
 
     useEffect(() => {
-        // Scroll into view when messages change
         if (lastMessageRef.current) {
             lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }, [chat.messages]);
-    // useEffect(() => {
-
-    // }, [chat.id]);
 
     console.log("user's state chat: ", chat, new Date());
 
@@ -68,7 +64,7 @@ function ChatSection() {
 
             </div>
             <div className="p-3 pt-0">
-                <CommentInputForm chatId={chat.id} onSubmit={sendMessage} />
+                <ChatInput chatId={chat.id} onSubmit={sendMessage} />
             </div>
         </div>
     )

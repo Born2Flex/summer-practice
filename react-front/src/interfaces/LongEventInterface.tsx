@@ -1,6 +1,7 @@
 import Host from "./HostInterface";
 import Location from "./LocationInterface";
 import Comment from "./CommentInterface";
+import ShortUser from "./ShortUserInterface";
 
 export interface LongEvent {
     id: string;
@@ -18,5 +19,5 @@ export interface LongEvent {
     comments: Comment[];
     tags: string[];
     imgUrl: string | null;
-    participants: any[];
+    participants: ShortUser[];
 }
