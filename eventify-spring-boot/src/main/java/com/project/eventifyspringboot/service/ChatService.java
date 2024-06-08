@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,11 +31,13 @@ public class ChatService {
     private final ChatMapper chatMapper;
     private final SimpMessagingTemplate template;
 
-    public ChatDto createChat(String participantOne, String participantTwo) {
+    public ChatDto createChat(AuthDetails authDetails, String participantOne, String participantTwo) {
         List<ChatShortDto> participantOneChats = findChatsByUserId(participantOne);
-        boolean chatExists = participantOneChats.stream().anyMatch(x -> x.getParticipant().getId().equals(participantTwo));
-        if (chatExists) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Chat already exists");
+        Optional<ChatShortDto> existingChat = participantOneChats.stream()
+                .filter(x -> x.getParticipant().getId().equals(participantTwo))
+                .findFirst();
+        if (existingChat.isPresent()) {
+            return findChatById(authDetails, existingChat.get().getId());
         }
         Chat chat = new Chat();
 

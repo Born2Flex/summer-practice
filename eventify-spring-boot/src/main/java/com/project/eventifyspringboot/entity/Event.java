@@ -39,7 +39,7 @@ public class Event {
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private Point location;
     private LocalDateTime startDateTime;
-    @DocumentReference(collection = "comments", lazy = true)
+//    @DocumentReference(collection = "comments", lazy = true)
     private List<Comment> comments;
     private String imgUrl;
 }

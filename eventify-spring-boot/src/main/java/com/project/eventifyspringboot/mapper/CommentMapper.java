@@ -10,7 +10,7 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
-    @Mapping(target = "id", ignore = true)
+//    @Mapping(target = "id", ignore = true)
     @Mapping(target = "text", source = "commentDto.text")
     @Mapping(target = "user", source = "user")
     Comment toEntity(CommentCreationDto commentDto, User user);
