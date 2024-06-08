@@ -149,14 +149,9 @@ function Profile() {
 
 export default Profile
 
-export async function action({ params }: { params: any }) {
-    const token = getToken();
-    if (!token) {
-        return redirect('/login');
-    }
-
+async function editProfile({ token, userId }: { token: string, userId: string }) {
     try {
-        const response = await fetch(`http://localhost:8080/rest/chats/new/${params.userId}`, {
+        const response = await fetch(`http://localhost:8080/rest/chats/new/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -174,6 +169,44 @@ export async function action({ params }: { params: any }) {
         return redirect(`/chat/${responseJson.id}`);
     } catch (error) {
         console.error('Error fetching chats:', error);
+    }
+}
+
+async function deleteEvent({ token, eventId }: { token: string, eventId: string }) {
+    try {
+        const response = await fetch(`http://localhost:8080/rest/event/${eventId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete chat');
+        }
+
+        return redirect('/profile');
+    } catch (error) {
+        console.error('Error fetching chats:', error);
+    }
+}
+
+export async function action({ request, params }: { request: any, params: any }) {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    const method = request.method;
+
+    if (method === 'POST') {
+        return editProfile({ token, userId: params.userId });
+    }
+
+    if (method === 'DELETE') {
+        const eventId = request.formData().get('eventId');
+        return deleteEvent({ token, eventId });
     }
 }
 

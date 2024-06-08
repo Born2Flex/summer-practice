@@ -4,7 +4,6 @@ import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, json, redirect, useActionData } from "react-router-dom";
-import { set } from "date-fns";
 import { setToken, setUserId } from "../auth";
 
 function SignupPage() {

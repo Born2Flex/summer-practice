@@ -1,7 +1,8 @@
-import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake, faUsersViewfinder, faShop, faGlobe, faMusic, faPalette, faComments, faRobot, faMoneyBill, faHotdog, faGraduationCap } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake, faUsersViewfinder, faShop, faGlobe, faMusic, faPalette, faComments, faRobot, faMoneyBill, faHotdog, faGraduationCap, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { NavLink } from 'react-router-dom'
+import { Form, NavLink } from 'react-router-dom'
 import ShortEvent from '../../interfaces/ShortEventInterface';
+import { IconButton } from '@material-tailwind/react';
 
 export const colorVariants = {
     'PARTY': 'bg-yellow-500 group-hover/item:shadow-yellow-300',
@@ -45,31 +46,39 @@ export const iconVariants = {
     "CEREMONY": faGraduationCap,
 }
 
-/*export const ribbonVariants = {
-    'public': 'bg-green-500',
-    'paid': 'bg-yellow-300',
-    'private': 'bg-red-500',
-}*/
-
 export const ribbonVariants = {
     'PUBLIC': 'bg-green-500',
     'PAID': 'bg-yellow-300',
     'PRIVATE': 'bg-red-500',
 }
 
-function EventCard(event: ShortEvent) {
+function EventCard({ event, deletable }: { event: ShortEvent, deletable?: boolean }) {
     return (
         <div
-            className="bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
+            className="relative bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
             rounded-lg shadow-md flex card text-gray-700"
             style={{ transition: "background-color 0.3s" }}
         >
             <div className={`w-2 text-white flex items-center rounded-l-lg shadow-xl ${ribbonVariants[event.availability as keyof typeof ribbonVariants]}`} />
+            {deletable && (
+                <Form method='DELETE' className="absolute top-1 right-1">
+                    <input type='hidden' name='eventId' value={event.id} readOnly />
+                    <IconButton
+                        className='text-red-500'
+                        variant='text'
+                        size='sm'
+                        onClick={() => console.log('delete event')}
+                        placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                    >
+                        <FontAwesomeIcon icon={faTrashCan} />
+                    </IconButton>
+                </Form>
+            )}
 
             <div className="w-full flex flex-col">
                 <div className="flex flex-1 p-4">
                     <div className='w-3/4'>
-                        <h3 className="text-xl mb-1 text-gray-700">{event.title}</h3>
+                        <h3 className="text-xl mb-1 text-gray-700">{event.title.length > 20 ? event.title.slice(0, 20) + '...' : event.title}</h3>
                         <div className="text-xs flex items-center mb-4 gap-2">
                             <FontAwesomeIcon icon={faLocationDot} /> {event.locationName}
                         </div>

@@ -23,7 +23,7 @@ function UserEvents() {
                     <div ref={scrollRef as any} className="flex overflow-x-auto gap-x-6 custom-scrollbar py-3 w-full lg:w-11/12 px-4 shadow-inner">
                         {profile.events.map((event, index) => (
                             <div key={index} className="min-w-[40%] shrink-0 text-left">
-                                <EventCard {...event} />
+                                <EventCard event={event} deletable />
                             </div>
                         ))}
                     </div>

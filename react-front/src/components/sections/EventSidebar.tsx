@@ -42,7 +42,8 @@ function EventSidebar() {
     const weekday = format(date, 'EEEE');
     const time = format(date, 'h:mm a');
 
-    const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants) || participants.some(participant => participant.id === userId);
+    const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants);
+    const isSubscibed = participants.some(participant => participant.id === userId);
 
     return (
         <section className='transition-all duration-500 delay-150 has-[nav]:w-1/3 w-1/4 flex flex-col justify-between min-w-[384px] bg-white z-10 relative shadow-left py-4 pl-7 pr-3 bg-white/70 overflow-hidden'>
@@ -123,19 +124,34 @@ function EventSidebar() {
                     <p className="text-sm font-semibold text-gray-500">{maxParticipants === null ? 'Unlimited spots' : `${maxParticipants - currentParticipants} Spots left`}</p>
                 </div>
 
-                <Form method='PATCH' className="w-1/2">
-                    <Button
-                        type="submit"
-                        variant="filled"
-                        fullWidth
-                        size="lg"
-                        color="green"
-                        placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                        disabled={isJoinDisabled}
-                    >
-                        Join
-                    </Button>
-                </Form>
+                {isSubscibed ? (
+                    <Form method='DELETE' className="w-1/2">
+                        <Button
+                            variant="outlined"
+                            type="submit"
+                            fullWidth
+                            size="lg"
+                            color="red"
+                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                        >
+                            Leave
+                        </Button>
+                    </Form>
+                ) : (
+                    <Form method='PATCH' className="w-1/2">
+                        <Button
+                            type="submit"
+                            variant="filled"
+                            fullWidth
+                            size="lg"
+                            color="green"
+                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                            disabled={isJoinDisabled}
+                        >
+                            Join
+                        </Button>
+                    </Form>
+                )}
             </div>
 
         </section>
@@ -167,11 +183,34 @@ async function joinEvent(eventId: string, token: string) {
     return redirect(`/events/${eventId}`);
 }
 
+async function leaveEvent(eventId: string, token: string) {
+    try {
+        const response = await fetch(`http://localhost:8080/rest/events/${eventId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.error('Failed to leave the event');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+    return redirect(`/events/${eventId}`);
+}
+
 export async function action({ request, params }: { request: any, params: any }) {
 
-    const token = localStorage.getItem('jwt');
+    const token = getToken();
     if (!token) {
-        throw new Error('No JWT token found');
+        return redirect('/login/');
     }
 
     const eventId = params.id;
@@ -180,13 +219,9 @@ export async function action({ request, params }: { request: any, params: any })
     if (method === 'PATCH') {
         return joinEvent(eventId, token);
     }
-    // if (method === 'DELETE') {
-    //     return leaveEvent(eventId, token);
-    // }
-    // if (method === 'POST') {
-    //     const data = await request.formData();
-    //     return commentEvent(eventId, token, data);
-    // }
+    if (method === 'DELETE') {
+        return leaveEvent(eventId, token);
+    }
 }
 
 export async function loader({ params }: { params: any }) {
