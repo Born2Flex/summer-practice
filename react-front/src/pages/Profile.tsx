@@ -41,7 +41,7 @@ function Profile() {
     return (
 
         <div className="w-full h-full overflow-auto scrollbar-invisible">
-            <section className="relative bg-gray-50/60 pt-24 pb-10">
+            <section className="relative bg-gray-50/60 pt-24 pb-10 min-h-full">
                 <div className="container mx-auto px-4">
                     <div className="relative flex flex-col min-w-0 break-words bg-gray-50/80 w-full mb-6 shadow-xl rounded-lg">
                         <div className="px-6">

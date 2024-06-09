@@ -77,7 +77,7 @@ export default function SearchDetailsForm({ eventTypes }: { eventTypes: string[]
                 <AccordionBody
                     className='flex flex-col max-h-72 pr-2 overflow-y-auto custom-scrollbar'
                 >
-                    <div className="flex flex-col gap-4 mb-4">
+                    <div className="flex flex-col gap-4 mb-4 max-w-[332px]">
                         <SelectInput name="event-type" options={structuredTypes} />
 
                         <SelectInput name="event-category" options={event_categories} />
