@@ -69,7 +69,7 @@ public class EventController {
     @ApiResponse(responseCode = "200", description = "Interviews found",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class)))})
     public List<EventShortDto> getEvents() {
-        return eventService.getAllEvents();
+        return eventService.getActualEvents();
     }
 
     @GetMapping("/search")

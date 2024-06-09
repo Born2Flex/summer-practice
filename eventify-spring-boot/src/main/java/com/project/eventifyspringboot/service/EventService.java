@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -74,8 +75,8 @@ public class EventService {
         return commentRepository.countCommentsByUserId(userId);
     }
 
-    public List<EventShortDto> getAllEvents() {
-        List<Event> eventEntities = eventRepository.findAll();
+    public List<EventShortDto> getActualEvents() {
+        List<Event> eventEntities = eventRepository.findEventsByStartDateTimeAfter(LocalDateTime.now(ZoneOffset.UTC));
         return eventMapper.toListDto(eventEntities);
     }
 
