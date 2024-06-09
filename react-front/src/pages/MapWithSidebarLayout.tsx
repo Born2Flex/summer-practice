@@ -15,7 +15,7 @@ function MapWithSidebarLayout() {
                 <Await resolve={currentLocation}>
                     {(userLocation: LatLngExpression) => (
                         <Suspense fallback={
-                            <section className='w-3/4 z-0'>
+                            <section className='flex-1 z-0'>
                                 <MapContainer
                                     center={userLocation}
                                     zoom={15}

@@ -39,7 +39,7 @@ function EventsMap({ events, userLocation }: { events: ShortEvent[], userLocatio
     const privateEvents = events.filter(event => event.availability === 'PRIVATE');
 
     return (
-        <section className='w-3/4 z-0'>
+        <section className='flex-1 z-0'>
             <MapContainer
                 center={userLocation}
                 zoom={15}
