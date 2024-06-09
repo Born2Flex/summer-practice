@@ -42,19 +42,6 @@ export async function loader() {
         }
     }
 
-    // const socket = new SockJS('http://localhost:8080/socket');
-    // const stompClient = over(socket);
-    // const userId = getUserId();
-
-    // stompClient.connect({}, () => {
-    //     console.log('connected');
-    //     stompClient?.subscribe(`/chat/${userId}/notifications`, (message: any) => {
-    //         console.log(message);
-    //     });
-    // }, (error: any) => {
-    //     console.error(error);
-    // });
-
     return {
         isRegistered: true,
         // stompClient: stompClient,

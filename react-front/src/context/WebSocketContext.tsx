@@ -18,7 +18,9 @@ export const WebSocketProvider = ({ children, userId }: { children: ReactNode, u
     const [hasMessages, setHasMessages] = useState<boolean>(false);
 
     useEffect(() => {
-        const socket = new SockJS('http://localhost:8080/socket');
+        const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+
+        const socket = new SockJS(`${baseurl}/socket`);
         const stompClient = StompOver(socket);
 
         stompClient.connect({}, () => {
