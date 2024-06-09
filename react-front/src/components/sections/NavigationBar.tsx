@@ -60,7 +60,7 @@ function NewNavigation({ registered }: { registered: boolean }) {
                 as="li"
                 variant="h6"
                 color="blue-gray"
-                className={`flex items-center gap-x-2 p-1 font-medium ${hasMessages ? 'text-red-500' : 'text-gray-600'}`}
+                className={`relative flex items-center gap-x-2 p-1 font-medium text-gray-600`}
                 placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <FontAwesomeIcon icon={faCommentDots} className="text-gray-500" />
                 <NavLink
@@ -68,6 +68,9 @@ function NewNavigation({ registered }: { registered: boolean }) {
                     className={({ isActive }) => isActive ? "text-gray-700 font-semibold underline underline-offset-2" : undefined}>
                     Chat
                 </NavLink>
+                {hasMessages && (
+                    <span className="absolute top-0.5 -right-1 w-2.5 h-2.5 bg-amber-500 shadow-rounded-lg shadow-amber-400 animate-pulse rounded-full" />
+                )}
             </Typography>
             <Typography
                 as="li"
@@ -94,19 +97,6 @@ function NewNavigation({ registered }: { registered: boolean }) {
                 </Typography>
                 <div className="hidden lg:block">{navList}</div>
                 <div className="flex items-center gap-x-1">
-                    {/*<NavLink to='/login'>
-                        <Button variant="text" size="sm" className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                            Log In
-                        </Button>
-                    </NavLink>
-                    <NavLink to='/signup'>
-                        <Button
-                            variant="gradient"
-                            size="sm"
-                            className="hidden lg:inline-block" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
-                            Sign Up
-                        </Button>
-                    </NavLink>*/}
 
                     {registered ? (
                         <Form method="PUT" action="/">

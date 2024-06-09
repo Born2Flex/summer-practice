@@ -2,6 +2,11 @@ import { Typography, Input } from '@material-tailwind/react'
 import { ReactNode } from 'react'
 
 function InputWithLabel({ label, children, error, ...rest }: { label: string, children?: ReactNode, error?: boolean, [key: string]: any }) {
+    function onBlur(event: any) {
+        if (event.target.min && event.target.value < event.target.min) {
+            event.target.value = event.target.min;
+        }
+    }
     return (
         <div className="mb-4">
             <label>
@@ -20,6 +25,7 @@ function InputWithLabel({ label, children, error, ...rest }: { label: string, ch
                     }}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
+                    onBlur={onBlur}
                     crossOrigin={undefined}
                     {...rest}
                 />

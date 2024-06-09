@@ -1,4 +1,4 @@
-import { Await, Form, useNavigate, useRouteLoaderData } from "react-router-dom"
+import { Await, Form, redirect, useLoaderData, useNavigate, useRouteLoaderData } from "react-router-dom"
 import EventCard from "../cards/EventCard"
 import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
@@ -6,6 +6,7 @@ import SearchInput from "../inputs/SearchInput"
 import ShortEvent from "../../interfaces/ShortEventInterface"
 import { Suspense } from "react"
 import EventCardSkeleton from "../cards/EventCardSkeleton"
+import { getToken } from "../../auth"
 
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
@@ -16,6 +17,7 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
 function EventsSidebar() {
 
     const data = useRouteLoaderData('map-layout') as { events: ShortEvent[] };
+    const types = useLoaderData() as string[];
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -70,12 +72,12 @@ function EventsSidebar() {
     };
 
     return (
-        <section className='transition-all duration-500 delay-150 w-1/4 has-[nav]:w-1/2 min-w-[384px] flex flex-col bg-white gap-y-4 z-10 relative shadow-left p-4 pb-0 bg-white/70 overflow-hidden'>
+        <section className='w-fit min-w-[384px] flex flex-col bg-white gap-y-4 z-10 relative shadow-left p-4 pb-0 bg-white/70 overflow-hidden'>
             <Background />
             <div className="absolute z-0 pointer-events-none top-0 left-0 w-full h-full bg-white/65" />
             <Form onSubmit={handleSubmit} className="flex flex-col gap-y-3">
                 <SearchInput />
-                <SearchDetailsForm />
+                <SearchDetailsForm eventTypes={types} />
             </Form>
 
             <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
@@ -103,3 +105,32 @@ function EventsSidebar() {
 }
 
 export default EventsSidebar
+
+export async function loader() {
+    const token = getToken();
+    if (!token) {
+        return redirect('/login');
+    }
+
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+
+    try {
+        const response = await fetch(`${baseurl}/rest/events/types`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch event types');
+        }
+
+        const types = await response.json();
+        return types;
+    } catch (error) {
+        console.error('Error fetching event types:', error);
+        return [];
+    }
+}

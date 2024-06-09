@@ -72,6 +72,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                             color="gray"
                             size="lg"
                             type="number"
+                            min={0}
                             placeholder="$20-30"
                             name="event-price"
                             containerProps={{
@@ -105,6 +106,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     color="gray"
                     size="lg"
                     type="number"
+                    min={0}
                     placeholder="100"
                     name="max-participants"
                     containerProps={{
@@ -123,16 +125,18 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         readOnly
                     >
                         {tabName === 'PRIVATE' && (
-                            <Button
-                                variant='outlined'
-                                size="md"
-                                placeholder="Last Name"
-                                name="last-name"
-                                className="focus:!border-gray-900 !border-blue-gray-200"
-                                onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                            >
-                                Invite
-                            </Button>
+                            <div>
+                                <Button
+                                    variant='outlined'
+                                    size="md"
+                                    className="focus:!border-gray-900 !border-blue-gray-200"
+                                    onPointerEnterCapture={undefined}
+                                    onPointerLeaveCapture={undefined}
+                                    placeholder={undefined}
+                                >
+                                    Invite
+                                </Button>
+                            </div>
                         )}
                     </InputWithLabel>
                 </div>

@@ -1,7 +1,6 @@
-import { redirect, useRouteError } from 'react-router-dom';
+import { useRouteError } from 'react-router-dom';
 
 import PageContent from '../components/elements/PageContent';
-import HomePage from './HomePage';
 
 function ErrorPage() {
     const error = useRouteError() as any;

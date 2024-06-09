@@ -1,4 +1,4 @@
-import UserPic from '../assets/photo_2024-05-30_16-21-17.jpg'
+import UserPic from '../assets/empty-user.webp'
 import { Button, Textarea, Typography } from "@material-tailwind/react";
 import { Form, Link, redirect, useRouteLoaderData } from 'react-router-dom';
 import ImageInput from '../components/inputs/ImageInput';
@@ -164,8 +164,9 @@ export async function action({ request }: { request: Request }) {
     };
 
     console.log('Gathered profile data:', eventData);
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    const response = await fetch(`http://localhost:8080/rest/users/${userId}`, {
+    const response = await fetch(`${baseurl}/rest/users/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

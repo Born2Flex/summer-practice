@@ -79,10 +79,11 @@ export async function loader({ params }: { params: any }) {
     }
 
     const chatId = params.chatId;
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
 
-        const response = await fetch(`http://localhost:8080/rest/chats/${chatId}`, {
+        const response = await fetch(`${baseurl}/rest/chats/${chatId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

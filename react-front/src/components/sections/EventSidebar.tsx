@@ -161,8 +161,10 @@ function EventSidebar() {
 export default EventSidebar;
 
 async function joinEvent(eventId: string, token: string) {
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+
     try {
-        const response = await fetch(`http://localhost:8080/rest/events/${eventId}/participate`, {
+        const response = await fetch(`${baseurl}/rest/events/${eventId}/participate`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -199,9 +201,10 @@ export async function loader({ params }: { params: any }) {
 
     const id = params.id;
     console.log(id);
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`http://localhost:8080/rest/events/${id}`, {
+        const response = await fetch(`${baseurl}/rest/events/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

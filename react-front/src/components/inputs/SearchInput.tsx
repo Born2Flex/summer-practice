@@ -10,7 +10,7 @@ function SearchInput() {
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <FontAwesomeIcon icon={faMapLocationDot} className='text-gray-500 dark:text-gray-400' />
                 </div>
-                <input type="text" name='search-value' id="voice-search" className="bg-green-50/70 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search Places..." />
+                <input type="text" name='search-value' id="voice-search" className="bg-green-50/70 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 pe-8 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search Places..." />
                 <button type="button" className="absolute inset-y-0 end-0 flex items-center pe-3">
                     <FontAwesomeIcon icon={faMicrophone} className='text-gray-500' />
                 </button>

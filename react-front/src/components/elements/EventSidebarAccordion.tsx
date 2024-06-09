@@ -4,11 +4,6 @@ import {
     AccordionHeader,
     AccordionBody,
 } from "@material-tailwind/react";
-import Pic1 from "../../assets/photo_2024-05-30_16-20-27.jpg";
-import Pic2 from "../../assets/photo_2024-05-30_16-20-59.jpg";
-import Pic3 from "../../assets/photo_2024-05-30_16-21-05.jpg";
-import Pic4 from "../../assets/photo_2024-05-30_16-21-10.jpg";
-import Pic5 from "../../assets/photo_2024-05-30_16-21-17.jpg";
 import EmptyUser from "../../assets/empty-user.webp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Comment from "../../interfaces/CommentInterface";
@@ -18,24 +13,6 @@ import { Link } from "react-router-dom";
 import CommentInput from "../inputs/CommentInput";
 import CommentBubble from "./CommentBubble";
 import ShortUser from "../../interfaces/ShortUserInterface";
-
-const comments = [
-    {
-        image: Pic1,
-    },
-    {
-        image: Pic2,
-    },
-    {
-        image: Pic3,
-    },
-    {
-        image: Pic4,
-    },
-    {
-        image: Pic5,
-    },
-]
 
 interface EventSidebarAccordionProps {
     id: string;
@@ -172,7 +149,7 @@ export function EventSidebarAccordion({
                                         style={{ width: '24px', height: '24px' }}
                                     >
                                         <span className="text-gray-200 text-xs font-thin">
-                                            +{comments.length - 4}
+                                            +{participants.length - 4}
                                         </span>
                                     </div>
                                 )}

@@ -44,9 +44,10 @@ export async function loader() {
     if (!token) {
         return redirect('/login');
     }
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch('http://localhost:8080/rest/events/types', {
+        const response = await fetch(`${baseurl}/rest/events/types`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ export async function action({ request }: { request: Request }) {
             parseInt(year),
             parseInt(month) - 1,
             parseInt(day),
-            //parseInt(hours) - 3,
+            parseInt(hours),
             parseInt(minutes)
         ));
 
@@ -140,8 +141,9 @@ export async function action({ request }: { request: Request }) {
     };
 
     console.log('Gathered event data:', eventData);
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    const response = await fetch('http://localhost:8080/rest/events', {
+    const response = await fetch(`${baseurl}/rest/events`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ import EventCard from '../cards/EventCard'
 import { useRouteLoaderData } from 'react-router-dom';
 import User from '../../interfaces/UserInterface';
 
-function UserEvents() {
+function UserEvents({ isOwner }: { isOwner: boolean }) {
     const scrollRef = useHorizontalScroll();
     const { profile } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
 
@@ -23,7 +23,7 @@ function UserEvents() {
                     <div ref={scrollRef as any} className="flex overflow-x-auto gap-x-6 custom-scrollbar py-3 w-full lg:w-11/12 px-4 shadow-inner">
                         {profile.events.map((event, index) => (
                             <div key={index} className="min-w-[40%] shrink-0 text-left">
-                                <EventCard event={event} deletable />
+                                <EventCard event={event} deletable={isOwner} />
                             </div>
                         ))}
                     </div>

@@ -5,6 +5,7 @@ import { getToken } from "../../auth";
 function CommentInput({ id }: { id: string }) {
     const [comment, setComment] = useState('');
     const navigate = useNavigate();
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     async function handleSubmit(e: any) {
         e.preventDefault();
@@ -15,7 +16,7 @@ function CommentInput({ id }: { id: string }) {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/rest/events/${id}/comment`, {
+            const response = await fetch(`${baseurl}/rest/events/${id}/comment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

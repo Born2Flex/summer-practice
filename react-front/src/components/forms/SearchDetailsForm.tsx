@@ -4,20 +4,12 @@ import {
     AccordionBody,
     Typography,
 } from "@material-tailwind/react";
-import { DateRangePicker, RangeKeyDict } from 'react-date-range';
+import { RangeKeyDict, DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { useState } from 'react';
 import InputWithLabel from "../inputs/InputWithLabel";
 import SelectInput from "../inputs/SelectInput";
-
-const event_types = [
-    { value: 'party', label: 'Party' },
-    { value: 'birthday', label: 'Birthday' },
-    { value: 'gaming', label: 'Gaming' },
-    { value: 'meeting', label: 'Meeting' },
-    { value: 'other', label: 'Other' },
-]
 
 const event_categories = [
     { value: 'public', label: 'Public' },
@@ -40,7 +32,9 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
-export default function SearchDetailsForm() {
+export default function SearchDetailsForm({ eventTypes }: { eventTypes: string[] }) {
+    console.log(eventTypes);
+    const structuredTypes = eventTypes.map((type) => ({ value: type, label: type.toUpperCase() }));
     const [open, setOpen] = useState(0);
     const [range, setRange] = useState([
         {
@@ -71,7 +65,6 @@ export default function SearchDetailsForm() {
                 className={(open === 1 ? "bg-green-50 p-4 rounded-lg shadow-md open:bg-black" : "bg-green-100/50 p-4 rounded-lg")}
                 style={{ transition: "all 0.5s" }}
             >
-                {open == 1 && <nav className="w-0 h-0"></nav>}
                 <AccordionHeader
                     onClick={() => handleOpen(1)}
                     placeholder={undefined}
@@ -84,8 +77,8 @@ export default function SearchDetailsForm() {
                 <AccordionBody
                     className='flex flex-col max-h-72 pr-2 overflow-y-auto custom-scrollbar'
                 >
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                        <SelectInput name="event-type" options={event_types} />
+                    <div className="flex flex-col gap-4 mb-4">
+                        <SelectInput name="event-type" options={structuredTypes} />
 
                         <SelectInput name="event-category" options={event_categories} />
                     </div>
@@ -101,7 +94,7 @@ export default function SearchDetailsForm() {
                         </Typography>
                         <input name='from' value={range[0].startDate?.toDateString() ?? ''} readOnly className="hidden" />
                         <input name='to' value={range[0].endDate?.toDateString() ?? ''} readOnly className="hidden" />
-                        <DateRangePicker
+                        {/* <DateRangePicker
                             onChange={setDateRange}
                             moveRangeOnFirstSelection={false}
                             className="w-full rounded-lg"
@@ -109,6 +102,15 @@ export default function SearchDetailsForm() {
                             ranges={range}
                             rangeColors={['#0e9f6e']}
                             direction="horizontal"
+                        /> */}
+                        <DateRange
+                            className="rounded-lg"
+                            minDate={new Date()}
+                            rangeColors={['#0e9f6e']}
+                            editableDateInputs={true}
+                            onChange={setDateRange}
+                            moveRangeOnFirstSelection={false}
+                            ranges={range}
                         />
                     </div>
 
@@ -118,6 +120,7 @@ export default function SearchDetailsForm() {
                             color="gray"
                             size="lg"
                             type="number"
+                            min={1}
                             placeholder="150"
                             name="event-distance"
                         />

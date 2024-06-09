@@ -104,9 +104,10 @@ export async function action({ request }: { request: Request }) {
     };
 
     console.log(authData)
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch('http://localhost:8080/rest/auth/login', {
+        const response = await fetch(`${baseurl}/rest/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,4 +1,4 @@
-import UserPic from '../assets/photo_2024-05-30_16-21-17.jpg'
+import UserPic from '../assets/empty-user.webp'
 import React from "react";
 import {
     Button,
@@ -34,7 +34,7 @@ function Profile() {
             label: "Events",
             value: "events",
             icon: Square3Stack3DIcon,
-            desc: <UserEvents />,
+            desc: <UserEvents isOwner={isOwner} />,
         },
     ];
 
@@ -150,8 +150,10 @@ function Profile() {
 export default Profile
 
 async function editProfile({ token, userId }: { token: string, userId: string }) {
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+
     try {
-        const response = await fetch(`http://localhost:8080/rest/chats/new/${userId}`, {
+        const response = await fetch(`${baseurl}/rest/chats/new/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -173,8 +175,10 @@ async function editProfile({ token, userId }: { token: string, userId: string })
 }
 
 async function deleteEvent({ token, eventId, userId }: { token: string, eventId: string, userId: string }) {
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+
     try {
-        const response = await fetch(`http://localhost:8080/rest/events/${eventId}`, {
+        const response = await fetch(`${baseurl}/rest/events/${eventId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -217,10 +221,11 @@ export async function loader({ params }: { params: any }) {
         return redirect('/login');
     }
     const userId = getUserId();
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
         const startTime1 = new Date();
-        const response = await fetch(`http://localhost:8080/rest/users/${params.userId}`, {
+        const response = await fetch(`${baseurl}/rest/users/${params.userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

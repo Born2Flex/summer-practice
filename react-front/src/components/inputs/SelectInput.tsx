@@ -3,12 +3,6 @@ import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
 
-// const options = [
-//     { value: 'chocolate', label: 'Chocolate' },
-//     { value: 'strawberry', label: 'Strawberry' },
-//     { value: 'vanilla', label: 'Vanilla' }
-// ]
-
 const colourStyles: StylesConfig<any> = {
     control: (styles, { isFocused }) => ({
         ...styles,
@@ -77,6 +71,7 @@ function SelectInput({ name, options }: { name: string, options: { value: string
             isMulti
             options={options}
             styles={colourStyles}
+            maxMenuHeight={200}
         />
     )
 }

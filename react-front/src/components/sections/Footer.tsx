@@ -2,9 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
+import { getUserId } from '../../auth';
 
 const Footer: React.FC = () => {
-
+  const userId = getUserId() || "12345";
   return (
     <>
 
@@ -35,7 +36,7 @@ const Footer: React.FC = () => {
             <div className="flex flex-col justify-between md:justify-between items-start md:items-center">
               <div className="flex flex-col justify-between md:justify-between items-start">
                 <Link to="/events" className='w-fit'>Explore Events</Link>
-                <Link to="/profile" className='w-fit'>Your Profile</Link>
+                <Link to={`/profile/${userId}`} className='w-fit'>Your Profile</Link>
                 <Link to="#" className='w-fit'>About Us</Link>
               </div>
             </div>

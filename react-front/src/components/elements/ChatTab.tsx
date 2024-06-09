@@ -1,9 +1,8 @@
-import { Link, NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import EmptyUser from "../../assets/empty-user.webp"
 import ShortChat from "../../interfaces/ShortChatInterface"
 
 function ChatTab({ chat }: { chat: ShortChat }) {
-    // console.log("chat in chat tab: ", chat)
     return (
         <NavLink to={`/chat/${chat.id}`} >
             <div className="w-full flex flex-col border-gray-500 hover:bg-white/30 cursor-pointer">

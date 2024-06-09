@@ -147,9 +147,10 @@ export async function action({ request }: { request: Request }) {
     if (authData.password !== authData.repeatPassword) {
         return json({ error: 'Passwords do not match.' }, { status: 422 });
     }
+    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch('http://localhost:8080/rest/auth/register', {
+        const response = await fetch(`${baseurl}/rest/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
