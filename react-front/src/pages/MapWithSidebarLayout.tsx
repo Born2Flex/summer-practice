@@ -4,7 +4,7 @@ import { getToken } from '../auth';
 import ShortEvent from '../interfaces/ShortEventInterface';
 import { Suspense } from 'react';
 import { LatLngExpression } from 'leaflet';
-import { MapContainer, TileLayer, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Circle, Popup } from 'react-leaflet';
 
 function MapWithSidebarLayout() {
     const { events, currentLocation } = useRouteLoaderData('map-layout') as { events: ShortEvent[], currentLocation: LatLngExpression };
@@ -31,7 +31,13 @@ function MapWithSidebarLayout() {
                                         pathOptions={{ color: '#058afd' }}
                                         fillOpacity={0.8}
                                         radius={15}
-                                    />
+                                    >
+                                        <Popup closeButton={false} className='w-max'>
+                                            <div className='p-4 font-semibold'>
+                                                You are here
+                                            </div>
+                                        </Popup>
+                                    </Circle>
 
                                 </MapContainer>
                             </section>

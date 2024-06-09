@@ -55,7 +55,13 @@ function EventsMap({ events, userLocation }: { events: ShortEvent[], userLocatio
                     pathOptions={{ color: '#058afd' }}
                     fillOpacity={0.8}
                     radius={15}
-                />
+                >
+                    <Popup closeButton={false} className='w-max'>
+                        <div className='p-4 font-semibold'>
+                            You are here
+                        </div>
+                    </Popup>
+                </Circle>
                 <LayersControl position="topright">
                     <LayersControl.Overlay checked name="Public Events">
                         <LayerGroup>
