@@ -5,7 +5,7 @@ function Sponsors() {
             <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
                 <h2 className="text-3xl font-bold mb-4">Trusted by over <span className="underline text-4xl">20,000</span> companies all over the world</h2>
                 <p className="text-xl text-gray-600 aos-init aos-animate" data-aos="zoom-y-out">
-                    Arcu cursus vitae congue mauris rhoncus viverra nibh cras pulvinar mattis blandit libero cursus mattis.
+                    We are proud to have some of the most respected companies in the world as our clients. We would love to add you to our list of satisfied customers.
                 </p>
             </div>
             <div className="max-w-sm md:max-w-4xl mx-auto grid gap-2 grid-cols-4 md:grid-cols-5">
