@@ -106,7 +106,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                     color="gray"
                     size="lg"
                     type="number"
-                    min={0}
+                    min={1}
                     placeholder="100"
                     name="max-participants"
                     containerProps={{

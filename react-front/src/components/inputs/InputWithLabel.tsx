@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 
 function InputWithLabel({ label, children, error, ...rest }: { label: string, children?: ReactNode, error?: boolean, [key: string]: any }) {
     function onBlur(event: any) {
+        if (event.target.min && event.target.value == '') return;
         if (event.target.min && event.target.value < event.target.min) {
             event.target.value = event.target.min;
         }
