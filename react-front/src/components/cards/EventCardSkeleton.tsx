@@ -1,6 +1,7 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
+// EventCardSkeleton component, displays the skeleton of an event card while loading
 function EventCardSkeleton() {
     return (
         <div
@@ -33,7 +34,7 @@ function EventCardSkeleton() {
                     </div>
                     <div className='flex w-1/4 max-h-full items-center justify-center'>
                         <div className='w-full h-full aspect-square flex align-middle items-center justify-center rounded-full'>
-                            <Skeleton  className='w-full aspect-square flex items-center justify-center rounded-full' containerClassName='w-full aspect-square'/>
+                            <Skeleton className='w-full aspect-square flex items-center justify-center rounded-full' containerClassName='w-full aspect-square' />
                         </div>
                     </div>
                 </div>

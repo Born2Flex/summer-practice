@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouteLoaderData } from "react-router-dom";
 import User from "../../interfaces/UserInterface";
 
+//UserInformation component, displays the user's general information in the user profile page
 function UserInformation() {
     const { profile } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
 

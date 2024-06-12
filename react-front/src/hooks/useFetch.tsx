@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { LatLngExpression } from "leaflet";
 
+// useFetch hook, fetches data from Radar API
 const useFetch = ({ latLng }: { latLng: LatLngExpression }) => {
+    // fetched data
     const [data, setData] = useState<any>([]);
+    // loading state
     const [isLoading, setIsLoading] = useState(true);
+    // error state
     const [error, setError] = useState(null);
 
     const options = {

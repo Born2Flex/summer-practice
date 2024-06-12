@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom"
 import EmptyUser from "../../assets/empty-user.webp"
 import ShortChat from "../../interfaces/ShortChatInterface"
 
+//ChatTab component, displays the chat tab with the participant's image and name and the last message
 function ChatTab({ chat }: { chat: ShortChat }) {
     return (
         <NavLink to={`/chat/${chat.id}`} >

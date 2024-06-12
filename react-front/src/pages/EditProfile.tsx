@@ -6,6 +6,7 @@ import InputWithLabel from '../components/inputs/InputWithLabel';
 import User from '../interfaces/UserInterface'
 import { getUserId } from '../auth';
 
+//EditProfile component, displays the same profile page for the user, but with the ability to edit properties
 function EditProfile() {
     const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
     const userId = getUserId();
@@ -143,6 +144,7 @@ function EditProfile() {
 
 export default EditProfile
 
+//EditProfile action function, fetches the form data and updates the user profile
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
     const userId = getUserId();

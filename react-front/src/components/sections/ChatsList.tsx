@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import ChatTab from '../elements/ChatTab'
 import ShortChat from '../../interfaces/ShortChatInterface'
 
+//ChatsList component, displays the list of chats
 function ChatsList({ chats }: { chats: ShortChat[] }) {
     return (
         <section className='w-1/4 flex flex-col bg-white/70 justify-between min-w-[384px] z-10 relative shadow-right overflow-hidden'>

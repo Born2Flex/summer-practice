@@ -2,6 +2,7 @@ import { useRouteError } from 'react-router-dom';
 
 import PageContent from '../components/elements/PageContent';
 
+//ErrorPage component, displays an error message if there is an error
 function ErrorPage() {
     const error = useRouteError() as any;
 

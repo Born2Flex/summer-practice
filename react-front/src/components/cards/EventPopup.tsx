@@ -4,11 +4,8 @@ import { NavLink } from 'react-router-dom'
 import ShortEvent from '../../interfaces/ShortEventInterface';
 import { colorVariants, iconVariants, ribbonVariants } from './EventCard'
 
-
+//EventPopup component, displays the event popup with the event's details
 function EventPopup({ id, title, availability, currentParticipants, eventType, maxParticipants, entranceFee }: ShortEvent) {
-
-    // const link: string = `/events/${id}`;
-
     return (
         <div
             className="bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 

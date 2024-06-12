@@ -4,11 +4,12 @@ import { MapContainer } from "react-leaflet"
 import { LatLngExpression } from "leaflet";
 import { Button } from "@material-tailwind/react";
 
-
+//LocationPicker component, displays a map with a draggable marker to pick a location
 function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, onSetLocation: (location: LatLngExpression) => void }) {
     const [draggable, setDraggable] = useState(false)
     const [position, setPosition] = useState(center)
     const markerRef = useRef(null)
+    // event handlers for the draggable marker
     const eventHandlers = useMemo(
         () => ({
             dragend() {
@@ -20,6 +21,7 @@ function LocationPicker({ center, onSetLocation }: { center: LatLngExpression, o
         }),
         [],
     )
+    // toggles the draggable state of the marker
     const toggleDraggable = useCallback(() => {
         setDraggable((d) => {
             if (d) {

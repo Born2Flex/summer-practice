@@ -1,4 +1,4 @@
-
+// Sponsors card Component
 function Sponsors() {
     return (
         <div className="w-11/12 p-8 self-center bg-gray-100/40 my-6 rounded-lg">

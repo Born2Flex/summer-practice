@@ -1,9 +1,11 @@
 import { useRef, useEffect } from "react";
 
+// useHorizontalScroll hook, handles horizontal scrolling on profile page
 export default function useHorizontalScroll<T extends HTMLElement>() {
     const elRef = useRef<T>(null);
     const scrollInterval = useRef<number | null>(null);
 
+    // useEffect hook to handle scrolling on page load
     useEffect(() => {
         const el = elRef.current;
         let scrollAmount = 1;

@@ -1,4 +1,5 @@
-// src/auth.ts
+// Description: This file contains functions to handle the authentication of the user 
+// making use of the localStorage API to store the JWT token and user ID
 export function setToken(token: string): void {
     localStorage.setItem('jwt', token);
 }

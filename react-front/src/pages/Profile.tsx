@@ -18,11 +18,13 @@ import { Form, Link, defer, redirect, useRouteLoaderData } from 'react-router-do
 import { getToken, getUserId } from '../auth';
 import User from '../interfaces/UserInterface';
 
+//Profile component, displays the user profile page
 function Profile() {
     const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
     console.log('profile data inside component:', profile);
     console.log('isOwner:', isOwner);
 
+    //Data for the profile tabs
     const data = [
         {
             label: "Profile",
@@ -149,6 +151,7 @@ function Profile() {
 
 export default Profile
 
+//Profile action function, handles user profile editing
 async function editProfile({ token, userId }: { token: string, userId: string }) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
@@ -174,6 +177,7 @@ async function editProfile({ token, userId }: { token: string, userId: string })
     }
 }
 
+//Profile action function, handles user's event deletion
 async function deleteEvent({ token, eventId, userId }: { token: string, eventId: string, userId: string }) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
@@ -196,6 +200,7 @@ async function deleteEvent({ token, eventId, userId }: { token: string, eventId:
     }
 }
 
+//Profile action function, handles profile editing and event deletion
 export async function action({ request, params }: { request: any, params: any }) {
     const token = getToken();
     if (!token) {
@@ -215,6 +220,7 @@ export async function action({ request, params }: { request: any, params: any })
     }
 }
 
+//Profile loader function, fetches user profile data
 export async function loader({ params }: { params: any }) {
     const token = getToken();
     if (!token) {

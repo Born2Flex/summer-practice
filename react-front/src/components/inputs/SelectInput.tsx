@@ -3,6 +3,7 @@ import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
 
+//Styling for the select input
 const colourStyles: StylesConfig<any> = {
     control: (styles, { isFocused }) => ({
         ...styles,
@@ -61,6 +62,7 @@ const colourStyles: StylesConfig<any> = {
     }),
 };
 
+//SelectInput component, displays customizable a select input field
 function SelectInput({ name, options }: { name: string, options: { value: string, label: string }[] }) {
     return (
         <Select

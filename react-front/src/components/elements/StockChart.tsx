@@ -104,6 +104,7 @@ const chartConfig = {
     },
 } as unknown as Props;
 
+//StockChart component, displays the stock chart
 export default function StockChart() {
     return (
         <Card className="flex flex-1 h-fit" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>

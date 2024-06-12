@@ -53,7 +53,6 @@ export const ribbonVariants = {
 }
 
 function EventCard({ event, deletable }: { event: ShortEvent, deletable?: boolean }) {
-    // console.log(event)
     return (
         <div
             className="relative bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 

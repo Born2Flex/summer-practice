@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { LegacyRef, forwardRef, useState } from 'react';
 import ShortUser from '../../interfaces/ShortUserInterface';
 
+//CommentBubble component, displays the comment message bubble with the sender's image and name
 const CommentBubble = forwardRef(({ sender, commentText }: { sender: ShortUser, commentText: string }, ref: LegacyRef<HTMLDivElement> | undefined) => {
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import BrowserMockup from '../elements/BrowserMockup';
 import Sponsors from './Sponsors';
 
-
+//LandingCard component, displays the landing card with the start your journey message and the browser mockup
 function LandingCard() {
   return (
     <div className="relative flex flex-col items-center justify-center">

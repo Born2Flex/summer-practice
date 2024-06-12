@@ -6,6 +6,8 @@ import { Suspense } from 'react';
 import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Circle, Popup } from 'react-leaflet';
 
+//MapWithSidebarLayout component, displays the map layout with sidebar, events and user location
+//makes use of Await and Suspense components to handle async data fetching
 function MapWithSidebarLayout() {
     const { events, currentLocation } = useRouteLoaderData('map-layout') as { events: ShortEvent[], currentLocation: LatLngExpression };
     console.log('useRouteLoaderData:', events, currentLocation);
@@ -60,6 +62,7 @@ function MapWithSidebarLayout() {
 
 export default MapWithSidebarLayout
 
+//Loader to fetch events and user location
 async function loadAllEvents(token: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
@@ -86,6 +89,7 @@ async function loadAllEvents(token: string) {
     }
 }
 
+//Loader to fetch searched events
 async function loadSearchedEvents(token: string, params: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
@@ -111,6 +115,7 @@ async function loadSearchedEvents(token: string, params: string) {
     }
 }
 
+//Loader to check if user is logged in and fetch neccessary events
 export async function loader({ request }: { request: Request, params: any }) {
 
     const token = getToken();

@@ -16,8 +16,8 @@ const localDateTimeString = (utcDateTimeString: string): string => {
     return localDate.toISOString().split('T')[0] + ' ' + localDate.toTimeString().split(' ')[0];
 };
 
+//EventSidebar component, displays the event sidebar with all the event details
 function EventSidebar() {
-
     const {
         id,
         title,
@@ -35,6 +35,7 @@ function EventSidebar() {
         comments
     } = useLoaderData() as LongEvent;
     const userId = getUserId();
+    //Transform the startDateTime to a readable format
     const date = new Date(startDateTime);
 
     const day = format(date, 'd');
@@ -42,7 +43,9 @@ function EventSidebar() {
     const weekday = format(date, 'EEEE');
     const time = format(date, 'h:mm a');
 
+    //Check if the user can join the event
     const isJoinDisabled = (maxParticipants !== null && currentParticipants >= maxParticipants);
+    //Check if the user is already subscribed to the event
     const isSubscibed = participants.some(participant => participant.id === userId);
 
     return (
@@ -160,6 +163,7 @@ function EventSidebar() {
 
 export default EventSidebar;
 
+//Action to join the event by sending a PATCH request to the server with the event id
 async function joinEvent(eventId: string, token: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
@@ -182,6 +186,7 @@ async function joinEvent(eventId: string, token: string) {
     return redirect(`/events/${eventId}`);
 }
 
+//Action function to join or leave the event
 export async function action({ params }: { request: any, params: any }) {
 
     const token = getToken();
@@ -193,6 +198,7 @@ export async function action({ params }: { request: any, params: any }) {
     return joinEvent(eventId, token);
 }
 
+//Loader function to fetch the event details
 export async function loader({ params }: { params: any }) {
     const token = getToken();
     if (!token) {
@@ -218,7 +224,6 @@ export async function loader({ params }: { params: any }) {
 
         const event = await new Promise<LongEvent>((resolve, reject) => {
             response.json().then((data: LongEvent) => {
-                // Transform the startDateTime and resolve the event
                 data.startDateTime = localDateTimeString(data.startDateTime);
                 resolve(data);
             }).catch((error) => {

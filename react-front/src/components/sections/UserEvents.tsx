@@ -3,6 +3,7 @@ import EventCard from '../cards/EventCard'
 import { useRouteLoaderData } from 'react-router-dom';
 import User from '../../interfaces/UserInterface';
 
+//UserEvents component, displays the user's events in a horizontal scrollable list in user profile page
 function UserEvents({ isOwner }: { isOwner: boolean }) {
     const scrollRef = useHorizontalScroll();
     const { profile } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };

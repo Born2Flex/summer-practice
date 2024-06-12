@@ -8,13 +8,14 @@ import { useEffect, useRef, useState } from "react"
 import { useWebSocket } from "../../context/WebSocketContext"
 import ChatInput from "../inputs/ChatInput"
 
+//ChatSection component, displays the chat section with the chat messages and input
 function ChatSection() {
     const chatfetch = useLoaderData() as Chat;
-    console.log("user's chat:", chatfetch, new Date());
     const [chat, setChat] = useState(chatfetch);
     const lastMessageRef = useRef<HTMLDivElement>(null)
     const { subscribeToChat, sendMessage } = useWebSocket();
 
+    //Subscribe to chat and update chat state with incoming messages
     useEffect(() => {
         setChat(chatfetch);
         console.log("INNER EFFECT: ");
@@ -29,6 +30,7 @@ function ChatSection() {
         });
     }, [chatfetch]);
 
+    //Scroll to the last message on chat update
     useEffect(() => {
         if (lastMessageRef.current) {
             lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -72,6 +74,7 @@ function ChatSection() {
 
 export default ChatSection
 
+//Loader function to fetch chat data by chatId
 export async function loader({ params }: { params: any }) {
     const token = getToken();
     if (!token) {

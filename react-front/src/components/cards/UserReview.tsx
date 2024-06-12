@@ -1,5 +1,6 @@
 import Testemonial from '../../assets/pani-pechkurova.jpg';
 
+//UserReview component, displays the user review with the user's image and name
 function UserReview() {
     return (
         <div className="max-w-3xl mx-auto mt-20 aos-init aos-animate" data-aos="zoom-y-out">

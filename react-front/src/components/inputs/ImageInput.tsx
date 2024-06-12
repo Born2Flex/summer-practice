@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 
+// ImageInput component, handles image input with preview
 function ImageInput({ id, name, previewImg, round }: { id: string, name: string, previewImg?: string, round?: boolean }) {
     const [fileUrl, setFileUrl] = useState<string>(previewImg || '');
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(previewImg || null);
 
+    //Handle image input change by uploading the image to Cloudinary and displaying the preview
     async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
         const target = e.target as HTMLInputElement & {
             files: FileList;

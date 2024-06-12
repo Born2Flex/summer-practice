@@ -8,6 +8,7 @@ import ImageInput from '../inputs/ImageInput'
 import TimePicker from '../inputs/TimePicker'
 import { useState } from 'react'
 
+//EventCreationFrom component, displays the form for creating an event
 function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
     const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
     const [date, setDate] = useState<Date>();

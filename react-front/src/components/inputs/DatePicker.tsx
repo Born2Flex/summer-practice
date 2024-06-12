@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
+//DatePicker component, displays a date picker input
 function DatePicker({ date, setDate }: { date: Date | undefined, setDate: any }) {
     const today = new Date();
 

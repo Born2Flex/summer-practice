@@ -1,10 +1,10 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 import { getUserId } from '../../auth';
 
-const Footer: React.FC = () => {
+//Footer component, displays the footer with the contact information and links to other pages
+function Footer() {
   const userId = getUserId() || "12345";
   return (
     <>

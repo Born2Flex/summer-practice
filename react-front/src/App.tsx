@@ -14,8 +14,9 @@ import ChatSection, { loader as chatUserLoader } from './components/sections/Cha
 import ChatLayout, { loader as userChatsLoader } from './pages/ChatLayout.tsx';
 import NoChatSelectedSection from './components/sections/NoChatSelectedSection.tsx';
 
-
+//Root react App.tsx component
 function App() {
+  //Create a BrowserRouter navigation with the following routes
   const router = createBrowserRouter([
     {
       path: '/',
@@ -87,7 +88,6 @@ function App() {
             {
               index: true,
               element: <NoChatSelectedSection />,
-              // loader: chatUserLoader,
             },
             {
               path: ':chatId',
@@ -101,6 +101,7 @@ function App() {
     },
   ]);
 
+  //Return the RouterProvider with the router
   return <RouterProvider router={router} />;
 }
 

@@ -3,11 +3,13 @@ import { getUserId } from "../../auth";
 import { Message } from "../../interfaces/MessageInterface";
 import { Form } from "react-router-dom";
 
+//ChatInputProps interface, defines the props for the ChatInput component
 interface ChatInputProps {
     chatId: string;
     onSubmit: (chatId: string, message: any) => void;
 }
 
+//ChatInput component, displays the input field for sending messages
 function ChatInput({ chatId, onSubmit }: ChatInputProps) {
     const [messageContent, setMessageContent] = useState("");
     const userId = getUserId();

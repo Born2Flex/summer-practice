@@ -2,6 +2,7 @@ import { faMagnifyingGlass, faMapLocationDot, faMicrophone } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button } from '@material-tailwind/react'
 
+//SearchInput component, displays a search input field with a search button
 function SearchInput() {
     return (
         <div className="flex items-center gap-1.5">
@@ -29,8 +30,6 @@ function SearchInput() {
                     Search
                 </Button>
             </div>
-
-            {/* <AwesomeButton type="primary" className='awesome-button short-awesome-button inline-flex ms-2 text-sm rounded-lg' after={<FontAwesomeIcon icon={faMagnifyingGlass} />} >Search</AwesomeButton> */}
         </div>
     )
 }

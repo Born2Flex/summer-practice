@@ -5,6 +5,7 @@ import Background from '../components/elements/Background';
 import { clearToken, clearUserId, getToken, getUserId } from '../auth';
 import { WebSocketProvider } from '../context/WebSocketContext';
 
+//RootLayout component that defines the layout of the app
 function RootLayout() {
     const data = useLoaderData() as { isRegistered: boolean };
     const userId = getUserId();
@@ -27,12 +28,14 @@ function RootLayout() {
 
 export default RootLayout;
 
+//Action to logout
 export async function action() {
     clearToken();
     clearUserId();
     return redirect('/');
 }
 
+//Loader to check if user is registered
 export async function loader() {
     console.log('GENERAL LOADER');
     const token = getToken();
@@ -44,7 +47,6 @@ export async function loader() {
 
     return {
         isRegistered: true,
-        // stompClient: stompClient,
     }
 
 }

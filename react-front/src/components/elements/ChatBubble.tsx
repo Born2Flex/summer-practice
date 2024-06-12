@@ -39,9 +39,8 @@ function formatDateBasedOnToday(dateInput: string | Date) {
     return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-
+//ChatBubble component, displays the chat message bubble with the sender's image and name
 const ChatBubble = forwardRef(({ sender, message }: { sender: ShortUser, message: Message }, ref: LegacyRef<HTMLDivElement> | undefined) => {
-    // console.log('ChatBubble:', "SENDER:", sender, "MESSAGE:", message);
     const isSender = getUserId() === sender.id;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

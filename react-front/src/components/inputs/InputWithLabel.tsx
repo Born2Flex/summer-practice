@@ -1,7 +1,9 @@
 import { Typography, Input } from '@material-tailwind/react'
 import { ReactNode } from 'react'
 
+//InputWithLabel component, displays an input with a label above the input field
 function InputWithLabel({ label, children, error, ...rest }: { label: string, children?: ReactNode, error?: boolean, [key: string]: any }) {
+    //Provides validation for input fields with min attribute
     function onBlur(event: any) {
         if (event.target.min && event.target.value == '') return;
         if (event.target.min && event.target.value < event.target.min) {

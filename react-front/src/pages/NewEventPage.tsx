@@ -1,10 +1,11 @@
 import { Typography } from "@material-tailwind/react";
 import LocationPicker from "../components/inputs/LocationPicker";
-import TabsButtons from "../components/buttons/TabsButtons";
+import TabsButtons from "../components/elements/TabsButtons";
 import { useState } from "react";
 import { LatLngExpression } from "leaflet";
 import { redirect, useLoaderData } from "react-router-dom";
 
+//NewEventPage component, displays the new event page
 export function NewEventPage() {
     const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
 
@@ -39,6 +40,7 @@ export function NewEventPage() {
 
 export default NewEventPage;
 
+//NewEventPage loader function, fetches event types and user location
 export async function loader() {
     const token = localStorage.getItem('jwt');
     if (!token) {
@@ -85,7 +87,7 @@ export async function loader() {
     }
 }
 
-
+//NewEventPage action function, sends new event data to the server
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
 

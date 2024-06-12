@@ -1,3 +1,4 @@
+//Browser mockup component
 function BrowserMockup() {
     return (
         <div className="flex flex-col max-w-2xl items-center">

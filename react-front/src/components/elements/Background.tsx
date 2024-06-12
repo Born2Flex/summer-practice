@@ -1,3 +1,4 @@
+//Background component displays the gradient background with floating divs
 function Background() {
     return (
         <div className="gradient-bg absolute top-0 left-0">

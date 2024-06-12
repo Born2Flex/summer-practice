@@ -5,6 +5,7 @@ import ShortChat from "../interfaces/ShortChatInterface";
 import { useWebSocket } from "../context/WebSocketContext";
 import { Suspense } from "react";
 
+//ChatLayout component, displays the chat layout with the list of chats and the chat messages
 function ChatLayout() {
     console.log("ChatLayout MOUNTED");
     const { chats } = useLoaderData() as { chats: ShortChat[] };
@@ -34,6 +35,7 @@ function ChatLayout() {
 
 export default ChatLayout;
 
+//ChatLayout helper loader function, fetches the user's chats
 async function loadChats(token: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
@@ -59,6 +61,7 @@ async function loadChats(token: string) {
     }
 }
 
+//ChatLayout loader function, fetches the user's chats
 export async function loader() {
     console.log('ChatLayout loader started');
     const token = getToken();

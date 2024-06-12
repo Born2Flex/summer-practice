@@ -11,12 +11,14 @@ import { useState } from 'react';
 import InputWithLabel from "../inputs/InputWithLabel";
 import SelectInput from "../inputs/SelectInput";
 
+//categories for events in advanced search
 const event_categories = [
     { value: 'public', label: 'Public' },
     { value: 'paid', label: 'Paid' },
     { value: 'private', label: 'Private' },
 ]
 
+//Icon component for the accordion
 function Icon({ id, open }: { id: number; open: number }) {
     return (
         <svg
@@ -32,8 +34,8 @@ function Icon({ id, open }: { id: number; open: number }) {
     );
 }
 
+//SearchDetailsForm component, displays the advanced search options for events
 export default function SearchDetailsForm({ eventTypes }: { eventTypes: string[] }) {
-    console.log(eventTypes);
     const structuredTypes = eventTypes.map((type) => ({ value: type, label: type.toUpperCase() }));
     const [open, setOpen] = useState(0);
     const [range, setRange] = useState([
@@ -94,15 +96,6 @@ export default function SearchDetailsForm({ eventTypes }: { eventTypes: string[]
                         </Typography>
                         <input name='from' value={range[0].startDate?.toDateString() ?? ''} readOnly className="hidden" />
                         <input name='to' value={range[0].endDate?.toDateString() ?? ''} readOnly className="hidden" />
-                        {/* <DateRangePicker
-                            onChange={setDateRange}
-                            moveRangeOnFirstSelection={false}
-                            className="w-full rounded-lg"
-                            months={1}
-                            ranges={range}
-                            rangeColors={['#0e9f6e']}
-                            direction="horizontal"
-                        /> */}
                         <DateRange
                             className="rounded-lg"
                             minDate={new Date()}

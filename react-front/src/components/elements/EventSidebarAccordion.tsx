@@ -27,6 +27,7 @@ interface EventSidebarAccordionProps {
     eventType: string;
 }
 
+//Icon component for the accordion
 function Icon({ open }: { open: boolean }) {
     return (
         <svg
@@ -42,6 +43,7 @@ function Icon({ open }: { open: boolean }) {
     );
 }
 
+//EventSidebarAccordion component, displays the event details and comment section
 export function EventSidebarAccordion({
     id,
     description,

@@ -12,11 +12,13 @@ import { faCalendarDays, faCommentDots, faHouse, faUser, faWandMagicSparkles } f
 import { getUserId } from "../../auth";
 import { useWebSocket } from "../../context/WebSocketContext";
 
+//NewNavigation component, displays the navigation bar with the logo, links to other pages and the log in and sign up buttons
 function NewNavigation({ registered }: { registered: boolean }) {
 
     const { hasMessages } = useWebSocket()
     const [openNav, setOpenNav] = React.useState(false);
 
+    //Change the style of the navigation bar when the window is resized to a width of 960px or more
     React.useEffect(() => {
         window.addEventListener(
             "resize",

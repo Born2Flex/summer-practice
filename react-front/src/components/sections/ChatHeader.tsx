@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EmptyUser from "../../assets/empty-user.webp"
 import ShortUser from '../../interfaces/ShortUserInterface'
 
+//ChatHeader component, displays the chat header with the user's image and name
 function ChatHeader({ user }: { user: ShortUser }) {
     return (
         <section className='w-full px-8 py-4 bg-white/50 shadow-bottom'>

@@ -1,6 +1,7 @@
 import StockChart from '../elements/StockChart'
 import BarChart from '../elements/BarChart'
 
+//ChartCard component, displays the chart card with the stock chart and bar chart
 function ChartCard() {
     return (
         <div className="flex flex-col gap-y-6 w-11/12 p-8 self-center bg-gray-100/70 my-6 rounded-lg">

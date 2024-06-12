@@ -6,6 +6,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout/pickersLayoutClasses';
 
+//TimePicker component, displays a time picker input field making use if MUI's StaticTimePicker
 function TimePicker({ date, label, error, ...rest }: { date: Date | undefined, label: string, error?: boolean, [key: string]: any }) {
     const [time, setTime] = useState<Dayjs | null>();
 

@@ -6,6 +6,7 @@ import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, redirect, useActionData } from "react-router-dom";
 import { setToken, setUserId } from "../auth";
 
+//LoginPage component, displays the login page
 function LoginPage() {
     const [passwordShown, setPasswordShown] = useState(false);
     const togglePasswordVisiblity = () => setPasswordShown((cur) => !cur);
@@ -96,6 +97,8 @@ function LoginPage() {
 
 export default LoginPage;
 
+//Action to log into the account if there is such. 
+//If not, or the data is incorrect return an error message
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
     const authData = {
@@ -124,7 +127,6 @@ export async function action({ request }: { request: Request }) {
             throw new Error(`Error ${response.status}: ${responseData}`);
         }
 
-
         const token = responseData.token;
         const userId = responseData.userId;
 
@@ -135,10 +137,6 @@ export async function action({ request }: { request: Request }) {
     } catch (error) {
         console.error('Error logging in:', error);
     }
-
-
-
-
 
     return redirect('/events');
 }

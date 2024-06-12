@@ -8,18 +8,21 @@ import { Suspense } from "react"
 import EventCardSkeleton from "../cards/EventCardSkeleton"
 import { getToken } from "../../auth"
 
+//Function to get the current position of the user
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
     });
 };
 
+//EventsSidebar component, displays the events sidebar with the search form and events list
 function EventsSidebar() {
 
     const data = useRouteLoaderData('map-layout') as { events: ShortEvent[] };
     const types = useLoaderData() as string[];
     const navigate = useNavigate();
 
+    //Function to handle the search form submit event
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -106,6 +109,7 @@ function EventsSidebar() {
 
 export default EventsSidebar
 
+//Loader function to fetch event types
 export async function loader() {
     const token = getToken();
     if (!token) {

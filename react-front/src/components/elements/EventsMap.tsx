@@ -32,6 +32,7 @@ const redIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
+//EventsMap component, displays the map with events and user location
 function EventsMap({ events, userLocation }: { events: ShortEvent[], userLocation: LatLngExpression }) {
 
     const publicEvents = events.filter(event => event.availability === 'PUBLIC');
@@ -106,7 +107,6 @@ function EventsMap({ events, userLocation }: { events: ShortEvent[], userLocatio
                             {privateEvents.map((event, index) => (
                                 <Marker
                                     key={index}
-                                    //position={event.coordinates}
                                     position={[event.location.x, event.location.y]}
                                     icon={redIcon}
                                 >

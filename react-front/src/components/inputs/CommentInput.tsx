@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { getToken } from "../../auth";
 
+//CommentInput component, displays the input field for the user to comment on an event
 function CommentInput({ id }: { id: string }) {
     const [comment, setComment] = useState('');
     const navigate = useNavigate();
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
+    //Handle the submission of the comment creation form
     async function handleSubmit(e: any) {
         e.preventDefault();
         const token = getToken();

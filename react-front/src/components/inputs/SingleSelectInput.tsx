@@ -1,6 +1,7 @@
 import { Typography, Select, Option } from '@material-tailwind/react'
 import { useState } from 'react'
 
+//SingleSelectInput component, displays a single select input field
 function SingleSelectInput({ eventTypes }: { eventTypes: string[] }) {
     const [typeValue, setTypeValue] = useState<string>('party');
 

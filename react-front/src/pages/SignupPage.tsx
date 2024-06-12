@@ -6,6 +6,7 @@ import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, json, redirect, useActionData } from "react-router-dom";
 import { setToken, setUserId } from "../auth";
 
+//SignupPage component, displays the signup page
 function SignupPage() {
     const data: { error: string } = useActionData() as { error: string };
     const [passwordShown, setPasswordShown] = useState(false);
@@ -132,6 +133,7 @@ function SignupPage() {
 
 export default SignupPage;
 
+//Action to send registration data to the server
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
 
@@ -179,5 +181,4 @@ export async function action({ request }: { request: Request }) {
     }
 
     return redirect('/events');
-
 }
