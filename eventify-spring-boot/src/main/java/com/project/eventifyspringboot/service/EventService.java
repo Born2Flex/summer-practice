@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -118,16 +119,14 @@ public class EventService {
         if (availability != null) {
             query.addCriteria(Criteria.where("availability").in(availability));
         }
-        if (from != null || to != null) {
-            Criteria criteria = Criteria.where("startDateTime");
-            if (from != null) {
-                criteria = criteria.gte(from);
-            }
-            if (to != null) {
-                criteria = criteria.lte(to);
-            }
-            query.addCriteria(criteria);
+        Criteria criteria = Criteria.where("startDateTime");
+        criteria = criteria.gte(from != null ? from : LocalDate.now());
+
+        if (to != null) {
+            criteria = criteria.lte(to);
         }
+        query.addCriteria(criteria);
+
         if (tags != null) {
             query.addCriteria(Criteria.where("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags))));
         }
