@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: go-event-flow-spring-boot
+  data:
+    mongodb:
+      uri:
+      database:
+
+rest:
+  prefix: /go-event-flow
+
+project:
+  version: "@project.version@"
+
+domain:
+  back: ${BACK_URI:http://localhost:8080}
+  front: ${VITE_API_URL:http://localhost:5173}
+
+cors:
+  allowed-headers: Authorization, Cache-Control, Content-Type, AcceptLanguage
+  allowed-origins: ${domain.front}
+  allowed-methods: GET, POST, PUT, DELETE, OPTIONS, PATCH
+  exposed-headers: Authorization
+
+app:
+  security:
+    permitAllUris: >
+      ${rest.prefix}/users/hello,
+      ${rest.prefix}/auth/**,
+      /swagger-ui/**,
+      /v3/api-docs/**,
+      /socket
+    securedUris: ${rest.prefix}/**
+
+jwt:
+  secret:
+  expiration-time-minutes:
