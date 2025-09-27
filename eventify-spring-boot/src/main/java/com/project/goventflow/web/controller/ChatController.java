@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "${rest.prefix}/chats", produces = "application/json")
 @Tag(name = "Chat", description = "Chat endpoints")
 @SecurityRequirement(name = "jwt")
 @AllArgsConstructor
@@ -40,7 +41,7 @@ public class ChatController {
         log.info("Sending message to chat {}", chatId);
     }
 
-    @GetMapping("/rest/chats")
+    @GetMapping
     @Operation(summary = "Get all chats of user.")
     @ApiResponse(responseCode = "200", description = "Events found",
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ChatShortDto.class))))
@@ -48,7 +49,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.findChatsByUserId(authDetails.getUser().getId()));
     }
 
-    @GetMapping("/rest/chats/{chatId}")
+    @GetMapping("/{chatId}")
     @ApiResponse(responseCode = "200",
             content = {@Content(schema = @Schema(implementation = ChatDto.class), mediaType = "application/json")})
     @ApiResponse(responseCode = "404", content = {@Content})
@@ -56,7 +57,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.findChatById(authDetails, chatId));
     }
 
-    @PostMapping("/rest/chats/new/{participantId}")
+    @PostMapping("/new/{participantId}")
     @ApiResponse(responseCode = "200",
             content = {@Content(schema = @Schema(implementation = ChatDto.class), mediaType = "application/json")})
     public ResponseEntity<ChatDto> createChat(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String participantId) {

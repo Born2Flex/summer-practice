@@ -10,11 +10,13 @@ function BrowserMockup() {
             <div className="bg-gray-100 border-t-0 w-full h-fit">
                 <iframe
                     width="624" height="341"
-                    src="https://iframe.mediadelivery.net/embed/256129/7053d518-b153-43a2-875c-0bef7abf7f3f?autoplay=true&loop=true&muted=true&preload=true&responsive=true"
+                    src="https://www.youtube.com/embed/IkCh8VfN2d4?autoplay=1&mute=1&loop=1&playlist=IkCh8VfN2d4"
+                    title="Event Management Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
                     loading="lazy"
-                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
                 >
-
                 </iframe>
                 {/* <video autoPlay={true} playsInline={true} muted={true} className="lp-Hero-video lp-Hero-video--landscape hide-reduced-motion" width="1248" height="735" poster="https://vz-57aae6f4-e6e.b-cdn.net/7053d518-b153-43a2-875c-0bef7abf7f3f/preview.webp"><source src="https://iframe.mediadelivery.net/play/256129/7053d518-b153-43a2-875c-0bef7abf7f3f" type="video/mov; codecs=avc1.4d002a" /></video> */}
 
