@@ -33,7 +33,7 @@ public class AuthSecurityFilter extends OncePerRequestFilter {
         log.info("Request to uri - {}", request.getRequestURI());
         String authHeader = request.getHeader(AUTH_HEADER);
 
-        if (!request.getRequestURI().startsWith("/rest")) {
+        if (!request.getRequestURI().startsWith("/go-event-flow")) {
             filterChain.doFilter(request, response);
             return;
         }

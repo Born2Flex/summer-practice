@@ -49,7 +49,7 @@ export async function loader() {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/events/types`, {
+        const response = await fetch(`${baseurl}/go-event-flow/events/types`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export async function action({ request }: { request: Request }) {
     console.log('Gathered event data:', eventData);
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    const response = await fetch(`${baseurl}/rest/events`, {
+    const response = await fetch(`${baseurl}/go-event-flow/events`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

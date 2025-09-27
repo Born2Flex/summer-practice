@@ -152,7 +152,7 @@ export async function action({ request }: { request: Request }) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/auth/register`, {
+        const response = await fetch(`${baseurl}/go-event-flow/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

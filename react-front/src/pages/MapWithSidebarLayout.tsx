@@ -67,7 +67,7 @@ async function loadAllEvents(token: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/events`, {
+        const response = await fetch(`${baseurl}/go-event-flow/events`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ async function loadSearchedEvents(token: string, params: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/events/search?${params}`, {
+        const response = await fetch(`${baseurl}/go-event-flow/events/search?${params}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

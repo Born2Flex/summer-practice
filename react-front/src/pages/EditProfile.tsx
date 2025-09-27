@@ -168,7 +168,7 @@ export async function action({ request }: { request: Request }) {
     console.log('Gathered profile data:', eventData);
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    const response = await fetch(`${baseurl}/rest/users/${userId}`, {
+    const response = await fetch(`${baseurl}/go-event-flow/users/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

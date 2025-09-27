@@ -156,7 +156,7 @@ async function editProfile({ token, userId }: { token: string, userId: string })
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/chats/new/${userId}`, {
+        const response = await fetch(`${baseurl}/go-event-flow/chats/new/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ async function deleteEvent({ token, eventId, userId }: { token: string, eventId:
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/events/${eventId}`, {
+        const response = await fetch(`${baseurl}/go-event-flow/events/${eventId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -231,7 +231,7 @@ export async function loader({ params }: { params: any }) {
 
     try {
         const startTime1 = new Date();
-        const response = await fetch(`${baseurl}/rest/users/${params.userId}`, {
+        const response = await fetch(`${baseurl}/go-event-flow/users/${params.userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

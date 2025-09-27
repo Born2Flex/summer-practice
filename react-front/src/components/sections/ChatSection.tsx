@@ -86,7 +86,7 @@ export async function loader({ params }: { params: any }) {
 
     try {
 
-        const response = await fetch(`${baseurl}/rest/chats/${chatId}`, {
+        const response = await fetch(`${baseurl}/go-event-flow/chats/${chatId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -40,7 +40,7 @@ async function loadChats(token: string) {
     const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/rest/chats`, {
+        const response = await fetch(`${baseurl}/go-event-flow/chats`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

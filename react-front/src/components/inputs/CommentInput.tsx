@@ -18,7 +18,7 @@ function CommentInput({ id }: { id: string }) {
             return;
         }
         try {
-            const response = await fetch(`${baseurl}/rest/events/${id}/comment`, {
+            const response = await fetch(`${baseurl}/go-event-flow/events/${id}/comment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
