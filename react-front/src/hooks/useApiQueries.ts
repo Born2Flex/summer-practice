@@ -130,10 +130,9 @@ export const useCreateComment = () => {
   
   return useMutation({
     mutationFn: async ({ eventId, comment }: { eventId: string; comment: string }) => {
-      return await apiClient.postJson(`/go-event-flow/events/${eventId}/comment`, comment);
+      return await apiClient.postJson(`/go-event-flow/events/${eventId}/comment`, { text: comment });
     },
-    onSuccess: (data, variables) => {
-      // Invalidate event details to refresh comments
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.eventDetails(variables.eventId) });
     },
   });
@@ -146,9 +145,10 @@ export const useDeleteEvent = () => {
     mutationFn: async ({ eventId }: { eventId: string }) => {
       return await apiClient.delete(`/go-event-flow/events/${eventId}`);
     },
-    onSuccess: () => {
-      // Invalidate events list
+    onSuccess: (_, eventId) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.events });
+      queryClient.invalidateQueries({ queryKey: queryKeys.eventDetails(eventId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.user });
     },
   });
 };

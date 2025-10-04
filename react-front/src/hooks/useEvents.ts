@@ -11,6 +11,13 @@ interface ShortEvent {
     currentParticipants: number;
     maxParticipants: number;
     entranceFee?: number;
+    startDateTime: string;
+    host: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        imgUrl?: string;
+    };
     location: {
         x: number;
         y: number;
@@ -100,7 +107,7 @@ export const useEvents = (params?: EventSearchParams) => {
             
             return apiClient.getJson<ShortEvent[]>(url);
         },
-        enabled: !params || (!!params?.longitude && !!params?.latitude), 
+        enabled: !params || (!!params?.longitude && !!params?.latitude),
     });
 };
 

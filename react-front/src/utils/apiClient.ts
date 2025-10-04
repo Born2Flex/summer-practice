@@ -209,6 +209,7 @@ class ApiClient {
 export const apiClient = new ApiClient(undefined, {
     onAuthError: () => {
         console.warn('Authentication failed. Redirecting to login...');
+        window.location.href = '/login';
     }
 });
 
@@ -235,6 +236,8 @@ export const publicApiClient = new ApiClient(undefined, {
 });
 
 publicApiClient['makeRequest'] = async function(url: string, options: RequestInit = {}): Promise<Response> {
+    const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    
     if (!options.headers || !('Content-Type' in options.headers)) {
         options.headers = {
             ...options.headers,
@@ -242,7 +245,7 @@ publicApiClient['makeRequest'] = async function(url: string, options: RequestIni
         };
     }
 
-    return await fetch(`${this.baseURL}${url}`, options);
+    return await fetch(`${baseURL}${url}`, options);
 };
 
 export default ApiClient;

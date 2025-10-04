@@ -1,19 +1,59 @@
 import UserPic from '../assets/empty-user.webp'
 import { Button, Textarea, Typography } from "@material-tailwind/react";
-import { Form, Link, redirect, useRouteLoaderData } from 'react-router-dom';
+import { Link, useRouteLoaderData, useNavigate } from 'react-router-dom';
 import ImageInput from '../components/inputs/ImageInput';
 import InputWithLabel from '../components/inputs/InputWithLabel';
-import User from '../interfaces/UserInterface'
 import { getUserId } from '../auth';
-import { apiClient } from '../utils/apiClient';
+import { useUser, useUpdateProfile } from '../hooks/useApiQueries';
 
 //EditProfile component, displays the same profile page for the user, but with the ability to edit properties
 function EditProfile() {
-    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    const loaderData = useRouteLoaderData('profile-layout') as { userId: string, isOwner: boolean };
+    const { data: profile, isLoading, error } = useUser(loaderData.userId);
+    const updateProfileMutation = useUpdateProfile();
+    const navigate = useNavigate();
     const userId = getUserId();
     console.log('profile data inside edit-profile:', profile);
 
-    if (!isOwner) return <div>you can't edit other people profiles</div>;
+    if (!loaderData.isOwner) return <div>you can't edit other people profiles</div>;
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-full flex justify-center items-center">
+                <p>Loading profile...</p>
+            </div>
+        );
+    }
+
+    if (error || !profile) {
+        return (
+            <div className="w-full h-full flex justify-center items-center">
+                <p>Error loading profile</p>
+            </div>
+        );
+    }
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        
+        const profileData = {
+            email: formData.get('email')?.toString(),
+            firstName: formData.get('name')?.toString(),
+            lastName: formData.get('surname')?.toString(),
+            imgUrl: formData.get('profile-image')?.toString(),
+            location: formData.get('location')?.toString(),
+            description: formData.get('description')?.toString(),
+        };
+
+        try {
+            await updateProfileMutation.mutateAsync({ userId: userId!, profileData });
+            console.log('Profile updated successfully');
+            navigate(`/profile/${userId}`);
+        } catch (error) {
+            console.error('Error updating profile:', error);
+        }
+    };
 
     return (
 
@@ -21,7 +61,7 @@ function EditProfile() {
             <section className="relative bg-gray-50/60 pt-24 pb-10 min-h-full">
                 <div className="container mx-auto px-4">
                     <div className="relative flex flex-col min-w-0 break-words bg-gray-50/80 w-full mb-6 shadow-xl rounded-lg">
-                        <Form method='PUT' className="px-6">
+                        <form onSubmit={handleSubmit} className="px-6">
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                     <div className="relative">
@@ -136,7 +176,7 @@ function EditProfile() {
                                     </div>
                                 </div>
                             </div>
-                        </Form>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -144,33 +184,3 @@ function EditProfile() {
 }
 
 export default EditProfile
-
-//EditProfile action function, fetches the form data and updates the user profile
-export async function action({ request }: { request: Request }) {
-    const data = await request.formData();
-    const userId = getUserId();
-
-    if (!userId) {
-        throw new Error('User ID not found');
-    }
-
-    const profileData = {
-        email: data.get('email')?.toString(),
-        firstName: data.get('name')?.toString(),
-        lastName: data.get('surname')?.toString(),
-        imgUrl: data.get('profile-image')?.toString(),
-        location: data.get('location')?.toString(),
-        description: data.get('description')?.toString(),
-    };
-
-    console.log('Gathered profile data:', profileData);
-
-    try {
-        await apiClient.putJson(`/go-event-flow/users/${userId}`, profileData);
-        console.log('Profile updated successfully');
-        return redirect(`/profile/${userId}`);
-    } catch (error) {
-        console.error('Error updating profile:', error);
-        throw new Error('Failed to update profile');
-    }
-}

@@ -19,6 +19,7 @@ const queryClient = new QueryClient({
   },
 });
 
+
 // Render the App component in the root element
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>

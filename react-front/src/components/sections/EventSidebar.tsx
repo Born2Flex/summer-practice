@@ -186,15 +186,9 @@ export async function loader({ params }: { params: any }) {
     const id = params.id;
     console.log(id);
 
-    try {
-        const event = await loaderApiClient.getJson<LongEvent>(`/go-event-flow/events/${id}`);
-        event.startDateTime = localDateTimeString(event.startDateTime);
-        console.log(event);
-        return event;
-
-    } catch (error) {
-        console.error('Error fetching events:', error);
-        return null;
-    }
-};
+    const event = await loaderApiClient.getJson<LongEvent>(`/go-event-flow/events/${id}`);
+    event.startDateTime = localDateTimeString(event.startDateTime);
+    console.log(event);
+    return event;
+}
 

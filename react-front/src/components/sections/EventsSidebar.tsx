@@ -1,10 +1,10 @@
-import { Form, useNavigate, useRouteLoaderData } from "react-router-dom"
+import { Form, useNavigate, useRouteLoaderData, Await } from "react-router-dom"
 import EventCard from "../cards/EventCard"
 import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 import ShortEvent from "../../interfaces/ShortEventInterface"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import EventCardSkeleton from "../cards/EventCardSkeleton"
 import { useEvents, useEventTypes } from "../../hooks/useEvents"
 
@@ -15,9 +15,7 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
     });
 };
 
-//EventsSidebar component, displays the events sidebar with the search form and events list
-function EventsSidebar() {
-    const data = useRouteLoaderData('map-layout') as { events: ShortEvent[] };
+function EventsContent({ initialEvents }: { initialEvents: ShortEvent[] }) {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useState<{
         'event-type'?: string[];
@@ -32,9 +30,8 @@ function EventsSidebar() {
     } | null>(null);
     
     const { data: eventTypes = [], error: typesError } = useEventTypes();
-    const { data: searchedEvents = [], isLoading: eventsLoading, error: eventsError } = useEvents(searchParams);
+    const { data: searchedEvents = [], isLoading: eventsLoading, error: eventsError } = useEvents(searchParams || undefined);
     
-    const initialEvents = Array.isArray(data?.events) ? data.events : [];
     const eventsToShow = searchParams ? searchedEvents : initialEvents;
 
     //Function to handle the search form submit event
@@ -93,9 +90,7 @@ function EventsSidebar() {
     };
 
     return (
-        <section className='w-fit min-w-[384px] flex flex-col bg-white gap-y-4 z-10 relative shadow-left p-4 pb-0 bg-white/70 overflow-hidden'>
-            <Background />
-            <div className="absolute z-0 pointer-events-none top-0 left-0 w-full h-full bg-white/65" />
+        <>
             <Form onSubmit={handleSubmit} className="flex flex-col gap-y-3">
                 <SearchInput />
                 <SearchDetailsForm eventTypes={eventTypes} />
@@ -103,7 +98,7 @@ function EventsSidebar() {
 
             <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
                 <div className="flex flex-col gap-y-3">
-                    {(eventsLoading || !searchParams) && (
+                    {eventsLoading && (
                         <div className="flex flex-col gap-y-3">
                             {[...Array(5)].map((_, index) => (
                                 <EventCardSkeleton key={index} />
@@ -130,16 +125,41 @@ function EventsSidebar() {
                     )}
                 </div>
             </div>
+        </>
+    )
+}
 
+function EventsSidebar() {
+    const data = useRouteLoaderData('map-layout') as { events: Promise<ShortEvent[]> };
+    
+    return (
+        <section className='w-fit min-w-[384px] flex flex-col bg-white gap-y-4 z-10 relative shadow-left p-4 pb-0 bg-white/70 overflow-hidden'>
+            <Background />
+            <div className="absolute z-0 pointer-events-none top-0 left-0 w-full h-full bg-white/65" />
+            
+            <Suspense fallback={
+                <div className="flex flex-col gap-y-3">
+                    <div className="flex flex-col gap-y-3">
+                        <SearchInput />
+                        <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
+                    </div>
+                    <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
+                        <div className="flex flex-col gap-y-3">
+                            {[...Array(5)].map((_, index) => (
+                                <EventCardSkeleton key={index} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            }>
+                <Await resolve={data.events}>
+                    {(initialEvents: ShortEvent[]) => (
+                        <EventsContent initialEvents={initialEvents} />
+                    )}
+                </Await>
+            </Suspense>
         </section>
     )
 }
 
 export default EventsSidebar
-
-export async function loader() {
-    // We don't need to manually check tokens here anymore
-    // Our React Query hooks will handle authentication automatically via the API client
-    // If auth fails, the API client will redirect to login
-    return {};
-}

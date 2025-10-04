@@ -14,18 +14,39 @@ import {
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
-import { Form, Link, redirect, useRouteLoaderData } from 'react-router-dom';
-import { getAccessToken, getUserId } from '../auth';
-import { useUser } from '../hooks/useApiQueries';
-import { apiClient } from '../utils/apiClient';
+import { Link, useRouteLoaderData } from 'react-router-dom';
+import { getUserId } from '../auth';
+import { useUser, useDeleteEvent, useCreateChat } from '../hooks/useApiQueries';
+import { requireAuth } from '../utils/authGuard';
 
 //Profile component, displays the user profile page
 function Profile() {
     const loaderData = useRouteLoaderData('profile-layout') as { userId: string, isOwner: boolean };
     const { data: profile, isLoading, error } = useUser(loaderData.userId);
+    const deleteEventMutation = useDeleteEvent();
+    const createChatMutation = useCreateChat();
     
     console.log('profile data inside component:', profile);
     console.log('isOwner:', loaderData.isOwner);
+
+    const handleDeleteEvent = async (eventId: string) => {
+        try {
+            await deleteEventMutation.mutateAsync({ eventId });
+            console.log('Event deleted successfully');
+        } catch (error) {
+            console.error('Error deleting event:', error);
+        }
+    };
+
+    const handleCreateChat = async () => {
+        try {
+            const responseData = await createChatMutation.mutateAsync(loaderData.userId) as { id: string };
+            console.log('Chat created successfully:', responseData);
+            window.location.href = `/chat/${responseData.id}`;
+        } catch (error) {
+            console.error('Error creating chat:', error);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -55,7 +76,7 @@ function Profile() {
             label: "Events",
             value: "events",
             icon: Square3Stack3DIcon,
-            desc: <UserEvents isOwner={loaderData.isOwner} />,
+            desc: <UserEvents isOwner={loaderData.isOwner} onDeleteEvent={handleDeleteEvent} />,
         },
     ];
 
@@ -89,18 +110,16 @@ function Profile() {
                                         )}
                                         {!loaderData.isOwner && (
                                             <>
-                                                <Form method='POST'>
-                                                    <Button
-                                                        type='submit'
-                                                        variant='outlined'
-                                                        color='gray'
-                                                        placeholder={undefined}
-                                                        onPointerEnterCapture={undefined}
-                                                        onPointerLeaveCapture={undefined}
-                                                    >
-                                                        Message
-                                                    </Button>
-                                                </Form>
+                                                <Button
+                                                    onClick={handleCreateChat}
+                                                    variant='outlined'
+                                                    color='gray'
+                                                    placeholder={undefined}
+                                                    onPointerEnterCapture={undefined}
+                                                    onPointerLeaveCapture={undefined}
+                                                >
+                                                    Message
+                                                </Button>
                                                 <Button
                                                     variant='filled'
                                                     color='gray'
@@ -170,54 +189,9 @@ function Profile() {
 
 export default Profile
 
-//Profile action function, handles user profile editing
-async function editProfile({ userId }: { userId: string }) {
-    try {
-        const responseData = await apiClient.postJson(`/go-event-flow/chats/new/${userId}`) as { id: string };
-        console.log('response to creating a chat:', responseData);
-        return redirect(`/chat/${responseData.id}`);
-    } catch (error) {
-        console.error('Error creating chat:', error);
-        throw new Error('Failed to create chat');
-    }
-}
-
-//Profile action function, handles user's event deletion
-async function deleteEvent({ eventId, userId }: { eventId: string, userId: string }) {
-    try {
-        await apiClient.delete(`/go-event-flow/events/${eventId}`);
-        return redirect(`/profile/${userId}`);
-    } catch (error) {
-        console.error('Error deleting event:', error);
-        throw new Error('Failed to delete event');
-    }
-}
-
-//Profile action function, handles profile editing and event deletion
-export async function action({ request, params }: { request: any, params: any }) {
-    const token = getAccessToken();
-    if (!token) {
-        return redirect('/login');
-    }
-
-    const method = request.method;
-
-    if (method === 'POST') {
-        return editProfile({ userId: params.userId });
-    }
-
-    if (method === 'DELETE') {
-        const data = await request.formData();
-        const eventId = data.get('eventId') as string;
-        return deleteEvent({ eventId, userId: params.userId });
-    }
-}
-
 export async function loader({ params }: { params: any }) {
-    const token = getAccessToken();
-    if (!token) {
-        return redirect('/login');
-    }
+    await requireAuth();
+    
     const userId = getUserId();
 
     return {

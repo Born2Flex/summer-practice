@@ -3,9 +3,9 @@ import LocationPicker from "../components/inputs/LocationPicker";
 import TabsButtons from "../components/elements/TabsButtons";
 import { useState } from "react";
 import { LatLngExpression } from "leaflet";
-import { redirect, useLoaderData } from "react-router-dom";
-import { getAccessToken } from "../auth";
+import { useLoaderData, redirect } from "react-router-dom";
 import { apiClient } from "../utils/apiClient";
+import { requireAuth } from "../utils/authGuard";
 
 //NewEventPage component, displays the new event page
 export function NewEventPage() {
@@ -43,11 +43,8 @@ export function NewEventPage() {
 export default NewEventPage;
 
 export async function loader() {
-    const token = getAccessToken();
-    if (!token) {
-        return redirect('/login');
-    }
-
+    await requireAuth();
+    
     const currentLocation = await new Promise<LatLngExpression>((resolve) => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -70,10 +67,6 @@ export async function loader() {
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
 
-    const token = getAccessToken();
-    if (!token) {
-        throw new Error('No JWT token found');
-    }
 
     const eventDate: string | undefined = data.get('event-date')?.toString();
     const eventTime: string | undefined = data.get('event-time')?.toString();

@@ -162,9 +162,13 @@ export function EventSidebarAccordion({
                                 )}
                             </div>
 
-                            <a href="#" className="mt-2">
+                            <button 
+                                type="button"
+                                className="mt-2 bg-transparent border-none p-0 cursor-pointer"
+                                onClick={(e) => e.preventDefault()}
+                            >
                                 <span className="text-xs text-gray-500 underline">View all</span>
-                            </a>
+                            </button>
                         </div>
 
                         <div className="flex flex-col justify-between text-center w-1/2 min-w-32 px-4 py-4 rounded-lg bg-white/40">
@@ -181,9 +185,13 @@ export function EventSidebarAccordion({
                                     <span className="ml-1 text-gray-600">Food, Drinks, Music</span>
                                 </p>
                             </div>
-                            <a href="#">
+                            <button 
+                                type="button"
+                                className="bg-transparent border-none p-0 cursor-pointer"
+                                onClick={(e) => e.preventDefault()}
+                            >
                                 <span className="text-xs text-gray-500 underline">View all</span>
-                            </a>
+                            </button>
                         </div>
                     </div>
 

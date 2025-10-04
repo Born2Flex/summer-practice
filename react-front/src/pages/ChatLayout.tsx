@@ -1,8 +1,7 @@
-import { Await, Outlet, defer, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import ChatsList from "../components/sections/ChatsList";
 import ShortChat from "../interfaces/ShortChatInterface";
 import { useWebSocket } from "../context/WebSocketContext";
-import { Suspense } from "react";
 import { loaderApiClient } from "../utils/apiClient";
 
 //ChatLayout component, displays the chat layout with the list of chats and the chat messages
@@ -18,17 +17,8 @@ function ChatLayout() {
 
     return (
         <div className='flex flex-1'>
-            <Suspense >
-                <Await resolve={chats}>
-                    {(chats: ShortChat[]) => (
-                        <>
-                            <ChatsList chats={chats} />
-                            <Outlet />
-                        </>
-                    )}
-
-                </Await>
-            </Suspense>
+            <ChatsList chats={chats} />
+            <Outlet />
         </div>
     );
 }
@@ -37,18 +27,14 @@ export default ChatLayout;
 
 //ChatLayout helper loader function, fetches the user's chats
 async function loadChats(): Promise<ShortChat[]> {
-    try {
-        return await loaderApiClient.getJson<ShortChat[]>('/go-event-flow/chats');
-    } catch (error) {
-        console.error('Error fetching chats:', error);
-        return [];
-    }
+    return await loaderApiClient.getJson<ShortChat[]>('/go-event-flow/chats');
 }
 
 //ChatLayout loader function, fetches the user's chats
 export async function loader() {
-    console.log('ChatLayout loader started');    
-    return defer({
-        chats: loadChats()
-    })
+    console.log('ChatLayout loader started');
+    const chats = await loadChats();
+    return {
+        chats: chats
+    };
 }

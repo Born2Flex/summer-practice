@@ -1,6 +1,6 @@
-import { redirect, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import ChatHeader from "./ChatHeader"
-import { getAccessToken, getUserId } from "../../auth"
+import { getUserId } from "../../auth"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react"
 import { useWebSocket } from "../../context/WebSocketContext"
 import ChatInput from "../inputs/ChatInput"
 import { useChat } from "../../hooks/useApiQueries"
+import { requireAuth } from "../../utils/authGuard"
 
 //ChatSection component, displays the chat section with the chat messages and input
 function ChatSection() {
@@ -101,10 +102,6 @@ function ChatSection() {
 export default ChatSection
 
 export async function loader({ params }: { params: any }) {
-    const token = getAccessToken();
-    if (!token) {
-        return redirect('/login');
-    }
-
+    await requireAuth();
     return { chatId: params.chatId };
 }
