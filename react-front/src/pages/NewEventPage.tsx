@@ -4,17 +4,19 @@ import TabsButtons from "../components/elements/TabsButtons";
 import { useState } from "react";
 import { LatLngExpression } from "leaflet";
 import { redirect, useLoaderData } from "react-router-dom";
+import { getAccessToken } from "../auth";
+import { apiClient } from "../utils/apiClient";
 
 //NewEventPage component, displays the new event page
 export function NewEventPage() {
-    const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
-
+    const data = useLoaderData() as { currentLocation: LatLngExpression };
     const [eventLocation, setEventLocation] = useState<LatLngExpression>(data.currentLocation);
 
     function handleLocationChange(location: LatLngExpression) {
         console.log('Location changed:', eventLocation, location);
-        setEventLocation(_old => location);
+        setEventLocation(() => location);
     }
+
     return (
         <div className="z-10 flex flex-1 justify-center overflow-auto custom-scrollbar bg-gray-50/60">
             <section className="flex flex-col lg:flex-row px-8 py-2 gap-6 w-full self-center bg-gray-50/50">
@@ -40,58 +42,35 @@ export function NewEventPage() {
 
 export default NewEventPage;
 
-//NewEventPage loader function, fetches event types and user location
 export async function loader() {
-    const token = localStorage.getItem('jwt');
+    const token = getAccessToken();
     if (!token) {
         return redirect('/login');
     }
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    try {
-        const response = await fetch(`${baseurl}/go-event-flow/events/types`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+    const currentLocation = await new Promise<LatLngExpression>((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                resolve([latitude, longitude]);
             },
-        });
+            () => {
+                console.log('Location access denied by user.');
+                resolve([40.7128, -74.0060]);
+            }
+        );
+    });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch event types');
-        }
-
-        const eventTypes = await response.json();
-
-        const currentLocation = await new Promise<LatLngExpression>((resolve) => {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    resolve([latitude, longitude]);
-                },
-                () => {
-                    console.log('Location access denied by user.');
-                    resolve([40.7128, -74.0060]);
-                }
-            );
-        });
-
-        return {
-            eventTypes: eventTypes,
-            currentLocation: currentLocation
-        };
-
-    } catch (error) {
-        console.error('Error fetching events:', error);
-        return null;
-    }
+    return {
+        currentLocation: currentLocation
+    };
 }
 
 //NewEventPage action function, sends new event data to the server
 export async function action({ request }: { request: Request }) {
     const data = await request.formData();
 
-    const token = localStorage.getItem('jwt');
+    const token = getAccessToken();
     if (!token) {
         throw new Error('No JWT token found');
     }
@@ -122,9 +101,7 @@ export async function action({ request }: { request: Request }) {
         console.log('Combined ISO date string:', isoDateString);
     }
 
-    let eventData: any;
-
-    eventData = {
+    const eventData = {
         title: data.get('title')?.toString(),
         description: data.get('description')?.toString(),
         availability: data.get('availability')?.toString(),
@@ -143,25 +120,13 @@ export async function action({ request }: { request: Request }) {
     };
 
     console.log('Gathered event data:', eventData);
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    const response = await fetch(`${baseurl}/go-event-flow/events`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(eventData)
-    });
-
-    const responseData = await response.json();
-    if (!response.ok) {
-        console.error(`Error ${response.status}: ${responseData}`);
-        throw new Error(`Error ${response.status}: ${responseData}`);
+    try {
+        const responseData = await apiClient.postJson('/go-event-flow/events', eventData);
+        console.log('Event created successfully:', responseData);
+        return redirect('/events');
+    } catch (error) {
+        console.error('Error creating event:', error);
+        throw new Error('Failed to create event');
     }
-
-    console.log('Event created successfully:', responseData);
-
-    return redirect('/events');
-
 }

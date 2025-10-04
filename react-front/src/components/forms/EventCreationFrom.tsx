@@ -1,20 +1,29 @@
 import { Typography, Textarea, Button } from '@material-tailwind/react'
 import InputWithLabel from '../inputs/InputWithLabel'
 import DatePicker from '../inputs/DatePicker'
-import { Form, useLoaderData } from 'react-router-dom'
+import { Form } from 'react-router-dom'
 import { LatLngExpression } from 'leaflet'
 import SingleSelectInput from '../inputs/SingleSelectInput'
 import ImageInput from '../inputs/ImageInput'
 import TimePicker from '../inputs/TimePicker'
 import { useState } from 'react'
+import { useEventTypes } from '../../hooks/useApiQueries'
 
 //EventCreationFrom component, displays the form for creating an event
 function EventCreationFrom({ tabName, location, locationData }: { tabName: string, location: string, locationData: LatLngExpression }) {
-    const data = useLoaderData() as { eventTypes: any[], currentLocation: LatLngExpression };
+    const { data: eventTypes, isLoading: eventTypesLoading } = useEventTypes();
     const [date, setDate] = useState<Date>();
 
     function onDateChange(date: Date) {
         setDate(date);
+    }
+
+    if (eventTypesLoading) {
+        return (
+            <div className="flex justify-center items-center p-8">
+                <p>Loading form...</p>
+            </div>
+        );
     }
 
     let lat, lng;
@@ -50,7 +59,7 @@ function EventCreationFrom({ tabName, location, locationData }: { tabName: strin
                         required
                     />
 
-                    <SingleSelectInput eventTypes={data.eventTypes} />
+                    <SingleSelectInput eventTypes={eventTypes || []} />
 
                     <DatePicker date={date} setDate={onDateChange} />
 

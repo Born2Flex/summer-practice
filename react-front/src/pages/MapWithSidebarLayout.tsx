@@ -1,10 +1,10 @@
 import EventsMap from '../components/elements/EventsMap'
 import { Await, Outlet, redirect, useRouteLoaderData, defer } from 'react-router-dom'
-import { getToken } from '../auth';
 import ShortEvent from '../interfaces/ShortEventInterface';
 import { Suspense } from 'react';
 import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Circle, Popup } from 'react-leaflet';
+import { loaderApiClient } from '../utils/apiClient';
 
 //MapWithSidebarLayout component, displays the map layout with sidebar, events and user location
 //makes use of Await and Suspense components to handle async data fetching
@@ -62,67 +62,26 @@ function MapWithSidebarLayout() {
 
 export default MapWithSidebarLayout
 
-//Loader to fetch events and user location
-async function loadAllEvents(token: string) {
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
+async function loadAllEvents(): Promise<ShortEvent[]> {
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/events`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-        const data = await response.json();
-        console.log('data:', data);
-
-        return data;
-
+        return await loaderApiClient.getJson<ShortEvent[]>('/go-event-flow/events');
     } catch (error) {
         console.error('Error fetching events:', error);
+        return [];
     }
 }
 
-//Loader to fetch searched events
-async function loadSearchedEvents(token: string, params: string) {
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
+async function loadSearchedEvents(params: string): Promise<ShortEvent[]> {
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/events/search?${params}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-        const data = await response.json();
-        console.log('data:', data);
-
-        return data;
+        return await loaderApiClient.getJson<ShortEvent[]>(`/go-event-flow/events/search?${params}`);
     } catch (error) {
         console.error('Error fetching events:', error);
+        return [];
     }
 }
 
-//Loader to check if user is logged in and fetch neccessary events
 export async function loader({ request }: { request: Request, params: any }) {
-
-    const token = getToken();
-    if (!token) {
-        return redirect('/login');
-    }
-
+    
     const url = new URL(request.url);
 
     const currentLocation = await new Promise<LatLngExpression>((resolve) => {
@@ -142,8 +101,8 @@ export async function loader({ request }: { request: Request, params: any }) {
 
     return defer({
         events: shouldSearch
-            ? loadSearchedEvents(token, url.searchParams.toString())
-            : loadAllEvents(token),
+            ? loadSearchedEvents(url.searchParams.toString())
+            : loadAllEvents(),
         currentLocation: currentLocation
     });
 }

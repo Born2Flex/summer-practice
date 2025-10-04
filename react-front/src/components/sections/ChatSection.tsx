@@ -1,41 +1,67 @@
-import { redirect, useLoaderData } from "react-router-dom"
+import { redirect, useParams } from "react-router-dom"
 import ChatHeader from "./ChatHeader"
-import { getToken, getUserId } from "../../auth"
+import { getAccessToken, getUserId } from "../../auth"
 import ChatBubble from "../elements/ChatBubble"
 import Chat from "../../interfaces/ChatInterface"
 import ShortUser from "../../interfaces/ShortUserInterface"
 import { useEffect, useRef, useState } from "react"
 import { useWebSocket } from "../../context/WebSocketContext"
 import ChatInput from "../inputs/ChatInput"
+import { useChat } from "../../hooks/useApiQueries"
 
 //ChatSection component, displays the chat section with the chat messages and input
 function ChatSection() {
-    const chatfetch = useLoaderData() as Chat;
-    const [chat, setChat] = useState(chatfetch);
+    const { chatId } = useParams<{ chatId: string }>();
+    const { data: chatfetch, isLoading, error } = useChat(chatId!);
+    const [chat, setChat] = useState<Chat | null>(null);
     const lastMessageRef = useRef<HTMLDivElement>(null)
     const { subscribeToChat, sendMessage } = useWebSocket();
 
+    useEffect(() => {
+        if (chatfetch) {
+            setChat(chatfetch);
+        }
+    }, [chatfetch]);
+
     //Subscribe to chat and update chat state with incoming messages
     useEffect(() => {
-        setChat(chatfetch);
+        if (!chat) return;
+        
         console.log("INNER EFFECT: ");
-        subscribeToChat(chatfetch.id, (message: any) => {
+        subscribeToChat(chat.id, (message: any) => {
             console.log("MESSAGE RECEIVED AND PASSED TO STATE: ", message);
             setChat((prevChat) => {
+                if (!prevChat) return prevChat;
                 return {
                     ...prevChat,
                     messages: [...prevChat.messages, message]
                 }
             });
         });
-    }, [chatfetch]);
+    }, [chat, subscribeToChat]);
 
     //Scroll to the last message on chat update
     useEffect(() => {
-        if (lastMessageRef.current) {
+        if (lastMessageRef.current && chat) {
             lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-    }, [chat.messages]);
+    }, [chat?.messages]);
+
+    if (isLoading) {
+        return (
+            <div className="z-0 w-3/4 bg-white/50 flex flex-col justify-center items-center">
+                <p>Loading chat...</p>
+            </div>
+        );
+    }
+
+    if (error || !chat) {
+        return (
+            <div className="z-0 w-3/4 bg-white/50 flex flex-col justify-center items-center">
+                <p>Error loading chat</p>
+            </div>
+        );
+    }
 
     console.log("user's state chat: ", chat, new Date());
 
@@ -74,35 +100,11 @@ function ChatSection() {
 
 export default ChatSection
 
-//Loader function to fetch chat data by chatId
 export async function loader({ params }: { params: any }) {
-    const token = getToken();
+    const token = getAccessToken();
     if (!token) {
         return redirect('/login');
     }
 
-    const chatId = params.chatId;
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
-    try {
-
-        const response = await fetch(`${baseurl}/go-event-flow/chats/${chatId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch chat data');
-        }
-
-        return await response.json();
-
-    } catch (error) {
-        console.error('Error fetching chat data:', error);
-        return null;
-    }
-
+    return { chatId: params.chatId };
 }

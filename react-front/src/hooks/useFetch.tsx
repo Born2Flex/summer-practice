@@ -1,51 +1,15 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { LatLngExpression } from "leaflet";
+import { useReverseGeocode } from "./useApiQueries";
 
-// useFetch hook, fetches data from Radar API
 const useFetch = ({ latLng }: { latLng: LatLngExpression }) => {
-    // fetched data
-    const [data, setData] = useState<any>([]);
-    // loading state
-    const [isLoading, setIsLoading] = useState(true);
-    // error state
-    const [error, setError] = useState(null);
+    const { data, isLoading, error, refetch } = useReverseGeocode(latLng);
 
-    const options = {
-        method: 'GET',
-        url: `https://api.radar.io/v1/geocode/reverse?coordinates=${latLng}&layers=address`,
-        headers: {
-            'Authorization': import.meta.env.VITE_RADAR_API_KEY as string,
-        },
+    return { 
+        data: data || [], 
+        isLoading, 
+        error, 
+        refetch 
     };
-
-    const fetchData = async () => {
-        setIsLoading(true);
-
-        try {
-            console.log('OPTIONS: ', options);
-            const response = await axios.request(options);
-            setData(response.data);
-            setIsLoading(false);
-        } catch (error) {
-            // @ts-expect-error TS(2345): Argument of type 'unknown' is not assignable to pa... Remove this comment to see the full error message
-            setError(error);
-            alert('There was an error fetching the data. Please try again later.')
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        fetchData();
-    }, [latLng]);
-
-    const refetch = () => {
-        setIsLoading(true);
-        fetchData();
-    }
-
-    return { data, isLoading, error, refetch };
 }
 
 export default useFetch;

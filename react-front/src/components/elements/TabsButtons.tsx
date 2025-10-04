@@ -14,11 +14,9 @@ import EventCreationFrom from "../forms/EventCreationFrom";
 import { LatLngExpression } from "leaflet";
 import useFetch from "../../hooks/useFetch";
 
-//TabsButtons component, displays the tabs for creating different types of events
 function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
     const { data: fetchedData, isLoading } = useFetch({ latLng: locationData });
     console.log(fetchedData);
-    // data for the tabs
     const data = [
         {
             label: "Public",
@@ -51,7 +49,7 @@ function TabsButtons({ locationData }: { locationData: LatLngExpression }) {
             <TabsBody placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 {data.map(({ value }) => (
                     <TabPanel key={value} value={value} className="px-0 pb-0">
-                        <EventCreationFrom tabName={value} location={isLoading ? 'Loading...' : fetchedData.addresses[0].formattedAddress} locationData={locationData} />
+                        <EventCreationFrom tabName={value} location={isLoading ? 'Loading...' : fetchedData?.addresses?.[0]?.formattedAddress || 'Unknown location'} locationData={locationData} />
                     </TabPanel>
                 ))}
             </TabsBody>

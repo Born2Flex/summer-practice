@@ -14,15 +14,34 @@ import {
 } from "@heroicons/react/24/solid";
 import UserInformation from '../components/sections/UserInformation';
 import UserEvents from '../components/sections/UserEvents';
-import { Form, Link, defer, redirect, useRouteLoaderData } from 'react-router-dom';
-import { getToken, getUserId } from '../auth';
-import User from '../interfaces/UserInterface';
+import { Form, Link, redirect, useRouteLoaderData } from 'react-router-dom';
+import { getAccessToken, getUserId } from '../auth';
+import { useUser } from '../hooks/useApiQueries';
+import { apiClient } from '../utils/apiClient';
 
 //Profile component, displays the user profile page
 function Profile() {
-    const { profile, isOwner } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    const loaderData = useRouteLoaderData('profile-layout') as { userId: string, isOwner: boolean };
+    const { data: profile, isLoading, error } = useUser(loaderData.userId);
+    
     console.log('profile data inside component:', profile);
-    console.log('isOwner:', isOwner);
+    console.log('isOwner:', loaderData.isOwner);
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-full flex justify-center items-center">
+                <p>Loading profile...</p>
+            </div>
+        );
+    }
+
+    if (error || !profile) {
+        return (
+            <div className="w-full h-full flex justify-center items-center">
+                <p>Error loading profile</p>
+            </div>
+        );
+    }
 
     //Data for the profile tabs
     const data = [
@@ -36,7 +55,7 @@ function Profile() {
             label: "Events",
             value: "events",
             icon: Square3Stack3DIcon,
-            desc: <UserEvents isOwner={isOwner} />,
+            desc: <UserEvents isOwner={loaderData.isOwner} />,
         },
     ];
 
@@ -55,7 +74,7 @@ function Profile() {
                                 </div>
                                 <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                                     <div className="flex py-6 px-3 mt-32 sm:mt-0 gap-4 justify-end">
-                                        {isOwner && (
+                                        {loaderData.isOwner && (
                                             <Link to="/profile/edit">
                                                 <Button
                                                     variant='filled'
@@ -68,7 +87,7 @@ function Profile() {
                                                 </Button>
                                             </Link>
                                         )}
-                                        {!isOwner && (
+                                        {!loaderData.isOwner && (
                                             <>
                                                 <Form method='POST'>
                                                     <Button
@@ -152,57 +171,31 @@ function Profile() {
 export default Profile
 
 //Profile action function, handles user profile editing
-async function editProfile({ token, userId }: { token: string, userId: string }) {
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
+async function editProfile({ userId }: { userId: string }) {
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/chats/new/${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to create chat');
-        }
-
-        const responseJson = await response.json();
-        console.log('response to creating a chat:', responseJson);
-
-        return redirect(`/chat/${responseJson.id}`);
+        const responseData = await apiClient.postJson(`/go-event-flow/chats/new/${userId}`) as { id: string };
+        console.log('response to creating a chat:', responseData);
+        return redirect(`/chat/${responseData.id}`);
     } catch (error) {
-        console.error('Error fetching chats:', error);
+        console.error('Error creating chat:', error);
+        throw new Error('Failed to create chat');
     }
 }
 
 //Profile action function, handles user's event deletion
-async function deleteEvent({ token, eventId, userId }: { token: string, eventId: string, userId: string }) {
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
+async function deleteEvent({ eventId, userId }: { eventId: string, userId: string }) {
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/events/${eventId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to delete chat');
-        }
-
+        await apiClient.delete(`/go-event-flow/events/${eventId}`);
         return redirect(`/profile/${userId}`);
     } catch (error) {
-        console.error('Error fetching chats:', error);
+        console.error('Error deleting event:', error);
+        throw new Error('Failed to delete event');
     }
 }
 
 //Profile action function, handles profile editing and event deletion
 export async function action({ request, params }: { request: any, params: any }) {
-    const token = getToken();
+    const token = getAccessToken();
     if (!token) {
         return redirect('/login');
     }
@@ -210,51 +203,25 @@ export async function action({ request, params }: { request: any, params: any })
     const method = request.method;
 
     if (method === 'POST') {
-        return editProfile({ token, userId: params.userId });
+        return editProfile({ userId: params.userId });
     }
 
     if (method === 'DELETE') {
         const data = await request.formData();
-        const eventId = data.get('eventId');
-        return deleteEvent({ token, eventId, userId: params.userId });
+        const eventId = data.get('eventId') as string;
+        return deleteEvent({ eventId, userId: params.userId });
     }
 }
 
-//Profile loader function, fetches user profile data
 export async function loader({ params }: { params: any }) {
-    const token = getToken();
+    const token = getAccessToken();
     if (!token) {
         return redirect('/login');
     }
     const userId = getUserId();
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    try {
-        const startTime1 = new Date();
-        const response = await fetch(`${baseurl}/go-event-flow/users/${params.userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        const endTime1 = new Date();
-        const timeTaken1 = Number(endTime1) - Number(startTime1);
-        console.log(`Time taken for the first request: ${timeTaken1}ms`);
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-        return defer({
-            profile: await response.json(),
-            isOwner: params.userId === userId,
-        })
-
-    } catch (error) {
-        console.error('Error fetching events:', error);
-        return null;
-    }
-
+    return {
+        userId: params.userId,
+        isOwner: params.userId === userId,
+    };
 }

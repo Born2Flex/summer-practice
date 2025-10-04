@@ -4,7 +4,8 @@ import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, json, redirect, useActionData } from "react-router-dom";
-import { setToken, setUserId } from "../auth";
+import { setAccessToken, setRefreshToken, setUserId } from "../auth";
+import { publicApiClient } from "../utils/apiClient";
 
 //SignupPage component, displays the signup page
 function SignupPage() {
@@ -149,26 +150,13 @@ export async function action({ request }: { request: Request }) {
     if (authData.password !== authData.repeatPassword) {
         return json({ error: 'Passwords do not match.' }, { status: 422 });
     }
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/auth/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(authData)
-        });
-
-        const responseData = await response.json();
-
-        if (!response.ok) {
-            console.error(`Error ${response.status}: ${responseData}`);
-            throw new Error(`Error ${response.status}: ${responseData}`);
-        }
+        const responseData = await publicApiClient.postJson('/go-event-flow/auth/register', authData);
 
         console.log('Created successfully:', responseData);
-        setToken(responseData.token);
+        setAccessToken(responseData.accessToken);
+        setRefreshToken(responseData.refreshToken);
         setUserId(responseData.userId);
 
     } catch (error) {

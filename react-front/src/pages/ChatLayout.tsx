@@ -1,9 +1,9 @@
-import { Await, Outlet, defer, redirect, useLoaderData } from "react-router-dom";
+import { Await, Outlet, defer, useLoaderData } from "react-router-dom";
 import ChatsList from "../components/sections/ChatsList";
-import { getToken } from "../auth";
 import ShortChat from "../interfaces/ShortChatInterface";
 import { useWebSocket } from "../context/WebSocketContext";
 import { Suspense } from "react";
+import { loaderApiClient } from "../utils/apiClient";
 
 //ChatLayout component, displays the chat layout with the list of chats and the chat messages
 function ChatLayout() {
@@ -36,40 +36,19 @@ function ChatLayout() {
 export default ChatLayout;
 
 //ChatLayout helper loader function, fetches the user's chats
-async function loadChats(token: string) {
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
+async function loadChats(): Promise<ShortChat[]> {
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/chats`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-        const data = await response.json();
-        console.log('data:', data);
-
-        return data;
+        return await loaderApiClient.getJson<ShortChat[]>('/go-event-flow/chats');
     } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error fetching chats:', error);
+        return [];
     }
 }
 
 //ChatLayout loader function, fetches the user's chats
 export async function loader() {
-    console.log('ChatLayout loader started');
-    const token = getToken();
-    if (!token) {
-        return redirect('/login');
-    }
-
+    console.log('ChatLayout loader started');    
     return defer({
-        chats: loadChats(token)
+        chats: loadChats()
     })
 }

@@ -5,6 +5,7 @@ import ImageInput from '../components/inputs/ImageInput';
 import InputWithLabel from '../components/inputs/InputWithLabel';
 import User from '../interfaces/UserInterface'
 import { getUserId } from '../auth';
+import { apiClient } from '../utils/apiClient';
 
 //EditProfile component, displays the same profile page for the user, but with the ability to edit properties
 function EditProfile() {
@@ -149,14 +150,11 @@ export async function action({ request }: { request: Request }) {
     const data = await request.formData();
     const userId = getUserId();
 
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-        throw new Error('No JWT token found');
+    if (!userId) {
+        throw new Error('User ID not found');
     }
 
-    let eventData: any;
-
-    eventData = {
+    const profileData = {
         email: data.get('email')?.toString(),
         firstName: data.get('name')?.toString(),
         lastName: data.get('surname')?.toString(),
@@ -165,25 +163,14 @@ export async function action({ request }: { request: Request }) {
         description: data.get('description')?.toString(),
     };
 
-    console.log('Gathered profile data:', eventData);
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+    console.log('Gathered profile data:', profileData);
 
-    const response = await fetch(`${baseurl}/go-event-flow/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(eventData)
-    });
-
-    if (!response.ok) {
-        console.error(`Error ${response.status} ${response.json()}`);
-        throw new Error(`Error ${response.status} ${response.json()}`);
+    try {
+        await apiClient.putJson(`/go-event-flow/users/${userId}`, profileData);
+        console.log('Profile updated successfully');
+        return redirect(`/profile/${userId}`);
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        throw new Error('Failed to update profile');
     }
-
-    console.log('Event created successfully:', response);
-
-    return redirect(`/profile/${userId}`);
-
 }
