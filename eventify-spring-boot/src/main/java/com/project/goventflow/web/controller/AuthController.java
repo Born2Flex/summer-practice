@@ -3,6 +3,7 @@ package com.project.goventflow.web.controller;
 import com.project.goventflow.domain.dto.auth.LoginRequest;
 import com.project.goventflow.domain.dto.auth.JwtResponseDto;
 import com.project.goventflow.domain.dto.auth.RegisterRequest;
+import com.project.goventflow.domain.dto.auth.RefreshTokenRequest;
 import com.project.goventflow.web.handler.dto.ApiErrorDto;
 import com.project.goventflow.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,5 +44,15 @@ public class AuthController {
             content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
     public JwtResponseDto login(@RequestBody LoginRequest request) {
         return authService.authenticateUser(request);
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Refresh authentication token using refresh token.")
+    @ApiResponse(responseCode = "200",
+            content = {@Content(schema = @Schema(implementation = JwtResponseDto.class), mediaType = "application/json")})
+    @ApiResponse(responseCode = "403",
+            content = {@Content(schema = @Schema(implementation = ApiErrorDto.class), mediaType = "application/json")})
+    public JwtResponseDto refreshToken(@RequestBody @Valid RefreshTokenRequest request) {
+        return authService.refreshToken(request);
     }
 }
