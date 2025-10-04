@@ -17,6 +17,9 @@ import com.project.goventflow.repository.EventRepository;
 import com.project.goventflow.config.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
@@ -36,11 +39,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class EventService {
+    private final EmbeddingService embeddingService;
     private final EventRepository eventRepository;
     private final CommentRepository commentRepository;
     private final EventMapper eventMapper;
     private final CommentMapper commentMapper;
     private final MongoTemplate template;
+
+    private final VectorStore vectorStore;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -140,6 +146,15 @@ public class EventService {
 
         List<Event> events = template.find(query, Event.class);
         return eventMapper.toListDto(events);
+    }
+
+    public List<EventShortDto> searchEventsVector(String search_query, int limit) {
+        //float[] embedding = embeddingService.embedText(search_query);
+        List<Event> eventEntities = vectorStore.similaritySearch(SearchRequest.builder().query(search_query).topK(limit).build());
+        //List<Event> eventEntities = eventRepository.findTop30ByEmbeddingNear(Vector.of(embedding), ScoringFunction.cosine());
+        // List<Event> eventEntities = eventRepository.searchByEmbeddingNear(Vector.of(embedding), ScoringFunction.cosine());
+
+        return eventMapper.toListDto(eventEntities);
     }
 
     private List<String> normalizeTags(List<String> tags) {

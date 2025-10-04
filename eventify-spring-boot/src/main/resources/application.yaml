@@ -33,5 +33,5 @@ app:
     securedUris: ${rest.prefix}/**
 
 jwt:
-  secret:
-  expiration-time-minutes:
+  secret: secret
+  expiration-time-minutes: 30
