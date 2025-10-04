@@ -7,6 +7,7 @@ import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
 import org.mapstruct.*;
+import org.springframework.ai.document.Document;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public abstract class EventMapper {
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventShortDto toShortDto(Event event);
     public abstract List<EventShortDto> toListDto(List<Event> eventEntities);
+
+    public abstract List<EventShortDto> embeddingsToList(List<Document> embeddedDocuments);
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventParticipantsDto toParticipantsDto(Event event);
 

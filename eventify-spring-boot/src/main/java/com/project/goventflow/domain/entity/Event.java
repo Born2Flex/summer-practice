@@ -42,4 +42,6 @@ public class Event {
     private LocalDateTime startDateTime;
     private List<Comment> comments = new ArrayList<>();
     private String imgUrl;
+
+    private float[] embedding;
 }

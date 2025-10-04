@@ -1,22 +1,26 @@
 package com.project.goventflow.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.goventflow.config.security.AuthDetails;
+import com.project.goventflow.domain.dto.event.EventCreationDto;
+import com.project.goventflow.domain.dto.event.EventDto;
 import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
-import com.project.goventflow.domain.dto.event.EventCreationDto;
-import com.project.goventflow.domain.dto.event.EventDto;
 import com.project.goventflow.domain.entity.Comment;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
 import com.project.goventflow.domain.enumeration.EventAvailability;
 import com.project.goventflow.domain.enumeration.EventType;
-import com.project.goventflow.service.mapper.CommentMapper;
-import com.project.goventflow.service.mapper.EventMapper;
 import com.project.goventflow.repository.CommentRepository;
 import com.project.goventflow.repository.EventRepository;
-import com.project.goventflow.config.security.AuthDetails;
+import com.project.goventflow.service.mapper.CommentMapper;
+import com.project.goventflow.service.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
@@ -36,11 +40,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class EventService {
+    private final EmbeddingService embeddingService;
     private final EventRepository eventRepository;
     private final CommentRepository commentRepository;
     private final EventMapper eventMapper;
     private final CommentMapper commentMapper;
     private final MongoTemplate template;
+    private final ObjectMapper objectMapper;
+
+    private final VectorStore vectorStore;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -140,6 +148,14 @@ public class EventService {
 
         List<Event> events = template.find(query, Event.class);
         return eventMapper.toListDto(events);
+    }
+
+    public List<EventShortDto> searchEventsVector(String search_query, int limit) {
+        //float[] embedding = embeddingService.embedText(search_query);
+        List<Document> eventEntities = vectorStore.similaritySearch(SearchRequest.builder().query(search_query).topK(limit).build());
+        //List<Event> eventEntities = eventRepository.findTop30ByEmbeddingNear(Vector.of(embedding), ScoringFunction.cosine());
+        // List<Event> eventEntities = eventRepository.searchByEmbeddingNear(Vector.of(embedding), ScoringFunction.cosine());
+        return eventMapper.embeddingsToList(eventEntities);
     }
 
     private List<String> normalizeTags(List<String> tags) {
