@@ -4,9 +4,14 @@ import com.project.goventflow.domain.dto.event.EventCreationDto;
 import com.project.goventflow.domain.dto.event.EventDto;
 import com.project.goventflow.domain.dto.event.EventParticipantsDto;
 import com.project.goventflow.domain.dto.event.EventShortDto;
+import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -14,16 +19,22 @@ import java.util.List;
 public abstract class EventMapper {
     @Mapping(target = "tags", ignore = true)
     public abstract Event toEntity(EventCreationDto eventDto);
+
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventDto toDto(Event event);
+
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventShortDto toShortDto(Event event);
+
     public abstract List<EventShortDto> toListDto(List<Event> eventEntities);
+
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventParticipantsDto toParticipantsDto(Event event);
 
     @Named("getAmountOfParticipants")
     protected int getAmountOfParticipants(List<User> users) {
-        return users == null? 0 : users.size();
+        return users == null ? 0 : users.size();
     }
+
+    public abstract Event updateEvent(@MappingTarget Event event, EventUpdateDto eventDto);
 }

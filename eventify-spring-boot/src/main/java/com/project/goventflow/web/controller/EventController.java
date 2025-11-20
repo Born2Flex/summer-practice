@@ -1,6 +1,7 @@
 package com.project.goventflow.web.controller;
 
 import com.project.goventflow.domain.dto.event.EventShortDto;
+import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
 import com.project.goventflow.domain.dto.event.EventCreationDto;
@@ -42,6 +43,16 @@ public class EventController {
     @ApiResponse(responseCode = "400", description = "Invalid event data", content = {@Content})
     public EventDto createEvent(@AuthenticationPrincipal AuthDetails authDetails, @RequestBody @Valid EventCreationDto event) {
         return eventService.createEvent(authDetails, event);
+    }
+
+    @PutMapping("/{eventId}")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Create a new event.", description = "Create a new event.")
+    @ApiResponse(responseCode = "201", description = "Event created successfully",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))})
+    @ApiResponse(responseCode = "400", description = "Invalid event data", content = {@Content})
+    public EventDto updateEvent(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable String eventId, @RequestBody @Valid EventUpdateDto updateDto) {
+        return eventService.updateEvent(authDetails, eventId, updateDto);
     }
 
     @PostMapping("/{eventId}/comment")

@@ -5,7 +5,17 @@ spring:
     mongodb:
       uri:
       database:
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 rest:
   prefix: /go-event-flow
 
@@ -35,3 +45,7 @@ app:
 jwt:
   secret:
   expiration-time-minutes:
+
+mail:
+  templates:
+    folder:  mail-templates/
