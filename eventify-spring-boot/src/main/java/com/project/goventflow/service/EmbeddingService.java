@@ -1,22 +1,30 @@
 package com.project.goventflow.service;
 
-import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.embedding.EmbeddingRequest;
-import org.springframework.ai.embedding.EmbeddingResponse;
+import com.project.goventflow.domain.entity.Event;
+import org.springframework.ai.vertexai.embedding.text.VertexAiTextEmbeddingModel;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EmbeddingService {
-    private final EmbeddingModel embeddingModel;
+    private final VertexAiTextEmbeddingModel embeddingModel;
 
-    public EmbeddingService(EmbeddingModel embeddingModel) {
+    public EmbeddingService(VertexAiTextEmbeddingModel embeddingModel) {
         this.embeddingModel = embeddingModel;
     }
 
     public float[] embedText(String text) {
-        EmbeddingResponse response = embeddingModel.call(new EmbeddingRequest(List.of(text), null));
-        return response.getResults().getFirst().getOutput();
+        return embeddingModel.embed(text);
+    }
+
+    public float[] embedEvent(Event event) {
+        String text = eventToText(event);
+        return embeddingModel.embed(text);
+    }
+
+    private String eventToText(Event event) {
+        return  "Title:" +  event.getTitle() + '\n' +
+                "Description:" +  event.getDescription() + '\n' +
+                "Event type:" +  event.getEventType() + '\n' +
+                "Location name:" +  event.getLocationName() + '\n';
     }
 }
