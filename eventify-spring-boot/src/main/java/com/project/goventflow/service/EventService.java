@@ -189,8 +189,8 @@ public class EventService {
                         .append("index", "event-search")
                         .append("path", "embedding")
                         .append("queryVector", embedding)
-                        .append("numCandidates", 5)
-                        .append("limit", 2)
+                        .append("numCandidates", 20)
+                        .append("limit", 10)
                 ),
                 Aggregation.match(criteria)
         );
