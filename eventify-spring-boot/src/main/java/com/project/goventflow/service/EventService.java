@@ -17,13 +17,14 @@ import com.project.goventflow.repository.EventRepository;
 import com.project.goventflow.config.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.bson.Document;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
+import org.springframework.data.geo.Circle;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,8 +48,6 @@ public class EventService {
     private final CommentMapper commentMapper;
     private final MongoTemplate template;
 
-    private final VectorStore vectorStore;
-
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
         if (event.getAvailability() == EventAvailability.PAID && event.getEntranceFee() == null) {
@@ -55,6 +55,7 @@ public class EventService {
         }
         event.setHost(authDetails.getUser());
         event.setTags(normalizeTags(eventCreationDto.getTags()));
+        event.setEmbedding(embeddingService.embedEvent(event));
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
     }
@@ -148,14 +149,55 @@ public class EventService {
         return eventMapper.toListDto(events);
     }
 
-    public List<EventShortDto> searchEventsVector(String search_query, int limit) {
-        //float[] embedding = embeddingService.embedText(search_query);
-        List<Event> eventEntities = vectorStore.similaritySearch(SearchRequest.builder().query(search_query).topK(limit).build());
-        //List<Event> eventEntities = eventRepository.findTop30ByEmbeddingNear(Vector.of(embedding), ScoringFunction.cosine());
-        // List<Event> eventEntities = eventRepository.searchByEmbeddingNear(Vector.of(embedding), ScoringFunction.cosine());
+    public List<EventShortDto> vectorSearchEvents(String query, List<EventType> type, List<EventAvailability> availability,
+                                            LocalDateTime from, LocalDateTime to,
+                                            List<String> tags, int eventRadius,
+                                            double latitude, double longitude) {
+        Criteria criteria = new Criteria();
 
-        return eventMapper.toListDto(eventEntities);
+        if (type != null) {
+            criteria.and("eventType").in(type);
+        }
+        if (availability != null) {
+            criteria.and("availability").in(availability);
+        }
+        criteria.and("startDateTime").gte(from != null ? from : LocalDate.now());
+
+        if (to != null) {
+            criteria.and("startDateTime").lte(to);
+        }
+
+        if (tags != null) {
+            criteria.and("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags)));
+
+        }
+
+        Point location = new Point(latitude, longitude);
+        Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
+        criteria.and("location").withinSphere(new Circle(location, distance.getNormalizedValue()));
+
+        float[] queryVector = embeddingService.embedText(query);
+
+        List<Double> embedding = new ArrayList<>();
+        for (float f : queryVector) {
+            embedding.add((double) f);
+        }
+
+        TypedAggregation<Event> aggregation = TypedAggregation.newAggregation(
+                Event.class,
+                context -> new Document("$vectorSearch", new Document()
+                        .append("index", "event-search")
+                        .append("path", "embedding")
+                        .append("queryVector", embedding)
+                        .append("numCandidates", 5)
+                        .append("limit", 2)
+                ),
+                Aggregation.match(criteria)
+        );
+        List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
+        return eventMapper.toListDto(events);
     }
+
 
     private List<String> normalizeTags(List<String> tags) {
         return tags.stream().map(String::toLowerCase).toList();
