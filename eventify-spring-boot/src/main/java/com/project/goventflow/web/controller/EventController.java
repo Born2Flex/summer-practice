@@ -88,6 +88,22 @@ public class EventController {
         return eventService.searchEvents(type, availability, from, to, tags, searchValue, eventDistance, latitude, longitude);
     }
 
+    @GetMapping("/vector-search")
+    @Operation(summary = "Search events based on various criteria using vector index",
+            description = "Provide criteria such as event type, availability, date range, radius, and location to search for events.")
+    @ApiResponse(responseCode = "200", description = "Events found",
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class))))
+    public List<EventShortDto> vectorSearchEvents(@RequestParam(name = "query") String query,
+                                            @RequestParam(required = false, name = "event-type") List<EventType> type,
+                                            @RequestParam(required = false, name = "event-category") List<EventAvailability> availability,
+                                            @RequestParam(required = false) LocalDateTime from,
+                                            @RequestParam(required = false) LocalDateTime to,
+                                            @RequestParam(required = false, name = "tag") List<String> tags,
+                                            @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
+                                            @RequestParam double longitude, @RequestParam double latitude) {
+        return eventService.vectorSearchEvents(query, type, availability, from, to, tags, eventDistance, latitude, longitude);
+    }
+
     @PatchMapping("/{eventId}/participate")
     @Operation(summary = "Submit participation in event", description = "Submit participation in event")
     @ApiResponse(responseCode = "200", description = "Participation submitted successfully")
