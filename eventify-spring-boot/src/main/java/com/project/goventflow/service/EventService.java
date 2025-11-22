@@ -1,6 +1,7 @@
 package com.project.goventflow.service;
 
 import com.project.goventflow.domain.dto.event.EventShortDto;
+import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
 import com.project.goventflow.domain.dto.event.EventCreationDto;
@@ -47,6 +48,7 @@ public class EventService {
     private final EventMapper eventMapper;
     private final CommentMapper commentMapper;
     private final MongoTemplate template;
+    private final MailingService mailingService;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -60,8 +62,17 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
+    public EventDto updateEvent(AuthDetails authDetails, String eventId, EventUpdateDto eventDto) {
+        Event event = getEventOrElseThrow(eventId);
+        validateHostIsManagingEvent(authDetails, event);
+        Event updatedEvent = eventMapper.updateEvent(event, eventDto);
+        mailingService.sendEventUpdateNotification(event);
+        eventRepository.save(updatedEvent);
+        return eventMapper.toDto(updatedEvent);
+    }
+
     public CommentDto createComment(AuthDetails authDetails, String eventId, CommentCreationDto comment) {
-        Event event = getEventOrThrow(eventId);
+        Event event = getEventOrElseThrow(eventId);
         Comment commentEntity = commentMapper.toEntity(comment, authDetails.getUser());
         Comment savedComment = commentRepository.save(commentEntity);
         event.getComments().add(savedComment);
@@ -70,7 +81,7 @@ public class EventService {
     }
 
     public EventDto getEventById(String eventId) {
-        Event event = getEventOrThrow(eventId);
+        Event event = getEventOrElseThrow(eventId);
         return eventMapper.toDto(event);
     }
 
@@ -89,7 +100,7 @@ public class EventService {
     }
 
     public void submitParticipation(AuthDetails authDetails, String eventId) {
-        Event event = getEventOrThrow(eventId);
+        Event event = getEventOrElseThrow(eventId);
         User user = authDetails.getUser();
         List<User> participants = event.getParticipants();
 
@@ -107,10 +118,8 @@ public class EventService {
     }
 
     public void deleteEvent(AuthDetails authDetails, String eventId) {
-        Event event = getEventOrThrow(eventId);
-        if (!event.getHost().equals(authDetails.getUser())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not event host");
-        }
+        Event event = getEventOrElseThrow(eventId);
+        validateHostIsManagingEvent(authDetails, event);
         eventRepository.delete(event);
     }
 
@@ -201,8 +210,14 @@ public class EventService {
         return tags.stream().map(String::toLowerCase).toList();
     }
 
-    private Event getEventOrThrow(String eventId) {
+    private Event getEventOrElseThrow(String eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event not found"));
+    }
+
+    private void validateHostIsManagingEvent(AuthDetails authDetails, Event event) {
+        if (!authDetails.getUser().getId().equals(event.getHost().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not event host");
+        }
     }
 }
