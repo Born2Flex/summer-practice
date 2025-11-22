@@ -169,7 +169,6 @@ public class EventService {
 
         if (tags != null) {
             criteria.and("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags)));
-
         }
 
         Point location = new Point(latitude, longitude);
@@ -197,7 +196,6 @@ public class EventService {
         List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
         return eventMapper.toListDto(events);
     }
-
 
     private List<String> normalizeTags(List<String> tags) {
         return tags.stream().map(String::toLowerCase).toList();
