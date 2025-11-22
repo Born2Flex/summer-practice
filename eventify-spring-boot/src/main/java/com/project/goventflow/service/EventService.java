@@ -1,5 +1,6 @@
 package com.project.goventflow.service;
 
+import com.project.goventflow.domain.dto.event.EventSearchParams;
 import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
@@ -49,6 +50,7 @@ public class EventService {
     private final CommentMapper commentMapper;
     private final MongoTemplate template;
     private final MailingService mailingService;
+    private final EventCriteriaBuilder eventCriteriaBuilder;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -123,68 +125,38 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
-                                            LocalDateTime from, LocalDateTime to,
-                                            List<String> tags, String searchValue, int eventRadius,
-                                            double latitude, double longitude) {
+    public List<EventShortDto> searchEvents(EventSearchParams params) {
         Query query = new Query();
 
-        if (type != null) {
-            query.addCriteria(Criteria.where("eventType").in(type));
-        }
-        if (availability != null) {
-            query.addCriteria(Criteria.where("availability").in(availability));
-        }
-        Criteria criteria = Criteria.where("startDateTime");
-        criteria = criteria.gte(from != null ? from : LocalDate.now());
+        Criteria baseCriteria = eventCriteriaBuilder.buildBaseCriteria(params);
+        query.addCriteria(baseCriteria);
 
-        if (to != null) {
-            criteria = criteria.lte(to);
-        }
-        query.addCriteria(criteria);
+        query.addCriteria(eventCriteriaBuilder.nearSphereFilter(
+                params.getLatitude(),
+                params.getLongitude(),
+                params.getEventDistance()
+        ));
 
-        if (tags != null) {
-            query.addCriteria(Criteria.where("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags))));
+        if (params.getSearchValue() != null) {
+            query.addCriteria(Criteria.where("title").regex(params.getSearchValue()));
         }
-        if (searchValue != null) {
-            query.addCriteria(Criteria.where("title").regex(searchValue));
-        }
-
-        Point location = new Point(latitude, longitude);
-        Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
-        query.addCriteria(Criteria.where("location").nearSphere(location).maxDistance(distance.getNormalizedValue()));
 
         List<Event> events = template.find(query, Event.class);
         return eventMapper.toListDto(events);
     }
 
-    public List<EventShortDto> vectorSearchEvents(String query, List<EventType> type, List<EventAvailability> availability,
-                                            LocalDateTime from, LocalDateTime to,
-                                            List<String> tags, int eventRadius,
-                                            double latitude, double longitude) {
-        Criteria criteria = new Criteria();
+    public List<EventShortDto> vectorSearchEvents(EventSearchParams params) {
+        Criteria criteria = eventCriteriaBuilder.buildBaseCriteria(params);
 
-        if (type != null) {
-            criteria.and("eventType").in(type);
-        }
-        if (availability != null) {
-            criteria.and("availability").in(availability);
-        }
-        criteria.and("startDateTime").gte(from != null ? from : LocalDate.now());
+        Criteria geoCriteria = eventCriteriaBuilder.withinSphereFilter(
+                params.getLatitude(),
+                params.getLongitude(),
+                params.getEventDistance()
+        );
 
-        if (to != null) {
-            criteria.and("startDateTime").lte(to);
-        }
+        Criteria finalMatchCriteria = new Criteria().andOperator(criteria, geoCriteria);
 
-        if (tags != null) {
-            criteria.and("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags)));
-        }
-
-        Point location = new Point(latitude, longitude);
-        Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
-        criteria.and("location").withinSphere(new Circle(location, distance.getNormalizedValue()));
-
-        float[] queryVector = embeddingService.embedText(query);
+        float[] queryVector = embeddingService.embedText(params.getQuery());
 
         List<Double> embedding = new ArrayList<>();
         for (float f : queryVector) {
@@ -200,7 +172,7 @@ public class EventService {
                         .append("numCandidates", 20)
                         .append("limit", 10)
                 ),
-                Aggregation.match(criteria)
+                Aggregation.match(finalMatchCriteria)
         );
         List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
         return eventMapper.toListDto(events);

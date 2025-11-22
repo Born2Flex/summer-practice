@@ -1,5 +1,6 @@
 package com.project.goventflow.web.controller;
 
+import com.project.goventflow.domain.dto.event.EventSearchParams;
 import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
@@ -96,7 +97,18 @@ public class EventController {
                                             @RequestParam(required = false, name = "search-value") String searchValue,
                                             @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
                                             @RequestParam double longitude, @RequestParam double latitude) {
-        return eventService.searchEvents(type, availability, from, to, tags, searchValue, eventDistance, latitude, longitude);
+        EventSearchParams params = EventSearchParams.builder()
+                .eventType(type)
+                .availability(availability)
+                .from(from)
+                .to(to)
+                .tags(tags)
+                .searchValue(searchValue)
+                .eventDistance(eventDistance)
+                .longitude(longitude)
+                .latitude(latitude)
+                .build();
+        return eventService.searchEvents(params);
     }
 
     @GetMapping("/vector-search")
@@ -112,7 +124,18 @@ public class EventController {
                                             @RequestParam(required = false, name = "tag") List<String> tags,
                                             @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
                                             @RequestParam double longitude, @RequestParam double latitude) {
-        return eventService.vectorSearchEvents(query, type, availability, from, to, tags, eventDistance, latitude, longitude);
+        EventSearchParams params = EventSearchParams.builder()
+                .eventType(type)
+                .availability(availability)
+                .from(from)
+                .to(to)
+                .tags(tags)
+                .query(query)
+                .eventDistance(eventDistance)
+                .longitude(longitude)
+                .latitude(latitude)
+                .build();
+        return eventService.vectorSearchEvents(params);
     }
 
     @PatchMapping("/{eventId}/participate")
