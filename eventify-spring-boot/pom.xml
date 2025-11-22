@@ -19,12 +19,19 @@
         <springdoc.openapi.starter.webmvc.ui.version>2.8.13</springdoc.openapi.starter.webmvc.ui.version>
         <maven.compile.plugin.version>3.11.0</maven.compile.plugin.version>
         <jwt.version>0.13.0</jwt.version>
+        <spring.ai.starter.model.vertexai.version>1.1.0-M3</spring.ai.starter.model.vertexai.version>
     </properties>
     <dependencies>
         <!-- starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.36</version>
         </dependency>
 
         <!-- starter-security -->
@@ -101,6 +108,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-vertex-ai-embedding</artifactId>
+            <version>${spring.ai.starter.model.vertexai.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-vertexai</artifactId>
+            <version>1.38.0</version>
         </dependency>
     </dependencies>
 

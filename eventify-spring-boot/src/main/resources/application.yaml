@@ -3,8 +3,17 @@ spring:
     name: go-event-flow-spring-boot
   data:
     mongodb:
-      uri:
-      database:
+      uri: ${DB_URI}
+      database: ${DB_NAME}
+  ai:
+    vertex:
+      ai:
+        embedding:
+          project-id: ${PROJ_ID}
+          location: ${EMBEDDING_LOCATION}
+          text:
+            options:
+              model: text-embedding-004
 
 rest:
   prefix: /go-event-flow
@@ -33,5 +42,5 @@ app:
     securedUris: ${rest.prefix}/**
 
 jwt:
-  secret:
-  expiration-time-minutes:
+  secret: ${JWT_SECRET}
+  expiration-time-minutes: 10
