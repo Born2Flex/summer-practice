@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
 
         try {
-            const data: AuthResponse = await refreshTokenMutation.mutateAsync(refreshTokenValue);
+            const data = await refreshTokenMutation.mutateAsync(refreshTokenValue) as AuthResponse;
             setAccessToken(data.accessToken);
             setRefreshToken(data.refreshToken);
             setUserId(data.userId);
@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
         setIsLoading(true);
         try {
-            const data: AuthResponse = await loginMutation.mutateAsync({ email, password });
+            const data = await loginMutation.mutateAsync({ email, password }) as AuthResponse;
             setAccessToken(data.accessToken);
             setRefreshToken(data.refreshToken);
             setUserId(data.userId);
@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setIsLoading(true);
         try {
-            const data: AuthResponse = await registerMutation.mutateAsync(userData);
+            const data = await registerMutation.mutateAsync(userData) as AuthResponse;
             setAccessToken(data.accessToken);
             setRefreshToken(data.refreshToken);
             setUserId(data.userId);
@@ -129,7 +129,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUserIdState(null);
     }, []);
 
-    const value: AuthContextType = {
+    const value: AuthContextType = React.useMemo(() => ({
         isAuthenticated,
         userId,
         login,
@@ -137,7 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         refreshToken: refreshTokenFunc,
         isLoading,
-    };
+    }), [isAuthenticated, userId, login, register, logout, refreshTokenFunc, isLoading]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

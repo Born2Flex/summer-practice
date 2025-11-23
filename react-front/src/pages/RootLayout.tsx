@@ -48,7 +48,6 @@ export async function action() {
 
 //Loader to check if user is registered
 export async function loader() {
-    console.log('GENERAL LOADER');
     const token = getAccessToken();
     if (!token) {
         return {

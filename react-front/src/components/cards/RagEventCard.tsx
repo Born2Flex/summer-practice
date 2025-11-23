@@ -1,10 +1,11 @@
+import React from 'react';
 import { faLocationDot, faCalendar, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
 import ShortEvent from '../../interfaces/ShortEventInterface';
 import { colorVariants, iconVariants } from './EventCard';
 
-function RagEventCard({ event }: { event: ShortEvent }) {
+const RagEventCard = React.memo(({ event }: { event: ShortEvent }) => {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full max-w-xs hover:shadow-md transition-shadow duration-300">
             <div className="flex p-3 gap-3">
@@ -26,7 +27,7 @@ function RagEventCard({ event }: { event: ShortEvent }) {
                     </div>
                     <div className="flex items-center text-xs text-gray-500">
                         <FontAwesomeIcon icon={faCalendar} className="mr-1.5 w-3 text-gray-400" />
-                        <span className="truncate">{new Date(event.startDate).toLocaleDateString()}</span>
+                        <span className="truncate">{new Date(event.startDateTime).toLocaleDateString()}</span>
                     </div>
                 </div>
             </div>
@@ -41,6 +42,6 @@ function RagEventCard({ event }: { event: ShortEvent }) {
             </NavLink>
         </div>
     )
-}
+});
 
 export default RagEventCard

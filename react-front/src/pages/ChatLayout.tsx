@@ -6,9 +6,7 @@ import { loaderApiClient } from "../utils/apiClient";
 
 //ChatLayout component, displays the chat layout with the list of chats and the chat messages
 function ChatLayout() {
-    console.log("ChatLayout MOUNTED");
     const { chats } = useLoaderData() as { chats: ShortChat[] };
-    console.log("user's chats: ", chats);
 
     const { hasMessages, setHasMessages } = useWebSocket();
     if (hasMessages && chats.length != 0) {
@@ -32,7 +30,6 @@ async function loadChats(): Promise<ShortChat[]> {
 
 //ChatLayout loader function, fetches the user's chats
 export async function loader() {
-    console.log('ChatLayout loader started');
     const chats = await loadChats();
     return {
         chats: chats

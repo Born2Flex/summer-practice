@@ -1,5 +1,7 @@
+import React from 'react';
+
 //Background component displays the gradient background with floating divs
-function Background() {
+const Background = React.memo(() => {
     return (
         <div className="gradient-bg absolute top-0 left-0">
             <svg xmlns="http://www.w3.org/2000/svg">
@@ -20,6 +22,6 @@ function Background() {
             </div>
         </div>
     )
-}
+});
 
 export default Background
