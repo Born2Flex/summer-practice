@@ -13,6 +13,7 @@ import EditProfile from './pages/EditProfile.tsx';
 import ChatSection, { loader as chatUserLoader } from './components/sections/ChatSection.tsx';
 import ChatLayout, { loader as userChatsLoader } from './pages/ChatLayout.tsx';
 import NoChatSelectedSection from './components/sections/NoChatSelectedSection.tsx';
+import RagChatInterface from './components/sections/RagChatInterface.tsx';
 
 //Root react App.tsx component
 function App() {
@@ -88,6 +89,10 @@ function App() {
             {
               index: true,
               element: <NoChatSelectedSection />,
+            },
+            {
+              path: 'ai',
+              element: <RagChatInterface />,
             },
             {
               path: ':chatId',
