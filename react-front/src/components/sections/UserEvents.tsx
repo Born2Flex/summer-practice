@@ -1,12 +1,29 @@
 import useHorizontalScroll from '../../hooks/useHorizontalScroll';
 import EventCard from '../cards/EventCard'
 import { useRouteLoaderData } from 'react-router-dom';
-import User from '../../interfaces/UserInterface';
+import { useUser } from '../../hooks/useApiQueries';
 
 //UserEvents component, displays the user's events in a horizontal scrollable list in user profile page
-function UserEvents({ isOwner }: { isOwner: boolean }) {
+function UserEvents({ isOwner, onDeleteEvent }: { isOwner: boolean, onDeleteEvent?: (eventId: string) => void }) {
     const scrollRef = useHorizontalScroll();
-    const { profile } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    const loaderData = useRouteLoaderData('profile-layout') as { userId: string, isOwner: boolean };
+    const { data: profile, isLoading, error } = useUser(loaderData.userId);
+
+    if (isLoading) {
+        return (
+            <div className="text-center mt-12">
+                <p>Loading events...</p>
+            </div>
+        );
+    }
+
+    if (error || !profile) {
+        return (
+            <div className="text-center mt-12">
+                <p>Error loading user events</p>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -24,7 +41,7 @@ function UserEvents({ isOwner }: { isOwner: boolean }) {
                     <div ref={scrollRef as any} className="flex overflow-x-auto gap-x-6 custom-scrollbar py-3 w-full lg:w-11/12 px-4 shadow-inner">
                         {profile.events.map((event, index) => (
                             <div key={index} className="min-w-[40%] shrink-0 text-left">
-                                <EventCard event={event} deletable={isOwner} />
+                                <EventCard event={event} deletable={isOwner} onDelete={onDeleteEvent} />
                             </div>
                         ))}
                     </div>

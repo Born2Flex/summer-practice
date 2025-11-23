@@ -20,6 +20,8 @@ public class JwtService {
     private String secret;
     @Value("${jwt.expiration-time-minutes}")
     private long expirationTime;
+    @Value("${jwt.refresh-token-expiration-days}")
+    private long refreshTokenExpirationDays;
 
     public boolean isExpired(String token) {
         try {
@@ -48,6 +50,16 @@ public class JwtService {
     public String generateToken(String id) {
         Date issuedDateTime = new Date(System.currentTimeMillis());
         Date expirationDateTime = new Date(System.currentTimeMillis() + expirationTime * 60 * 1000);
+        return Jwts.builder()
+                .subject(id)
+                .issuedAt(issuedDateTime)
+                .expiration(expirationDateTime)
+                .signWith(getSigningKey()).compact();
+    }
+
+    public String generateRefreshToken(String id) {
+        Date issuedDateTime = new Date(System.currentTimeMillis());
+        Date expirationDateTime = new Date(System.currentTimeMillis() + refreshTokenExpirationDays * 24 * 60 * 60 * 1000);
         return Jwts.builder()
                 .subject(id)
                 .issuedAt(issuedDateTime)

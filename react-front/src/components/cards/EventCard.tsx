@@ -1,6 +1,6 @@
 import { faLocationDot, faWifi, faUsers, faChevronRight, faStar, faDesktop, faCakeCandles, faHandshake, faUsersViewfinder, faShop, faGlobe, faMusic, faPalette, faComments, faRobot, faMoneyBill, faHotdog, faGraduationCap, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Form, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import ShortEvent from '../../interfaces/ShortEventInterface';
 import { IconButton } from '@material-tailwind/react';
 
@@ -52,7 +52,12 @@ export const ribbonVariants = {
     'PRIVATE': 'bg-red-500',
 }
 
-function EventCard({ event, deletable }: { event: ShortEvent, deletable?: boolean }) {
+function EventCard({ event, deletable, onDelete }: { event: ShortEvent, deletable?: boolean, onDelete?: (eventId: string) => void }) {
+    const handleDelete = () => {
+        if (onDelete) {
+            onDelete(event.id);
+        }
+    };
     return (
         <div
             className="relative bg-gray-50/80 group/item hover:bg-gray-50 backdrop-blur-sm w-full h-auto 
@@ -61,18 +66,15 @@ function EventCard({ event, deletable }: { event: ShortEvent, deletable?: boolea
         >
             <div className={`w-2 text-white flex items-center rounded-l-lg shadow-xl ${ribbonVariants[event.availability as keyof typeof ribbonVariants]}`} />
             {deletable && (
-                <Form method='DELETE' className="absolute top-1 right-1">
-                    <input type='hidden' name='eventId' value={event.id} readOnly />
-                    <IconButton
-                        className='text-red-500'
-                        variant='text'
-                        size='sm'
-                        type='submit'
-                        placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
-                    >
-                        <FontAwesomeIcon icon={faTrashCan} />
-                    </IconButton>
-                </Form>
+                <IconButton
+                    className='absolute top-1 right-1 text-red-500'
+                    variant='text'
+                    size='sm'
+                    onClick={handleDelete}
+                    placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                >
+                    <FontAwesomeIcon icon={faTrashCan} />
+                </IconButton>
             )}
 
             <div className="w-full flex flex-col">

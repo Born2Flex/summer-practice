@@ -1,45 +1,34 @@
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
-import { getToken } from "../../auth";
+import { useCreateComment } from "../../hooks/useApiQueries";
 
 //CommentInput component, displays the input field for the user to comment on an event
 function CommentInput({ id }: { id: string }) {
     const [comment, setComment] = useState('');
     const navigate = useNavigate();
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
+    const createCommentMutation = useCreateComment();
 
     //Handle the submission of the comment creation form
     async function handleSubmit(e: any) {
         e.preventDefault();
-        const token = getToken();
 
         const value = comment.trim();
         if (!value) {
             return;
         }
+
         try {
-            const response = await fetch(`${baseurl}/go-event-flow/events/${id}/comment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(value)
+            await createCommentMutation.mutateAsync({
+                eventId: id,
+                comment: value
             });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-                setComment('');
-                navigate(`/events/${id}`);
-
-            } else {
-                console.error('Failed to comment the event');
-            }
+            
+            console.log('Comment created successfully');
+            setComment('');
+            navigate(`/events/${id}`);
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error creating comment:', error);
         }
-
     }
 
     return (

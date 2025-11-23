@@ -8,7 +8,8 @@ import { ArrowLeftIcon, ShareIcon } from "@heroicons/react/24/solid"
 import { Form, NavLink, redirect, useLoaderData } from "react-router-dom"
 import { format } from 'date-fns';
 import { EventSidebarAccordion } from "../elements/EventSidebarAccordion"
-import { getToken, getUserId } from "../../auth"
+import { getUserId } from "../../auth"
+import { apiClient, loaderApiClient } from "../../utils/apiClient"
 
 const localDateTimeString = (utcDateTimeString: string): string => {
     const utcDate = new Date(utcDateTimeString);
@@ -164,21 +165,9 @@ function EventSidebar() {
 export default EventSidebar;
 
 //Action to join the event by sending a PATCH request to the server with the event id
-async function joinEvent(eventId: string, token: string) {
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
-
+async function joinEvent(eventId: string) {
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/events/${eventId}/participate`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            console.error('Failed to join the event');
-        }
+        await apiClient.patch(`/go-event-flow/events/${eventId}/participate`);
     } catch (error) {
         console.error('Error:', error);
     }
@@ -188,55 +177,18 @@ async function joinEvent(eventId: string, token: string) {
 
 //Action function to join or leave the event
 export async function action({ params }: { request: any, params: any }) {
-
-    const token = getToken();
-    if (!token) {
-        return redirect('/login/');
-    }
-
     const eventId = params.id;
-    return joinEvent(eventId, token);
+    return joinEvent(eventId);
 }
 
 //Loader function to fetch the event details
 export async function loader({ params }: { params: any }) {
-    const token = getToken();
-    if (!token) {
-        return redirect('/login/');
-    }
-
     const id = params.id;
     console.log(id);
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
-    try {
-        const response = await fetch(`${baseurl}/go-event-flow/events/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch events');
-        }
-
-        const event = await new Promise<LongEvent>((resolve, reject) => {
-            response.json().then((data: LongEvent) => {
-                data.startDateTime = localDateTimeString(data.startDateTime);
-                resolve(data);
-            }).catch((error) => {
-                console.error('Error processing event data:', error);
-                reject(error);
-            });
-        });
-        console.log(event);
-        return event;
-
-    } catch (error) {
-        console.error('Error fetching events:', error);
-        return null;
-    }
-};
+    const event = await loaderApiClient.getJson<LongEvent>(`/go-event-flow/events/${id}`);
+    event.startDateTime = localDateTimeString(event.startDateTime);
+    console.log(event);
+    return event;
+}
 
