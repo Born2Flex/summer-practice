@@ -8,6 +8,13 @@ export default interface ShortEvent {
     currentParticipants: number;
     maxParticipants: number;
     entranceFee?: number;
+    startDateTime: string;
+    host: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        imgUrl?: string;
+    };
     location: {
         x: number;
         y: number;
