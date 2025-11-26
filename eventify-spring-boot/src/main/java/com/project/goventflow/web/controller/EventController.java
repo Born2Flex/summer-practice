@@ -1,5 +1,6 @@
 package com.project.goventflow.web.controller;
 
+import com.project.goventflow.domain.dto.event.EventSearchParams;
 import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
@@ -96,7 +97,45 @@ public class EventController {
                                             @RequestParam(required = false, name = "search-value") String searchValue,
                                             @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
                                             @RequestParam double longitude, @RequestParam double latitude) {
-        return eventService.searchEvents(type, availability, from, to, tags, searchValue, eventDistance, latitude, longitude);
+        EventSearchParams params = EventSearchParams.builder()
+                .eventType(type)
+                .availability(availability)
+                .from(from)
+                .to(to)
+                .tags(tags)
+                .searchValue(searchValue)
+                .eventDistance(eventDistance)
+                .longitude(longitude)
+                .latitude(latitude)
+                .build();
+        return eventService.searchEvents(params);
+    }
+
+    @GetMapping("/vector-search")
+    @Operation(summary = "Search events based on various criteria using vector index",
+            description = "Provide criteria such as event type, availability, date range, radius, and location to search for events.")
+    @ApiResponse(responseCode = "200", description = "Events found",
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class))))
+    public List<EventShortDto> vectorSearchEvents(@RequestParam(name = "query") String query,
+                                            @RequestParam(required = false, name = "event-type") List<EventType> type,
+                                            @RequestParam(required = false, name = "event-category") List<EventAvailability> availability,
+                                            @RequestParam(required = false) LocalDateTime from,
+                                            @RequestParam(required = false) LocalDateTime to,
+                                            @RequestParam(required = false, name = "tag") List<String> tags,
+                                            @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
+                                            @RequestParam double longitude, @RequestParam double latitude) {
+        EventSearchParams params = EventSearchParams.builder()
+                .eventType(type)
+                .availability(availability)
+                .from(from)
+                .to(to)
+                .tags(tags)
+                .query(query)
+                .eventDistance(eventDistance)
+                .longitude(longitude)
+                .latitude(latitude)
+                .build();
+        return eventService.vectorSearchEvents(params);
     }
 
     @PatchMapping("/{eventId}/participate")

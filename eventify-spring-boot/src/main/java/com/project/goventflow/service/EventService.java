@@ -1,5 +1,6 @@
 package com.project.goventflow.service;
 
+import com.project.goventflow.domain.dto.event.EventSearchParams;
 import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
@@ -18,10 +19,14 @@ import com.project.goventflow.repository.EventRepository;
 import com.project.goventflow.config.security.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
+import org.springframework.data.geo.Circle;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
@@ -31,18 +36,21 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class EventService {
+    private final EmbeddingService embeddingService;
     private final EventRepository eventRepository;
     private final CommentRepository commentRepository;
     private final EventMapper eventMapper;
     private final CommentMapper commentMapper;
     private final MongoTemplate template;
     private final MailingService mailingService;
+    private final EventCriteriaBuilder eventCriteriaBuilder;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -51,6 +59,7 @@ public class EventService {
         }
         event.setHost(authDetails.getUser());
         event.setTags(normalizeTags(eventCreationDto.getTags()));
+        event.setEmbedding(embeddingService.embedEvent(event));
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
     }
@@ -116,38 +125,56 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public List<EventShortDto> searchEvents(List<EventType> type, List<EventAvailability> availability,
-                                            LocalDateTime from, LocalDateTime to,
-                                            List<String> tags, String searchValue, int eventRadius,
-                                            double latitude, double longitude) {
+    public List<EventShortDto> searchEvents(EventSearchParams params) {
         Query query = new Query();
 
-        if (type != null) {
-            query.addCriteria(Criteria.where("eventType").in(type));
-        }
-        if (availability != null) {
-            query.addCriteria(Criteria.where("availability").in(availability));
-        }
-        Criteria criteria = Criteria.where("startDateTime");
-        criteria = criteria.gte(from != null ? from : LocalDate.now());
+        Criteria baseCriteria = eventCriteriaBuilder.buildBaseCriteria(params);
+        query.addCriteria(baseCriteria);
 
-        if (to != null) {
-            criteria = criteria.lte(to);
-        }
-        query.addCriteria(criteria);
+        query.addCriteria(eventCriteriaBuilder.nearSphereFilter(
+                params.getLatitude(),
+                params.getLongitude(),
+                params.getEventDistance()
+        ));
 
-        if (tags != null) {
-            query.addCriteria(Criteria.where("tags").elemMatch(Criteria.where("$in").is(normalizeTags(tags))));
+        if (params.getSearchValue() != null) {
+            query.addCriteria(Criteria.where("title").regex(params.getSearchValue()));
         }
-        if (searchValue != null) {
-            query.addCriteria(Criteria.where("title").regex(searchValue));
-        }
-
-        Point location = new Point(latitude, longitude);
-        Distance distance = new Distance(eventRadius, Metrics.KILOMETERS);
-        query.addCriteria(Criteria.where("location").nearSphere(location).maxDistance(distance.getNormalizedValue()));
 
         List<Event> events = template.find(query, Event.class);
+        return eventMapper.toListDto(events);
+    }
+
+    public List<EventShortDto> vectorSearchEvents(EventSearchParams params) {
+        Criteria criteria = eventCriteriaBuilder.buildBaseCriteria(params);
+
+        Criteria geoCriteria = eventCriteriaBuilder.withinSphereFilter(
+                params.getLatitude(),
+                params.getLongitude(),
+                params.getEventDistance()
+        );
+
+        Criteria finalMatchCriteria = new Criteria().andOperator(criteria, geoCriteria);
+
+        float[] queryVector = embeddingService.embedText(params.getQuery());
+
+        List<Double> embedding = new ArrayList<>();
+        for (float f : queryVector) {
+            embedding.add((double) f);
+        }
+
+        TypedAggregation<Event> aggregation = TypedAggregation.newAggregation(
+                Event.class,
+                context -> new Document("$vectorSearch", new Document()
+                        .append("index", "event-search")
+                        .append("path", "embedding")
+                        .append("queryVector", embedding)
+                        .append("numCandidates", 20)
+                        .append("limit", 10)
+                ),
+                Aggregation.match(finalMatchCriteria)
+        );
+        List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
         return eventMapper.toListDto(events);
     }
 
