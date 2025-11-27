@@ -1,12 +1,8 @@
 package com.project.goventflow.web.controller;
 
-import com.project.goventflow.domain.dto.event.EventSearchParams;
-import com.project.goventflow.domain.dto.event.EventShortDto;
-import com.project.goventflow.domain.dto.event.EventUpdateDto;
+import com.project.goventflow.domain.dto.event.*;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
-import com.project.goventflow.domain.dto.event.EventCreationDto;
-import com.project.goventflow.domain.dto.event.EventDto;
 import com.project.goventflow.domain.enumeration.EventAvailability;
 import com.project.goventflow.domain.enumeration.EventType;
 import com.project.goventflow.config.security.AuthDetails;
@@ -115,15 +111,15 @@ public class EventController {
     @Operation(summary = "Search events based on various criteria using vector index",
             description = "Provide criteria such as event type, availability, date range, radius, and location to search for events.")
     @ApiResponse(responseCode = "200", description = "Events found",
-            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventShortDto.class))))
-    public List<EventShortDto> vectorSearchEvents(@RequestParam(name = "query") String query,
-                                            @RequestParam(required = false, name = "event-type") List<EventType> type,
-                                            @RequestParam(required = false, name = "event-category") List<EventAvailability> availability,
-                                            @RequestParam(required = false) LocalDateTime from,
-                                            @RequestParam(required = false) LocalDateTime to,
-                                            @RequestParam(required = false, name = "tag") List<String> tags,
-                                            @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
-                                            @RequestParam double longitude, @RequestParam double latitude) {
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventSearchDto.class))))
+    public List<EventSearchDto> vectorSearchEvents(@RequestParam(name = "query") String query,
+                                                   @RequestParam(required = false, name = "event-type") List<EventType> type,
+                                                   @RequestParam(required = false, name = "event-category") List<EventAvailability> availability,
+                                                   @RequestParam(required = false) LocalDateTime from,
+                                                   @RequestParam(required = false) LocalDateTime to,
+                                                   @RequestParam(required = false, name = "tag") List<String> tags,
+                                                   @RequestParam(required = false, name = "event-distance", defaultValue = "10") int eventDistance,
+                                                   @RequestParam double longitude, @RequestParam double latitude) {
         EventSearchParams params = EventSearchParams.builder()
                 .eventType(type)
                 .availability(availability)
