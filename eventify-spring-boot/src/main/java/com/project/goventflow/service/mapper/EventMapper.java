@@ -1,10 +1,6 @@
 package com.project.goventflow.service.mapper;
 
-import com.project.goventflow.domain.dto.event.EventCreationDto;
-import com.project.goventflow.domain.dto.event.EventDto;
-import com.project.goventflow.domain.dto.event.EventParticipantsDto;
-import com.project.goventflow.domain.dto.event.EventShortDto;
-import com.project.goventflow.domain.dto.event.EventUpdateDto;
+import com.project.goventflow.domain.dto.event.*;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
 import org.mapstruct.Mapper;
@@ -26,7 +22,12 @@ public abstract class EventMapper {
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventShortDto toShortDto(Event event);
 
+    @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
+    public abstract EventSearchDto toSearchDto(Event event);
+
     public abstract List<EventShortDto> toListDto(List<Event> eventEntities);
+
+    public abstract List<EventSearchDto> toSearchListDto(List<Event> eventEntities);
 
     @Mapping(target = "currentParticipants", source = "participants", qualifiedByName = "getAmountOfParticipants")
     public abstract EventParticipantsDto toParticipantsDto(Event event);
