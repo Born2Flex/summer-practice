@@ -20,6 +20,7 @@
         <maven.compile.plugin.version>3.11.0</maven.compile.plugin.version>
         <jwt.version>0.13.0</jwt.version>
         <spring.ai.starter.model.vertexai.version>1.1.0-M3</spring.ai.starter.model.vertexai.version>
+        <spring.ai.starter.model.vertexai.gemini.version>1.1.0-M3</spring.ai.starter.model.vertexai.gemini.version>
     </properties>
     <dependencies>
         <!-- starter-web -->
@@ -120,6 +121,12 @@
             <artifactId>google-cloud-vertexai</artifactId>
             <version>1.38.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-vertex-ai-gemini</artifactId>
+            <version>${spring.ai.starter.model.vertexai.gemini.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
