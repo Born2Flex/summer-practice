@@ -2,10 +2,7 @@ package com.project.goventflow.domain.dto.event;
 
 import com.project.goventflow.domain.enumeration.EventAvailability;
 import com.project.goventflow.domain.enumeration.EventType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
