@@ -1,29 +1,20 @@
 package com.project.goventflow.service;
 
-import com.project.goventflow.domain.dto.event.EventSearchParams;
-import com.project.goventflow.domain.dto.event.EventShortDto;
-import com.project.goventflow.domain.dto.event.EventUpdateDto;
+import com.project.goventflow.config.security.AuthDetails;
+import com.project.goventflow.domain.dto.event.*;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
-import com.project.goventflow.domain.dto.event.EventCreationDto;
-import com.project.goventflow.domain.dto.event.EventDto;
 import com.project.goventflow.domain.entity.Comment;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
 import com.project.goventflow.domain.enumeration.EventAvailability;
-import com.project.goventflow.domain.enumeration.EventType;
-import com.project.goventflow.service.mapper.CommentMapper;
-import com.project.goventflow.service.mapper.EventMapper;
 import com.project.goventflow.repository.CommentRepository;
 import com.project.goventflow.repository.EventRepository;
-import com.project.goventflow.config.security.AuthDetails;
+import com.project.goventflow.service.mapper.CommentMapper;
+import com.project.goventflow.service.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
-import org.springframework.data.geo.Circle;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
@@ -33,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -145,12 +135,12 @@ public class EventService {
         return eventMapper.toListDto(events);
     }
 
-    public List<EventShortDto> vectorSearchEvents(EventSearchParams params) {
+    public List<EventSearchDto> vectorSearchEvents(EventSearchParams params) {
         Criteria criteria = eventCriteriaBuilder.buildBaseCriteria(params);
 
         Criteria geoCriteria = eventCriteriaBuilder.withinSphereFilter(
+                params.getLongitude(), // Reverted order for Point params x and y
                 params.getLatitude(),
-                params.getLongitude(),
                 params.getEventDistance()
         );
 
@@ -166,7 +156,7 @@ public class EventService {
         TypedAggregation<Event> aggregation = TypedAggregation.newAggregation(
                 Event.class,
                 context -> new Document("$vectorSearch", new Document()
-                        .append("index", "event-search")
+                        .append("index", "vector-search-events")
                         .append("path", "embedding")
                         .append("queryVector", embedding)
                         .append("numCandidates", 20)
@@ -175,7 +165,7 @@ public class EventService {
                 Aggregation.match(finalMatchCriteria)
         );
         List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
-        return eventMapper.toListDto(events);
+        return eventMapper.toSearchListDto(events);
     }
 
     private List<String> normalizeTags(List<String> tags) {
