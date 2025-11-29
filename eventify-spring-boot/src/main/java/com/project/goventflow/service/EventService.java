@@ -228,7 +228,6 @@ public class EventService {
     public void generateEvents(EventGenerationParams params) {
         ObjectMapper mapper = createObjectMapper();
 
-//        for (int i = 0; i < params.getNumberOfEvents(); i++) {
         String json = generateEventJson(params.getNumberOfEvents());
         Event[] events = parseEvent(json, mapper);
         for (Event event : events) {
@@ -236,7 +235,6 @@ public class EventService {
             eventRepository.save(event);
             log.info("Generated event id = {}", event.getId());
         }
-//        }
     }
 
     private ObjectMapper createObjectMapper() {
@@ -284,6 +282,7 @@ public class EventService {
                 Do not include extra text, explanations, or markup.
                 Start datetime must be within December 2025.
                 Choose topic for event very randomly, try not to repeat yourself, work for variety of topics. You can choose topics that correlate with chosen location.
+                Do not repeat events and topics, keep them as unique as possible.
                 
                 JSON structure template:
                 [
