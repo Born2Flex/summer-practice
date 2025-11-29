@@ -3,6 +3,7 @@ package com.project.goventflow.web.controller;
 import com.project.goventflow.domain.dto.event.*;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
+import com.project.goventflow.domain.dto.generate.EventGenerationParams;
 import com.project.goventflow.domain.enumeration.EventAvailability;
 import com.project.goventflow.domain.enumeration.EventType;
 import com.project.goventflow.config.security.AuthDetails;
@@ -158,5 +159,11 @@ public class EventController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void reembedAllEvents() {
         eventService.reembedAllEvents();
+    }
+
+    @PostMapping("/generate")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void generateEvents(@RequestBody EventGenerationParams params) {
+        eventService.generateEvents(params);
     }
 }

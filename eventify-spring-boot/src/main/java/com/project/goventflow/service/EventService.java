@@ -4,6 +4,7 @@ import com.project.goventflow.config.security.AuthDetails;
 import com.project.goventflow.domain.dto.event.*;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
+import com.project.goventflow.domain.dto.generate.EventGenerationParams;
 import com.project.goventflow.domain.entity.Comment;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
@@ -34,6 +35,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class EventService {
+    public static final String DEFAULT_HOST_ID = "692b20485d48888820945648";
     private final EmbeddingService embeddingService;
     private final EventRepository eventRepository;
     private final CommentRepository commentRepository;
@@ -42,6 +44,7 @@ public class EventService {
     private final MongoTemplate template;
     private final MailingService mailingService;
     private final EventCriteriaBuilder eventCriteriaBuilder;
+    private final UserService userService;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -204,5 +207,14 @@ public class EventService {
         event.setEmbedding(embeddingService.embedEvent(event));
         log.info("Reembedded event id = {}", event.getId());
         return event;
+    }
+
+    public void generateEvents(EventGenerationParams params) {
+        for (int i = 0; i < params.getNumberOfEvents(); i++) {
+            Event event = null; // TODO add event generation logic
+            User defaultHost = userService.findById(DEFAULT_HOST_ID);
+            event.setHost(defaultHost);
+            eventRepository.save(event);
+        }
     }
 }
