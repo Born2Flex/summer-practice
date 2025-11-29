@@ -5,52 +5,8 @@ import ShortEvent from '../../interfaces/ShortEventInterface';
 import { RagMessage } from '../../interfaces/RagMessageInterface';
 import MessageList from './MessageList';
 import ChatInputSection from './ChatInputSection';
-
-// Mock events data
-const MOCK_EVENTS: ShortEvent[] = [
-    {
-        id: '1',
-        title: 'Summer Music Festival',
-        locationName: 'Central Park',
-        startDateTime: new Date(Date.now() + 86400000).toISOString(),
-        eventType: 'CONCERT',
-        entranceFee: 50,
-        currentParticipants: 120,
-        maxParticipants: 500,
-        availability: 'PUBLIC',
-        description: 'A great music festival.',
-        host: { id: '1', firstName: 'John', lastName: 'Doe' },
-        location: { x: 0, y: 0 }
-    },
-    {
-        id: '2',
-        title: 'Tech Startup Meetup',
-        locationName: 'Innovation Hub',
-        startDateTime: new Date(Date.now() + 172800000).toISOString(),
-        eventType: 'NETWORKING',
-        entranceFee: undefined,
-        currentParticipants: 45,
-        maxParticipants: 100,
-        availability: 'PUBLIC',
-        description: 'Meet local founders.',
-        host: { id: '2', firstName: 'Jane', lastName: 'Smith' },
-        location: { x: 0, y: 0 }
-    },
-    {
-        id: '3',
-        title: 'Modern Art Exhibition',
-        locationName: 'City Gallery',
-        startDateTime: new Date(Date.now() + 259200000).toISOString(),
-        eventType: 'EXHIBITION',
-        entranceFee: 15,
-        currentParticipants: 30,
-        maxParticipants: 100,
-        availability: 'PAID',
-        description: 'Contemporary art showcase.',
-        host: { id: '3', firstName: 'Alice', lastName: 'Johnson' },
-        location: { x: 0, y: 0 }
-    }
-];
+import { apiClient } from '../../utils/apiClient';
+import { RagAnswerDto } from '../../interfaces/RagAnswerDto';
 
 function RagChatInterface() {
     const [messages, setMessages] = useState<RagMessage[]>([
@@ -63,7 +19,7 @@ function RagChatInterface() {
     ]);
     const [isTyping, setIsTyping] = useState(false);
 
-    const handleSendMessage = useCallback((text: string) => {
+    const handleSendMessage = useCallback(async (text: string) => {
         const newUserMessage: RagMessage = {
             id: Date.now().toString(),
             text: text,
@@ -74,42 +30,39 @@ function RagChatInterface() {
         setMessages(prev => [...prev, newUserMessage]);
         setIsTyping(true);
 
-        // Mock AI response logic
-        setTimeout(() => {
-            let responseText = "That sounds interesting! I found a few events that might match.";
-            let responseEvents: ShortEvent[] | undefined = undefined;
+        try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            });
 
-            if (text.toLowerCase().includes('concert') || text.toLowerCase().includes('music')) {
-                responseText = "Here are some concerts happening soon:";
-                responseEvents = [MOCK_EVENTS[0]];
-            } else if (text.toLowerCase().includes('tech') || text.toLowerCase().includes('meetup')) {
-                responseText = "I found a tech meetup you might like:";
-                responseEvents = [MOCK_EVENTS[1]];
-            } else if (text.toLowerCase().includes('art') || text.toLowerCase().includes('exhibition')) {
-                responseText = "Check out this art exhibition:";
-                responseEvents = [MOCK_EVENTS[2]];
-            } else {
-                const randomResponse = [
-                    "Could you tell me more about your preferred location?",
-                    "I see. Here are some popular events this weekend.",
-                    "Based on your profile, you might also like these."
-                ];
-                responseText = randomResponse[Math.floor(Math.random() * randomResponse.length)];
-                if (Math.random() > 0.5) {
-                    responseEvents = [MOCK_EVENTS[Math.floor(Math.random() * MOCK_EVENTS.length)]];
-                }
-            }
+            const { latitude, longitude } = position.coords;
+
+            const response = await apiClient.postJson<RagAnswerDto>(
+                `/go-event-flow/ai-chat/ask?messageText=${encodeURIComponent(text)}&longitude=${longitude}&latitude=${latitude}`,
+                {}
+            );
 
             const newAiMessage: RagMessage = {
                 id: (Date.now() + 1).toString(),
-                text: responseText,
+                text: response.answer,
                 sender: 'ai',
                 timestamp: new Date(),
-                events: responseEvents
+                events: response.events
             };
             setMessages(prev => [...prev, newAiMessage]);
+
+        } catch (error) {
+            console.error("Error asking AI:", error);
+            const errorMessage: RagMessage = {
+                id: (Date.now() + 1).toString(),
+                text: "Sorry, I encountered an error while processing your request. Please try again.",
+                sender: 'ai',
+                timestamp: new Date()
+            };
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
             setIsTyping(false);
-        }, 1500);
+        }
     }, []);
 
     const suggestions = ['Concerts this weekend', 'Free workshops', 'Tech meetups', 'Art galleries'];

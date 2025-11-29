@@ -19,7 +19,7 @@ public class EventSearchParams {
     private List<String> tags;
     private String searchValue;
     private String query;
-    private Integer eventDistance = 10;
+    private Integer eventDistance = 1000;
     private Double longitude;
     private Double latitude;
 }

@@ -30,7 +30,7 @@ export async function loader({ request }: { request: Request }) {
     
     const url = new URL(request.url);
 
-    const currentLocation = await new Promise<LatLngExpression>((resolve) => {
+    const currentLocation = await new Promise<[number, number]>((resolve) => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
@@ -46,7 +46,7 @@ export async function loader({ request }: { request: Request }) {
     const shouldSearch = url.searchParams.toString() !== '';
 
     const events = await (shouldSearch
-        ? loadSearchedEvents(url.searchParams.toString())
+        ? loadSearchedEvents(`${url.searchParams.toString()}&latitude=${currentLocation[0]}&longitude=${currentLocation[1]}`)
         : loadAllEvents());
 
     return {

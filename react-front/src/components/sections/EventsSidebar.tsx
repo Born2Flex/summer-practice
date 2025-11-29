@@ -4,35 +4,18 @@ import Background from "../elements/Background"
 import SearchDetailsForm from "../forms/SearchDetailsForm"
 import SearchInput from "../inputs/SearchInput"
 import ShortEvent from "../../interfaces/ShortEventInterface"
-import { useState, Suspense } from "react"
+import { Suspense } from "react"
 import EventCardSkeleton from "../cards/EventCardSkeleton"
-import { useEvents, useEventTypes } from "../../hooks/useEvents"
-
-//Function to get the current position of the user
-const getCurrentPosition = (): Promise<GeolocationPosition> => {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-    });
-};
+import { useEventTypes } from "../../hooks/useEvents"
 
 function EventsContent({ initialEvents }: { initialEvents: ShortEvent[] }) {
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useState<{
-        'event-type'?: string[];
-        'event-category'?: string[];
-        from?: string;
-        to?: string;
-        tag?: string[];
-        'search-value'?: string;
-        'event-distance'?: number;
-        longitude: number;
-        latitude: number;
-    } | null>(null);
-    
     const { data: eventTypes = [], error: typesError } = useEventTypes();
-    const { data: searchedEvents = [], isLoading: eventsLoading, error: eventsError } = useEvents(searchParams || undefined);
     
-    const eventsToShow = searchParams ? searchedEvents : initialEvents;
+    // Use initialEvents directly since loader handles fetching
+    const eventsToShow = initialEvents;
+    const eventsLoading = false; // Loader handles loading state before render
+    const eventsError = null; // Loader handles errors or returns empty/default
 
     //Function to handle the search form submit event
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -72,21 +55,8 @@ function EventsContent({ initialEvents }: { initialEvents: ShortEvent[] }) {
             }
         });
 
-        try {
-            const position = await getCurrentPosition();
-            const params = {
-                ...Object.fromEntries(queryParams.entries()),
-                longitude: position.coords.longitude,
-                latitude: position.coords.latitude,
-            };
-            
-            setSearchParams(params);
-            const queryString = queryParams.toString();
-            navigate(`/events?${queryString}`);
-
-        } catch (error) {
-            console.error('Error getting current position:', error);
-        }
+        const queryString = queryParams.toString();
+        navigate(`/events?${queryString}`);
     };
 
     return (
@@ -98,14 +68,6 @@ function EventsContent({ initialEvents }: { initialEvents: ShortEvent[] }) {
 
             <div className="h-full overflow-y-scroll custom-scrollbar z-10 pr-2">
                 <div className="flex flex-col gap-y-3">
-                    {eventsLoading && (
-                        <div className="flex flex-col gap-y-3">
-                            {[...Array(5)].map((_, index) => (
-                                <EventCardSkeleton key={index} />
-                            ))}
-                        </div>
-                    )}
-                    
                     {(eventsError || typesError) && (
                         <div className="text-center text-red-500 p-4">
                             <p>Error loading data. Please try again.</p>
