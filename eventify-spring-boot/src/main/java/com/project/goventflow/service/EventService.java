@@ -11,6 +11,7 @@ import com.project.goventflow.domain.entity.User;
 import com.project.goventflow.domain.enumeration.EventAvailability;
 import com.project.goventflow.repository.CommentRepository;
 import com.project.goventflow.repository.EventRepository;
+import com.project.goventflow.repository.UserRepository;
 import com.project.goventflow.service.mapper.CommentMapper;
 import com.project.goventflow.service.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class EventService {
     private final MongoTemplate template;
     private final MailingService mailingService;
     private final EventCriteriaBuilder eventCriteriaBuilder;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -212,7 +213,8 @@ public class EventService {
     public void generateEvents(EventGenerationParams params) {
         for (int i = 0; i < params.getNumberOfEvents(); i++) {
             Event event = null; // TODO add event generation logic
-            User defaultHost = userService.findById(DEFAULT_HOST_ID);
+            User defaultHost = userRepository.findById(DEFAULT_HOST_ID)
+                    .orElseThrow(() -> new RuntimeException("Default host not found"));
             event.setHost(defaultHost);
             eventRepository.save(event);
         }
