@@ -20,9 +20,16 @@ public class EmbeddingService {
     }
 
     private String eventToText(Event event) {
-        return  "Title:" +  event.getTitle() + '\n' +
-                "Description:" +  event.getDescription() + '\n' +
-                "Event type:" +  event.getEventType() + '\n' +
-                "Location name:" +  event.getLocationName() + '\n';
+        return String.format(
+                "%s. %s. This event is in %s category and is held in %s location",
+                safe(event.getTitle()),
+                safe(event.getDescription()),
+                safe(String.valueOf(event.getEventType())),
+                safe(event.getLocationName())
+        );
+    }
+
+    private String safe(String s) {
+        return (s == null || s.isBlank()) ? "" : s.trim();
     }
 }
