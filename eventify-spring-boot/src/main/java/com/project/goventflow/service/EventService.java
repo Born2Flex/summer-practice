@@ -15,6 +15,7 @@ import com.project.goventflow.service.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
@@ -139,9 +140,12 @@ public class EventService {
     public List<EventSearchDto> vectorSearchEvents(EventSearchParams params) {
         Criteria criteria = eventCriteriaBuilder.buildBaseCriteria(params);
 
+        System.out.println(params.getEventDistance());
+
         Criteria geoCriteria = eventCriteriaBuilder.withinSphereFilter(
-                params.getLongitude(), // Reverted order for Point params x and y
+                // Reverted order for Point params x and y
                 params.getLatitude(),
+                params.getLongitude(),
                 params.getEventDistance()
         );
 
@@ -161,9 +165,15 @@ public class EventService {
                         .append("path", "embedding")
                         .append("queryVector", embedding)
                         .append("numCandidates", 20)
-                        .append("limit", 10)
+                        .append("limit", 20)
                 ),
-                Aggregation.match(finalMatchCriteria)
+                context -> new Document("$addFields",
+                        new Document("score", new Document("$meta", "vectorSearchScore"))
+                ),
+                Aggregation.match(Criteria.where("score").gte(0.85)),
+                Aggregation.match(finalMatchCriteria),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "score")),
+                Aggregation.limit(7)
         );
         List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
         return eventMapper.toSearchListDto(events);

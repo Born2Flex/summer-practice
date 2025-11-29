@@ -66,7 +66,8 @@ public class RAGChatService {
                                      FUNDRAISER,
                                      BIRTHDAY,
                                      GAMING,
-                                     PARTY
+                                     PARTY,
+                                     HEALTH
                                      
                     Event availability variants:     PUBLIC,
                                                      PAID,
@@ -74,10 +75,12 @@ public class RAGChatService {
                         
                  Remember that keys except **query** can be omitted if no reasonable value can be found by analysing user messages;
                  
-                 Expand abbreviations in query value.
+                 Expand abbreviations in query value. Build queries like: events about artificial intelligence, neural networks.
                  
                  **Return ONLY valid JSON.**
                  **Output must be strict JSON, no extra text.**
+                 **Do not write markup symbols in answer.**
+                 **Be careful to remove unnecessary filters or words from query when user asks for something more general without connection to past questions.**
                 """
         ));
 
@@ -92,6 +95,8 @@ public class RAGChatService {
         if (start != -1 && end != -1 && end > start) {
             filterJSON = rawJSON.substring(start, end+1);
         }
+
+        System.out.println(filterJSON);
 
         ObjectMapper mapper = new ObjectMapper();
         EventSearchParams params = null;
