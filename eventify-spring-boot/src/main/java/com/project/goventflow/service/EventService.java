@@ -2,8 +2,15 @@ package com.project.goventflow.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.project.goventflow.config.security.AuthDetails;
-import com.project.goventflow.domain.dto.event.*;
+import com.project.goventflow.domain.dto.event.EventCreationDto;
+import com.project.goventflow.domain.dto.event.EventDto;
+import com.project.goventflow.domain.dto.event.EventSearchDto;
+import com.project.goventflow.domain.dto.event.EventSearchParams;
+import com.project.goventflow.domain.dto.event.EventShortDto;
+import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
 import com.project.goventflow.domain.dto.generate.EventGenerationParams;
@@ -11,6 +18,7 @@ import com.project.goventflow.domain.entity.Comment;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
 import com.project.goventflow.domain.enumeration.EventAvailability;
+import com.project.goventflow.domain.mixin.PointMixin;
 import com.project.goventflow.repository.CommentRepository;
 import com.project.goventflow.repository.EventRepository;
 import com.project.goventflow.repository.UserRepository;
@@ -23,6 +31,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
@@ -217,17 +226,62 @@ public class EventService {
     }
 
     public void generateEvents(EventGenerationParams params) {
-        for (int i = 0; i < params.getNumberOfEvents(); i++) {
-            Event event = null;
+        ObjectMapper mapper = createObjectMapper();
 
-            String prompt = """
-             Generate JSON describing ONE event entity. Strictly follow JSON example structure.
-             For location generate real adresses in Chisinau city, Moldova in format: Strada Mihai Eminescu 23, MD-2012 Chișinău, MD.
-             For location choose corresponding to location name coordinates: x means latitude, y means longitude.
-             Make description in details, choose meaningful titles.
-             Start datetime set to one of days in December 2025.
-             
-             JSON structure template:
+        for (int i = 0; i < params.getNumberOfEvents(); i++) {
+            String json = generateEventJson();
+            Event event = parseEvent(json, mapper);
+            assignDefaultHost(event);
+            eventRepository.save(event);
+            log.info("Generated event id = {}", event.getId());
+        }
+    }
+
+    private ObjectMapper createObjectMapper() {
+        return new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .addMixIn(Point.class, PointMixin.class);
+    }
+
+    private Event parseEvent(String json, ObjectMapper mapper) {
+        try {
+            return mapper.readValue(json, Event.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse event JSON", e);
+        }
+    }
+
+    private void assignDefaultHost(Event event) {
+        User defaultHost = userRepository.findById(DEFAULT_HOST_ID)
+                .orElseThrow(() -> new RuntimeException("Default host not found"));
+
+        event.setHost(defaultHost);
+    }
+
+    private String generateEventJson() {
+        ChatResponse response = chatModel.call(new Prompt(buildPrompt()));
+        return extractJson(response.getResult().getOutput().getText());
+    }
+
+    private String extractJson(String raw) {
+        int start = raw.indexOf("{");
+        int end = raw.lastIndexOf("}");
+
+        if (start == -1 || end == -1 || end <= start)
+            throw new IllegalStateException("No valid JSON object found in response");
+
+        return raw.substring(start, end + 1);
+    }
+
+
+    private String buildPrompt() {
+        return """
+                Generate JSON describing ONE event entity. Strictly follow JSON example structure.
+                Use real addresses in Chișinău, Moldova. Provide meaningful titles, detailed descriptions.
+                Start datetime must be within December 2025.
+                
+                JSON structure template:
                 {
                     "title": "string",
                     "description": "string",
@@ -236,67 +290,18 @@ public class EventService {
                     "entranceFee": 0.1,
                     "eventType": "CONFERENCE",
                     "locationName": "string",
-                    "location": {
-                    "x": 0.1,
-                    "y": 0.1
-                    },
+                    "location": { "x": 0.1, "y": 0.1 },
                     "startDateTime": "2025-11-29T21:28:32.264Z"
                 }
                 
-                Event types:     CONFERENCE,
-                                 WORKSHOP,
-                                 WEBINAR,
-                                 CONCERT,
-                                 EXHIBITION,
-                                 NETWORKING,
-                                 SEMINAR,
-                                 HACKATHON,
-                                 CHARITY,
-                                 FESTIVAL,
-                                 DISCUSSION,
-                                 LECTURE,
-                                 FUNDRAISER,
-                                 BIRTHDAY,
-                                 GAMING,
-                                 PARTY,
-                                 HEALTH
-                                 
-                Event availability variants:     PUBLIC,
-                                                 PAID,
-                                                 PRIVATE
-                    
-             **Return ONLY valid JSON.**
-             **Output must be strict JSON, no extra text.**
-             **Do not write markup symbols in answer.**
-             **Name location like this: Strada Mihai Eminescu 23, MD-2012 Chișinău, MD.**
-             **Select locations in Chisinau city, Moldova.**
-            """;
-
-            ChatResponse response = chatModel.call(new Prompt(prompt));
-
-            String rawJSON = response.getResult().getOutput().getText();
-
-            int start = rawJSON.indexOf("{");
-            int end = rawJSON.lastIndexOf("}");
-
-            String json = "";
-            if (start != -1 && end != -1 && end > start) {
-                json = rawJSON.substring(start, end+1);
-            }
-
-            System.out.println(json);
-
-            ObjectMapper event_mapper = new ObjectMapper();
-            try {
-                event = event_mapper.readValue(json, Event.class);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
-            User defaultHost = userRepository.findById(DEFAULT_HOST_ID)
-                    .orElseThrow(() -> new RuntimeException("Default host not found"));
-            event.setHost(defaultHost);
-            eventRepository.save(event);
-        }
+                Event types:
+                CONFERENCE, WORKSHOP, WEBINAR, CONCERT, EXHIBITION, NETWORKING, SEMINAR, HACKATHON,
+                CHARITY, FESTIVAL, DISCUSSION, LECTURE, FUNDRAISER, BIRTHDAY, GAMING, PARTY, HEALTH
+                
+                Availability options: PUBLIC, PAID, PRIVATE
+                
+                Return STRICT JSON — no extra text, no markup.
+                Location format example: "Strada Mihai Eminescu 23, MD-2012 Chișinău, MD".
+                """;
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EventCreationDto {
     @NotBlank
-    @Length(min = 3, max = 36)
+    @Length(min = 3)
     private String title;
     @NotBlank
     @Length(max = 1024)
