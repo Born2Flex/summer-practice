@@ -228,13 +228,15 @@ public class EventService {
     public void generateEvents(EventGenerationParams params) {
         ObjectMapper mapper = createObjectMapper();
 
-        for (int i = 0; i < params.getNumberOfEvents(); i++) {
-            String json = generateEventJson();
-            Event event = parseEvent(json, mapper);
+//        for (int i = 0; i < params.getNumberOfEvents(); i++) {
+        String json = generateEventJson(params.getNumberOfEvents());
+        Event[] events = parseEvent(json, mapper);
+        for (Event event : events) {
             assignDefaultHost(event);
             eventRepository.save(event);
             log.info("Generated event id = {}", event.getId());
         }
+//        }
     }
 
     private ObjectMapper createObjectMapper() {
@@ -244,9 +246,10 @@ public class EventService {
                 .addMixIn(Point.class, PointMixin.class);
     }
 
-    private Event parseEvent(String json, ObjectMapper mapper) {
+    private Event[] parseEvent(String json, ObjectMapper mapper) {
         try {
-            return mapper.readValue(json, Event.class);
+            String jsonArray = "[" + json + "]";
+            return mapper.readValue(jsonArray, Event[].class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to parse event JSON", e);
         }
@@ -259,8 +262,8 @@ public class EventService {
         event.setHost(defaultHost);
     }
 
-    private String generateEventJson() {
-        ChatResponse response = chatModel.call(new Prompt(buildPrompt()));
+    private String generateEventJson(int numberOfEvents) {
+        ChatResponse response = chatModel.call(new Prompt(buildPrompt().formatted(numberOfEvents)));
         return extractJson(response.getResult().getOutput().getText());
     }
 
@@ -276,7 +279,7 @@ public class EventService {
 
     private String buildPrompt() {
         return """
-                Generate a JSON array containing exactly five event objects.
+                Generate a JSON array containing exactly %s event objects.
                 Each object must strictly follow the JSON structure template below.
                 Do not include extra text, explanations, or markup.
                 Start datetime must be within December 2025.
