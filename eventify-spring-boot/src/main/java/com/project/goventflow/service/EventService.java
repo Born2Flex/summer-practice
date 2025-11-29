@@ -59,6 +59,7 @@ public class EventService {
         validateHostIsManagingEvent(authDetails, event);
         Event updatedEvent = eventMapper.updateEvent(event, eventDto);
         mailingService.sendEventUpdateNotification(event);
+        event.setEmbedding(embeddingService.embedEvent(event));
         eventRepository.save(updatedEvent);
         return eventMapper.toDto(updatedEvent);
     }
@@ -121,7 +122,7 @@ public class EventService {
         Criteria baseCriteria = eventCriteriaBuilder.buildBaseCriteria(params);
         query.addCriteria(baseCriteria);
 
-        query.addCriteria(eventCriteriaBuilder.nearSphereFilter(
+        query.addCriteria(eventCriteriaBuilder.withinSphereFilter(
                 params.getLatitude(),
                 params.getLongitude(),
                 params.getEventDistance()
@@ -181,5 +182,17 @@ public class EventService {
         if (!authDetails.getUser().getId().equals(event.getHost().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not event host");
         }
+    }
+
+    public void reembedAllEvents() {
+        eventRepository.findAll().stream()
+                .map(this::reembedEvent)
+                .forEach(eventRepository::save);
+    }
+
+    private Event reembedEvent(Event event) {
+        event.setEmbedding(embeddingService.embedEvent(event));
+        log.info("Reembedded event id = {}", event.getId());
+        return event;
     }
 }

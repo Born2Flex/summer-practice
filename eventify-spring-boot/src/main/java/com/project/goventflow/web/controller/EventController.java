@@ -153,4 +153,10 @@ public class EventController {
     public List<EventType> getEventTypes() {
         return List.of(EventType.values());
     }
+
+    @PostMapping("/reembed")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void reembedAllEvents() {
+        eventService.reembedAllEvents();
+    }
 }
