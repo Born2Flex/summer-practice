@@ -274,25 +274,39 @@ public class EventService {
         return raw.substring(start, end + 1);
     }
 
-
     private String buildPrompt() {
         return """
-                Generate JSON describing ONE event entity. Strictly follow JSON example structure.
-                Use real addresses in Chișinău, Moldova. Provide meaningful titles, detailed descriptions.
+                Generate JSON describing five event entities. Strictly follow JSON example structure.
+                Use real addresses in Chișinău, Moldova or in Moldova in general. Provide meaningful titles, detailed descriptions.
+                Make descriptions 2-3 sentences long.
                 Start datetime must be within December 2025.
+                Choose topic for event very randomly, try not to repeat yourself, work for variety of topics. You can choose topics that correlate with chosen location.
                 
                 JSON structure template:
-                {
-                    "title": "string",
-                    "description": "string",
-                    "availability": "PUBLIC",
-                    "maxParticipants": 0,
-                    "entranceFee": 0.1,
-                    "eventType": "CONFERENCE",
-                    "locationName": "string",
-                    "location": { "x": 0.1, "y": 0.1 },
-                    "startDateTime": "2025-11-29T21:28:32.264Z"
-                }
+                [
+                    {
+                        "title": "string",
+                        "description": "string",
+                        "availability": "PUBLIC",
+                        "maxParticipants": 0,
+                        "entranceFee": 0.1,
+                        "eventType": "CONFERENCE",
+                        "locationName": "string",
+                        "location": { "x": 0.1, "y": 0.1 },
+                        "startDateTime": "2025-11-29T21:28:32.264Z"
+                    },
+                    {
+                        "title": "string",
+                        "description": "string",
+                        "availability": "PUBLIC",
+                        "maxParticipants": 0,
+                        "entranceFee": 0.1,
+                        "eventType": "CONFERENCE",
+                        "locationName": "string",
+                        "location": { "x": 0.1, "y": 0.1 },
+                        "startDateTime": "2025-11-29T21:28:32.264Z"
+                    }
+                ]
                 
                 Event types:
                 CONFERENCE, WORKSHOP, WEBINAR, CONCERT, EXHIBITION, NETWORKING, SEMINAR, HACKATHON,
