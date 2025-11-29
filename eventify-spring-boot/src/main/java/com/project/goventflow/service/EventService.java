@@ -1,5 +1,7 @@
 package com.project.goventflow.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.goventflow.config.security.AuthDetails;
 import com.project.goventflow.domain.dto.event.*;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
@@ -16,6 +18,9 @@ import com.project.goventflow.service.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -45,6 +50,7 @@ public class EventService {
     private final MailingService mailingService;
     private final EventCriteriaBuilder eventCriteriaBuilder;
     private final UserService userService;
+    private final ChatModel chatModel;
 
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
@@ -211,7 +217,78 @@ public class EventService {
 
     public void generateEvents(EventGenerationParams params) {
         for (int i = 0; i < params.getNumberOfEvents(); i++) {
-            Event event = null; // TODO add event generation logic
+            Event event = null;
+
+            String prompt = """
+             Generate JSON describing ONE event entity. Strictly follow JSON example structure.
+             For location generate real adresses in Chisinau city, Moldova in format: Strada Mihai Eminescu 23, MD-2012 Chișinău, MD.
+             For location choose corresponding to location name coordinates: x means latitude, y means longitude.
+             Make description in details, choose meaningful titles.
+             Start datetime set to one of days in December.
+             
+             JSON structure template:
+                {
+                    "title": "string",
+                    "description": "string",
+                    "availability": "PUBLIC",
+                    "currentParticipants": 0,
+                    "maxParticipants": 0,
+                    "entranceFee": 0.1,
+                    "eventType": "CONFERENCE",
+                    "locationName": "string",
+                    "location": {
+                    "x": 0.1,
+                    "y": 0.1
+                    },
+                    "startDateTime": "2025-11-29T21:28:32.264Z"
+                }
+                
+                Event types:     CONFERENCE,
+                                 WORKSHOP,
+                                 WEBINAR,
+                                 CONCERT,
+                                 EXHIBITION,
+                                 NETWORKING,
+                                 SEMINAR,
+                                 HACKATHON,
+                                 CHARITY,
+                                 FESTIVAL,
+                                 DISCUSSION,
+                                 LECTURE,
+                                 FUNDRAISER,
+                                 BIRTHDAY,
+                                 GAMING,
+                                 PARTY,
+                                 HEALTH
+                                 
+                Event availability variants:     PUBLIC,
+                                                 PAID,
+                                                 PRIVATE
+                    
+             **Return ONLY valid JSON.**
+             **Output must be strict JSON, no extra text.**
+             **Do not write markup symbols in answer.**
+            """;
+
+            ChatResponse response = chatModel.call(new Prompt(prompt));
+
+            String rawJSON = response.getResult().getOutput().getText();
+
+            int start = rawJSON.indexOf("{");
+            int end = rawJSON.lastIndexOf("}");
+
+            String json = "";
+            if (start != -1 && end != -1 && end > start) {
+                json = rawJSON.substring(start, end+1);
+            }
+
+            ObjectMapper event_mapper = new ObjectMapper();
+            try {
+                event = event_mapper.readValue(json, Event.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
             User defaultHost = userService.findById(DEFAULT_HOST_ID);
             event.setHost(defaultHost);
             eventRepository.save(event);
