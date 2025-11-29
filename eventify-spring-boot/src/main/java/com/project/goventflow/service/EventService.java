@@ -225,14 +225,13 @@ public class EventService {
              For location generate real adresses in Chisinau city, Moldova in format: Strada Mihai Eminescu 23, MD-2012 Chișinău, MD.
              For location choose corresponding to location name coordinates: x means latitude, y means longitude.
              Make description in details, choose meaningful titles.
-             Start datetime set to one of days in December.
+             Start datetime set to one of days in December 2025.
              
              JSON structure template:
                 {
                     "title": "string",
                     "description": "string",
                     "availability": "PUBLIC",
-                    "currentParticipants": 0,
                     "maxParticipants": 0,
                     "entranceFee": 0.1,
                     "eventType": "CONFERENCE",
@@ -269,6 +268,8 @@ public class EventService {
              **Return ONLY valid JSON.**
              **Output must be strict JSON, no extra text.**
              **Do not write markup symbols in answer.**
+             **Name location like this: Strada Mihai Eminescu 23, MD-2012 Chișinău, MD.**
+             **Select locations in Chisinau city, Moldova.**
             """;
 
             ChatResponse response = chatModel.call(new Prompt(prompt));
@@ -282,6 +283,8 @@ public class EventService {
             if (start != -1 && end != -1 && end > start) {
                 json = rawJSON.substring(start, end+1);
             }
+
+            System.out.println(json);
 
             ObjectMapper event_mapper = new ObjectMapper();
             try {
