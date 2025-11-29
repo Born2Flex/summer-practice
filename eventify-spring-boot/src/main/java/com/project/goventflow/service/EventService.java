@@ -276,9 +276,9 @@ public class EventService {
 
     private String buildPrompt() {
         return """
-                Generate JSON describing five event entities. Strictly follow JSON example structure.
-                Use real addresses in Chișinău, Moldova or in Moldova in general. Provide meaningful titles, detailed descriptions.
-                Make descriptions 2-3 sentences long.
+                Generate a JSON array containing exactly five event objects.
+                Each object must strictly follow the JSON structure template below.
+                Do not include extra text, explanations, or markup.
                 Start datetime must be within December 2025.
                 Choose topic for event very randomly, try not to repeat yourself, work for variety of topics. You can choose topics that correlate with chosen location.
                 
@@ -316,6 +316,11 @@ public class EventService {
                 
                 Return STRICT JSON — no extra text, no markup.
                 Location format example: "Strada Mihai Eminescu 23, MD-2012 Chișinău, MD".
+                - Each event must have a unique title and topic.
+                - Use real addresses in Chișinău, Moldova or other Moldova cities.
+                - Each description must be 2-3 sentences long.
+                - The startDateTime of each event must be in December 2025.
+                - Return strictly valid JSON: a single array of five objects.
                 """;
     }
 }
