@@ -24,6 +24,7 @@ public class RAGChatService {
     private final EventService eventService;
     private final ChatMemory chatMemory;
     private final ChatModel chatModel;
+    private final ObjectMapper objectMapper;
 
     public RAGAnswerDto ask(AuthDetails authDetails, String messageText, Double longitude, Double latitude) {
         String userId = authDetails.getUser().getId();
@@ -44,12 +45,12 @@ public class RAGChatService {
                  
                  Here are values list that are desired to be extracted in JSON.
                  
-                    String query;
-                    List<EventType> eventType;
-                    List<EventAvailability> availability;
-                    LocalDateTime from;
-                    LocalDateTime to;
-                    Integer eventDistance; # Specify distance only if user talks about it.
+                    String query; (REQUIRED)
+                    List<EventType> eventType; (OPTIONAL)
+                    List<EventAvailability> availability; (OPTIONAL)
+                    LocalDateTime from; # Specify date range start (OPTIONAL)
+                    LocalDateTime to; # Specify date range end (OPTIONAL)
+                    Integer eventDistance; # Specify distance only if user talks about it. (OPTIONAL)
                     
                     Event types:     CONFERENCE,
                                      WORKSHOP,
@@ -98,10 +99,9 @@ public class RAGChatService {
 
         System.out.println(filterJSON);
 
-        ObjectMapper mapper = new ObjectMapper();
         EventSearchParams params = null;
         try {
-            params = mapper.readValue(filterJSON, EventSearchParams.class);
+            params = objectMapper.readValue(filterJSON, EventSearchParams.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
