@@ -88,25 +88,27 @@ export const eventKeys = {
     types: () => [...eventKeys.all, 'types'] as const,
 };
 
+export const fetchEvents = async (params?: EventSearchParams): Promise<ShortEvent[]> => {
+    const url = params 
+        ? `/go-event-flow/events/search?${new URLSearchParams(
+            Object.entries(params).reduce((acc, [key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(v => acc.append(key, v));
+                } else if (value !== undefined) {
+                    acc.append(key, value.toString());
+                }
+                return acc;
+            }, new URLSearchParams())
+        ).toString()}`
+        : '/go-event-flow/events';
+    
+    return apiClient.getJson<ShortEvent[]>(url);
+};
+
 export const useEvents = (params?: EventSearchParams) => {
     return useQuery({
         queryKey: params ? eventKeys.list(params) : eventKeys.lists(),
-        queryFn: async (): Promise<ShortEvent[]> => {
-            const url = params 
-                ? `/go-event-flow/events/search?${new URLSearchParams(
-                    Object.entries(params).reduce((acc, [key, value]) => {
-                        if (Array.isArray(value)) {
-                            value.forEach(v => acc.append(key, v));
-                        } else if (value !== undefined) {
-                            acc.append(key, value.toString());
-                        }
-                        return acc;
-                    }, new URLSearchParams())
-                ).toString()}`
-                : '/go-event-flow/events';
-            
-            return apiClient.getJson<ShortEvent[]>(url);
-        },
+        queryFn: () => fetchEvents(params),
         enabled: !params || (!!params?.longitude && !!params?.latitude),
     });
 };

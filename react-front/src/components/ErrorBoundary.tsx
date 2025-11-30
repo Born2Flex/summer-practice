@@ -40,7 +40,7 @@ class ErrorBoundary extends Component<Props, State> {
         }
     }
 
-    private isAuthError(error: Error): boolean {
+    private isAuthError(error: any): boolean {
         const authErrorMessages = [
             'authentication failed',
             'token expired',
@@ -48,7 +48,15 @@ class ErrorBoundary extends Component<Props, State> {
             '401',
             '403',
         ];
+
+        if (error instanceof Response) {
+             return error.status === 401 || error.status === 403;
+        }
         
+        if (!error || !error.message) {
+            return false;
+        }
+
         return authErrorMessages.some(msg => 
             error.message.toLowerCase().includes(msg.toLowerCase())
         );
