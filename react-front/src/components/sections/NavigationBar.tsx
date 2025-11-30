@@ -94,7 +94,7 @@ function NewNavigation({ registered }: { registered: boolean }) {
                     <span
                         className="self-center text-4xl font-bold whitespace-nowrap bg-clip-text text-transparent
                         bg-[linear-gradient(to_right,theme(colors.gray.800),theme(colors.gray.900),theme(colors.gray.400),theme(colors.gray.900),theme(colors.gray.800))] bg-[length:300%_auto] animate-gradient">
-                        Eventify
+                        GoEventFlow
                     </span>
                 </Typography>
                 <div className="hidden lg:block">{navList}</div>

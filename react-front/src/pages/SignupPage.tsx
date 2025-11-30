@@ -24,7 +24,7 @@ function SignupPage() {
                         Sign Up
                     </Typography>
                     <Typography className="mb-12 text-gray-600 font-normal text-[18px]" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        Create your Eventify account
+                        Create your GoEventFlow account
                     </Typography>
                     <Form method="post" className="grid columns-2 gap-x-4 mx-auto max-w-[44rem] text-left">
                         <InputWithLabel

@@ -16,7 +16,7 @@ function Footer() {
           <div className="max-w-2xl w-fit mx-auto grid grid-cols-1 md:grid-cols-2 text-black justify-center">
             <div className="flex flex-col items-center">
               <div>
-                <p>Contact us: eventifyteam@gmail.com</p>
+                <p>Contact us: goeventflowteam@gmail.com</p>
                 <div className="flex space-x-4 mt-4">
                   <a href="https://www.facebook.com" aria-label="Facebook">
                     <FontAwesomeIcon icon={faFacebook} className="text-black hover:text-gray-700" size="2x" />
