@@ -53,7 +53,7 @@ export async function loader() {
             },
             () => {
                 console.log('Location access denied by user.');
-                resolve([40.7128, -74.0060]);
+                resolve([47.0175, 28.8414]);
             }
         );
     });
