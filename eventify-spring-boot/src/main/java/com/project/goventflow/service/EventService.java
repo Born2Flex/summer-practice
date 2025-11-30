@@ -30,6 +30,8 @@ import org.bson.Document;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -62,6 +64,7 @@ public class EventService {
     private final ChatModel chatModel;
     private final UserRepository userRepository;
 
+    @CacheEvict(value = "events", allEntries = true)
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
         if (event.getAvailability() == EventAvailability.PAID && event.getEntranceFee() == null) {
@@ -74,6 +77,7 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     public EventDto updateEvent(AuthDetails authDetails, String eventId, EventUpdateDto eventDto) {
         Event event = getEventOrElseThrow(eventId);
         validateHostIsManagingEvent(authDetails, event);
@@ -107,7 +111,9 @@ public class EventService {
         return commentRepository.countCommentsByUserId(userId);
     }
 
+    @Cacheable("events")
     public List<EventShortDto> getActualEvents() {
+        log.info("Getting events without caching");
         List<Event> eventEntities = eventRepository.findEventsByStartDateTimeAfter(LocalDateTime.now(ZoneOffset.UTC));
         return eventMapper.toListDto(eventEntities);
     }
@@ -130,6 +136,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     public void deleteEvent(AuthDetails authDetails, String eventId) {
         Event event = getEventOrElseThrow(eventId);
         validateHostIsManagingEvent(authDetails, event);
@@ -283,6 +290,7 @@ public class EventService {
                 Start datetime must be within December 2025.
                 Choose topic for event very randomly, try not to repeat yourself, work for variety of topics. You can choose topics that correlate with chosen location.
                 Do not repeat events and topics, keep them as unique as possible.
+                Use students and university related events, focus on these group of people.
                 
                 JSON structure template:
                 [
