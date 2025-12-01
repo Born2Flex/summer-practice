@@ -31,8 +31,21 @@ function RagChatInterface() {
         setIsTyping(true);
 
         try {
-            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject);
+            const position = await new Promise<GeolocationPosition>((resolve) => {
+                navigator.geolocation.getCurrentPosition(resolve, () => {
+                    resolve({
+                        coords: {
+                            latitude: 47.0175,
+                            longitude: 28.8414,
+                            accuracy: 0,
+                            altitude: null,
+                            altitudeAccuracy: null,
+                            heading: null,
+                            speed: null
+                        },
+                        timestamp: Date.now()
+                    } as GeolocationPosition);
+                });
             });
 
             const { latitude, longitude } = position.coords;
