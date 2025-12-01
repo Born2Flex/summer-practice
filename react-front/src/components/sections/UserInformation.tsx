@@ -1,11 +1,28 @@
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRouteLoaderData } from "react-router-dom";
-import User from "../../interfaces/UserInterface";
+import { useUser } from "../../hooks/useApiQueries";
 
 //UserInformation component, displays the user's general information in the user profile page
 function UserInformation() {
-    const { profile } = useRouteLoaderData('profile-layout') as { profile: User, isOwner: boolean };
+    const loaderData = useRouteLoaderData('profile-layout') as { userId: string, isOwner: boolean };
+    const { data: profile, isLoading, error } = useUser(loaderData.userId);
+
+    if (isLoading) {
+        return (
+            <div className="text-center mt-12">
+                <p>Loading user information...</p>
+            </div>
+        );
+    }
+
+    if (error || !profile) {
+        return (
+            <div className="text-center mt-12">
+                <p>Error loading user information</p>
+            </div>
+        );
+    }
 
     return (
         <>

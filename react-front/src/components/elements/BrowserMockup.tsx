@@ -1,4 +1,4 @@
-//Browser mockup component
+// Browser mockup component
 function BrowserMockup() {
     return (
         <div className="flex flex-col max-w-2xl items-center">
@@ -9,17 +9,17 @@ function BrowserMockup() {
             </div>
             <div className="bg-gray-100 border-t-0 w-full h-fit">
                 <iframe
-                    width="624" height="341"
-                    src="https://www.youtube.com/embed/IkCh8VfN2d4?autoplay=1&mute=1&loop=1&playlist=IkCh8VfN2d4"
+                    width="624"
+                    height="341"
+                    // Video ID: BOG_CbEDhag
+                    // loop=1 + playlist=ID → continuous looping
+                    src="https://www.youtube.com/embed/BOG_CbEDhag?autoplay=1&mute=1&loop=1&playlist=BOG_CbEDhag"
                     title="Event Management Video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     loading="lazy"
-                >
-                </iframe>
-                {/* <video autoPlay={true} playsInline={true} muted={true} className="lp-Hero-video lp-Hero-video--landscape hide-reduced-motion" width="1248" height="735" poster="https://vz-57aae6f4-e6e.b-cdn.net/7053d518-b153-43a2-875c-0bef7abf7f3f/preview.webp"><source src="https://iframe.mediadelivery.net/play/256129/7053d518-b153-43a2-875c-0bef7abf7f3f" type="video/mov; codecs=avc1.4d002a" /></video> */}
-
+                ></iframe>
             </div>
         </div>
     )

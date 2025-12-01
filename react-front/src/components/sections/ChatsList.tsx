@@ -3,6 +3,7 @@ import { IconButton } from '@material-tailwind/react'
 import { ArrowLeftIcon } from '@mui/x-date-pickers/icons'
 import { NavLink } from 'react-router-dom'
 import ChatTab from '../elements/ChatTab'
+import RagChatTab from '../elements/RagChatTab'
 import ShortChat from '../../interfaces/ShortChatInterface'
 
 //ChatsList component, displays the list of chats
@@ -30,6 +31,8 @@ function ChatsList({ chats }: { chats: ShortChat[] }) {
             </div>
 
             <div className='flex flex-1 flex-col overflow-y-auto custom-scrollbar scrollbar-thin mt-4 divide-y divide-dashed shadow-inner'>
+                
+                <RagChatTab />
 
                 {chats.length === 0 && (<div className='flex flex-1 items-center justify-center'>
                     <p className="text-center text-gray-500 text-lg py-4">No chats yet</p>

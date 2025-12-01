@@ -1,29 +1,39 @@
 package com.project.goventflow.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.project.goventflow.config.security.AuthDetails;
+import com.project.goventflow.domain.dto.event.EventCreationDto;
+import com.project.goventflow.domain.dto.event.EventDto;
+import com.project.goventflow.domain.dto.event.EventSearchDto;
 import com.project.goventflow.domain.dto.event.EventSearchParams;
 import com.project.goventflow.domain.dto.event.EventShortDto;
 import com.project.goventflow.domain.dto.event.EventUpdateDto;
 import com.project.goventflow.domain.dto.event.comment.CommentCreationDto;
 import com.project.goventflow.domain.dto.event.comment.CommentDto;
-import com.project.goventflow.domain.dto.event.EventCreationDto;
-import com.project.goventflow.domain.dto.event.EventDto;
+import com.project.goventflow.domain.dto.generate.EventGenerationParams;
 import com.project.goventflow.domain.entity.Comment;
 import com.project.goventflow.domain.entity.Event;
 import com.project.goventflow.domain.entity.User;
 import com.project.goventflow.domain.enumeration.EventAvailability;
-import com.project.goventflow.domain.enumeration.EventType;
-import com.project.goventflow.service.mapper.CommentMapper;
-import com.project.goventflow.service.mapper.EventMapper;
+import com.project.goventflow.domain.mixin.PointMixin;
 import com.project.goventflow.repository.CommentRepository;
 import com.project.goventflow.repository.EventRepository;
-import com.project.goventflow.config.security.AuthDetails;
+import com.project.goventflow.repository.UserRepository;
+import com.project.goventflow.service.mapper.CommentMapper;
+import com.project.goventflow.service.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.Point;
-import org.springframework.data.geo.Circle;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
@@ -33,7 +43,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -43,6 +52,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class EventService {
+    public static final String DEFAULT_HOST_ID = "692b20485d48888820945648";
     private final EmbeddingService embeddingService;
     private final EventRepository eventRepository;
     private final CommentRepository commentRepository;
@@ -51,7 +61,10 @@ public class EventService {
     private final MongoTemplate template;
     private final MailingService mailingService;
     private final EventCriteriaBuilder eventCriteriaBuilder;
+    private final ChatModel chatModel;
+    private final UserRepository userRepository;
 
+    @CacheEvict(value = "events", allEntries = true)
     public EventDto createEvent(AuthDetails authDetails, EventCreationDto eventCreationDto) {
         Event event = eventMapper.toEntity(eventCreationDto);
         if (event.getAvailability() == EventAvailability.PAID && event.getEntranceFee() == null) {
@@ -64,11 +77,13 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     public EventDto updateEvent(AuthDetails authDetails, String eventId, EventUpdateDto eventDto) {
         Event event = getEventOrElseThrow(eventId);
         validateHostIsManagingEvent(authDetails, event);
         Event updatedEvent = eventMapper.updateEvent(event, eventDto);
         mailingService.sendEventUpdateNotification(event);
+        event.setEmbedding(embeddingService.embedEvent(event));
         eventRepository.save(updatedEvent);
         return eventMapper.toDto(updatedEvent);
     }
@@ -96,7 +111,9 @@ public class EventService {
         return commentRepository.countCommentsByUserId(userId);
     }
 
+    @Cacheable("events")
     public List<EventShortDto> getActualEvents() {
+        log.info("Getting events without caching");
         List<Event> eventEntities = eventRepository.findEventsByStartDateTimeAfter(LocalDateTime.now(ZoneOffset.UTC));
         return eventMapper.toListDto(eventEntities);
     }
@@ -119,6 +136,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     public void deleteEvent(AuthDetails authDetails, String eventId) {
         Event event = getEventOrElseThrow(eventId);
         validateHostIsManagingEvent(authDetails, event);
@@ -131,7 +149,7 @@ public class EventService {
         Criteria baseCriteria = eventCriteriaBuilder.buildBaseCriteria(params);
         query.addCriteria(baseCriteria);
 
-        query.addCriteria(eventCriteriaBuilder.nearSphereFilter(
+        query.addCriteria(eventCriteriaBuilder.withinSphereFilter(
                 params.getLatitude(),
                 params.getLongitude(),
                 params.getEventDistance()
@@ -145,10 +163,13 @@ public class EventService {
         return eventMapper.toListDto(events);
     }
 
-    public List<EventShortDto> vectorSearchEvents(EventSearchParams params) {
+    public List<EventSearchDto> vectorSearchEvents(EventSearchParams params) {
         Criteria criteria = eventCriteriaBuilder.buildBaseCriteria(params);
 
+        System.out.println(params.getEventDistance());
+
         Criteria geoCriteria = eventCriteriaBuilder.withinSphereFilter(
+                // Reverted order for Point params x and y
                 params.getLatitude(),
                 params.getLongitude(),
                 params.getEventDistance()
@@ -166,16 +187,22 @@ public class EventService {
         TypedAggregation<Event> aggregation = TypedAggregation.newAggregation(
                 Event.class,
                 context -> new Document("$vectorSearch", new Document()
-                        .append("index", "event-search")
+                        .append("index", "vector-search-events")
                         .append("path", "embedding")
                         .append("queryVector", embedding)
                         .append("numCandidates", 20)
-                        .append("limit", 10)
+                        .append("limit", 20)
                 ),
-                Aggregation.match(finalMatchCriteria)
+                context -> new Document("$addFields",
+                        new Document("score", new Document("$meta", "vectorSearchScore"))
+                ),
+                Aggregation.match(Criteria.where("score").gte(0.85)),
+                Aggregation.match(finalMatchCriteria),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "score")),
+                Aggregation.limit(7)
         );
         List<Event> events = template.aggregate(aggregation, Event.class).getMappedResults();
-        return eventMapper.toListDto(events);
+        return eventMapper.toSearchListDto(events);
     }
 
     private List<String> normalizeTags(List<String> tags) {
@@ -191,5 +218,119 @@ public class EventService {
         if (!authDetails.getUser().getId().equals(event.getHost().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not event host");
         }
+    }
+
+    public void reembedAllEvents() {
+        eventRepository.findAll().stream()
+                .map(this::reembedEvent)
+                .forEach(eventRepository::save);
+    }
+
+    private Event reembedEvent(Event event) {
+        event.setEmbedding(embeddingService.embedEvent(event));
+        log.info("Reembedded event id = {}", event.getId());
+        return event;
+    }
+
+    public void generateEvents(EventGenerationParams params) {
+        ObjectMapper mapper = createObjectMapper();
+
+        String json = generateEventJson(params.getNumberOfEvents());
+        Event[] events = parseEvent(json, mapper);
+        for (Event event : events) {
+            assignDefaultHost(event);
+            eventRepository.save(event);
+            log.info("Generated event id = {}", event.getId());
+        }
+    }
+
+    private ObjectMapper createObjectMapper() {
+        return new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .addMixIn(Point.class, PointMixin.class);
+    }
+
+    private Event[] parseEvent(String json, ObjectMapper mapper) {
+        try {
+            String jsonArray = "[" + json + "]";
+            return mapper.readValue(jsonArray, Event[].class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse event JSON", e);
+        }
+    }
+
+    private void assignDefaultHost(Event event) {
+        User defaultHost = userRepository.findById(DEFAULT_HOST_ID)
+                .orElseThrow(() -> new RuntimeException("Default host not found"));
+
+        event.setHost(defaultHost);
+    }
+
+    private String generateEventJson(int numberOfEvents) {
+        ChatResponse response = chatModel.call(new Prompt(buildPrompt().formatted(numberOfEvents)));
+        return extractJson(response.getResult().getOutput().getText());
+    }
+
+    private String extractJson(String raw) {
+        int start = raw.indexOf("{");
+        int end = raw.lastIndexOf("}");
+
+        if (start == -1 || end == -1 || end <= start)
+            throw new IllegalStateException("No valid JSON object found in response");
+
+        return raw.substring(start, end + 1);
+    }
+
+    private String buildPrompt() {
+        return """
+                Generate a JSON array containing exactly %s event objects.
+                Each object must strictly follow the JSON structure template below.
+                Do not include extra text, explanations, or markup.
+                Start datetime must be within December 2025.
+                Choose topic for event very randomly, try not to repeat yourself, work for variety of topics. You can choose topics that correlate with chosen location.
+                Do not repeat events and topics, keep them as unique as possible.
+                Use students and university related events, focus on these group of people.
+                
+                JSON structure template:
+                [
+                    {
+                        "title": "string",
+                        "description": "string",
+                        "availability": "PUBLIC",
+                        "maxParticipants": 0,
+                        "entranceFee": 0.1,
+                        "eventType": "CONFERENCE",
+                        "locationName": "string",
+                        "location": { "x": 0.1, "y": 0.1 },
+                        "startDateTime": "2025-11-29T21:28:32.264Z"
+                    },
+                    {
+                        "title": "string",
+                        "description": "string",
+                        "availability": "PUBLIC",
+                        "maxParticipants": 0,
+                        "entranceFee": 0.1,
+                        "eventType": "CONFERENCE",
+                        "locationName": "string",
+                        "location": { "x": 0.1, "y": 0.1 },
+                        "startDateTime": "2025-11-29T21:28:32.264Z"
+                    }
+                ]
+                
+                Event types:
+                CONFERENCE, WORKSHOP, WEBINAR, CONCERT, EXHIBITION, NETWORKING, SEMINAR, HACKATHON,
+                CHARITY, FESTIVAL, DISCUSSION, LECTURE, FUNDRAISER, BIRTHDAY, GAMING, PARTY, HEALTH
+                
+                Availability options: PUBLIC, PAID, PRIVATE
+                
+                Return STRICT JSON — no extra text, no markup.
+                Location format example: "Strada Mihai Eminescu 23, MD-2012 Chișinău, MD".
+                - Each event must have a unique title and topic.
+                - Use real addresses in Chișinău, Moldova or other Moldova cities.
+                - Each description must be 2-3 sentences long.
+                - The startDateTime of each event must be in December 2025.
+                - Return strictly valid JSON: a single array of five objects.
+                """;
     }
 }

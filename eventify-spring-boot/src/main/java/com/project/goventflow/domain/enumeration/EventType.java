@@ -16,5 +16,6 @@ public enum EventType {
     FUNDRAISER,
     BIRTHDAY,
     GAMING,
+    HEALTH,
     PARTY
 }

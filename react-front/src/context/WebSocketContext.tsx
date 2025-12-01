@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from 'react';
 import SockJS from 'sockjs-client';
 import { Client, over as StompOver, Subscription } from 'stompjs';
 
@@ -51,22 +51,20 @@ export const WebSocketProvider = ({ children, userId }: { children: ReactNode, u
     }, [userId]);
 
     //Send message to chat with certain id
-    const sendMessage = (chatId: string, message: any) => {
+    const sendMessage = useCallback((chatId: string, message: any) => {
         if (client && client.connected) {
             client.send(`/app/chat/${chatId}`, {}, JSON.stringify(message));
         }
-    };
+    }, [client]);
 
     //Subscribe to chat with certain id
-    const subscribeToChat = (chatId: string, onIncomingMessage: (message: any) => void) => {
+    const subscribeToChat = useCallback((chatId: string, onIncomingMessage: (message: any) => void) => {
         if (client && client.connected) {
             const existingSubscription = subscriptions.get(chatId);
             if (existingSubscription) {
-                console.log("Already subscribed to this chat:", chatId);
                 return;
             }
 
-            console.log("Subscribing to chat:", chatId);
             const subscription = client.subscribe(`/chat/${chatId}/messages`, (message) => {
                 const parsedMessage = JSON.parse(message.body);
                 onIncomingMessage(parsedMessage);
@@ -74,10 +72,18 @@ export const WebSocketProvider = ({ children, userId }: { children: ReactNode, u
 
             subscriptions.set(chatId, subscription);
         }
-    };
+    }, [client]);
+
+    const value = useMemo(() => ({
+        hasMessages,
+        setHasMessages,
+        sendMessage,
+        subscribeToChat,
+        client
+    }), [hasMessages, sendMessage, subscribeToChat, client]);
 
     return (
-        <WebSocketContext.Provider value={{ hasMessages, setHasMessages, sendMessage, subscribeToChat, client }}>
+        <WebSocketContext.Provider value={value}>
             {children}
         </WebSocketContext.Provider>
     );

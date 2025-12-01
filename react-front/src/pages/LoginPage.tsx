@@ -4,7 +4,8 @@ import { Typography, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import InputWithLabel from "../components/inputs/InputWithLabel";
 import { Form, NavLink, redirect, useActionData } from "react-router-dom";
-import { setToken, setUserId } from "../auth";
+import { setAccessToken, setRefreshToken, setUserId } from "../auth";
+import { publicApiClient } from "../utils/apiClient";
 
 //LoginPage component, displays the login page
 function LoginPage() {
@@ -107,35 +108,24 @@ export async function action({ request }: { request: Request }) {
     };
 
     console.log(authData)
-    const baseurl = import.meta.env.VITE_API_URL as string || 'http://localhost:8080';
 
     try {
-        const response = await fetch(`${baseurl}/go-event-flow/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(authData)
-        });
-
-        const responseData = await response.json();
-        if (response.status === 401) {
-            return { error: true, message: responseData.message };
-        }
-        if (!response.ok) {
-            console.error(`Error ${response.status}: ${responseData}`);
-            throw new Error(`Error ${response.status}: ${responseData}`);
-        }
-
-        const token = responseData.token;
+        const responseData = await publicApiClient.postJson('/go-event-flow/auth/login', authData);
+        
+        const accessToken = responseData.accessToken;
+        const refreshToken = responseData.refreshToken;
         const userId = responseData.userId;
 
         console.log('Logged in successfully:', responseData);
 
-        setToken(token);
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
         setUserId(userId);
     } catch (error) {
         console.error('Error logging in:', error);
+        if (error instanceof Error && error.message.includes('401')) {
+            return { error: true, message: 'Invalid email or password' };
+        }
     }
 
     return redirect('/events');

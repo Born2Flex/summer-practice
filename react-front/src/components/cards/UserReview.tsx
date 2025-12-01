@@ -1,4 +1,4 @@
-import Testemonial from '../../assets/pani-pechkurova.jpg';
+import Testemonial from '../../assets/indian-woman.jpg';
 
 //UserReview component, displays the user review with the user's image and name
 function UserReview() {
@@ -13,8 +13,8 @@ function UserReview() {
                         <img alt="Testimonial 01" loading="lazy" width="96" height="96" decoding="async" data-nimg="1" className="relative rounded-full" src={Testemonial} />
                     </div>
                     <blockquote className="text-xl font-medium mb-4">“ I love this product and would recommend it to anyone. Could be not easier to use, and our multiple events are wonderful. We get nice reviews all the time. “</blockquote>
-                    <cite className="block font-bold text-lg not-italic mb-1">Pechkurova Olena</cite>
-                    <div className="text-gray-600"><span>CEO &amp; Co-Founder</span> <a className="text-blue-600 hover:underline" href="#0">@Eventify</a></div>
+                    <cite className="block font-bold text-lg not-italic mb-1">Jamileh Chacsravani</cite>
+                    <div className="text-gray-600"><span>CEO &amp; Co-Founder</span> <a className="text-blue-600 hover:underline" href="#0">@GoEventFlow</a></div>
                 </div>
             </div>
         </div>

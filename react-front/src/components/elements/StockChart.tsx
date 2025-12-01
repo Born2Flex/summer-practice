@@ -13,7 +13,7 @@ const chartConfig = {
     height: 340,
     series: [
         {
-            name: "Eventify",
+            name: "GoEventFlow",
             data: [50, 40, 300, 320, 500, 350, 320, 470, 600, 820, 780, 900],
         },
         {

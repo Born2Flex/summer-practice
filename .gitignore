@@ -33,3 +33,4 @@ build/
 .vscode/
 
 .node_modules/
+./eventify-spring-boot/src/main/resources/application.yaml

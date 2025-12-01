@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import { useUploadImage } from '../../hooks/useApiQueries';
 
 // ImageInput component, handles image input with preview
 function ImageInput({ id, name, previewImg, round }: { id: string, name: string, previewImg?: string, round?: boolean }) {
     const [fileUrl, setFileUrl] = useState<string>(previewImg || '');
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(previewImg || null);
+    const uploadImageMutation = useUploadImage();
 
     //Handle image input change by uploading the image to Cloudinary and displaying the preview
     async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
@@ -22,20 +24,13 @@ function ImageInput({ id, name, previewImg, round }: { id: string, name: string,
         console.log(target.files[0]);
         if (typeof target.files[0] === 'undefined') return;
 
-        const formData = new FormData();
-
-        formData.append('file', target.files[0]);
-        formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string);
-        formData.append('api_key', import.meta.env.VITE_CLOUDINARY_API_KEY as string);
-
-        const results = await fetch('https://api.cloudinary.com/v1_1/dqi8wlcrp/image/upload', {
-            method: 'POST',
-            body: formData
-        }).then(
-            r => r.json()
-        );
-        setFileUrl(results.secure_url)
-        console.log(results);
+        try {
+            const result = await uploadImageMutation.mutateAsync(target.files[0]);
+            setFileUrl(result.secure_url);
+            console.log(result);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
     }
 
     return (
